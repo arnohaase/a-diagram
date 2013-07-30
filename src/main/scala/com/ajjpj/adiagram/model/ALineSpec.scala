@@ -36,12 +36,14 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
     }
   })
 
-  def bindStartPoint(p: => APoint, clipBounds: => ARect) {
+  def bindStartPoint(box: ABoxSpec): Unit = bindStartPoint(ARect(box.pos, box.dim).center, ARect(box.pos, box.dim))
+  def bindStartPoint(p: => APoint, clipBounds: => ARect): Unit = {
     digest.unbind(p0BindingProp)
     digest.bind(p0BindingProp, (p, clipBounds))
   }
   def unbindStartPoint()(implicit digest: Digest) = digest.unbind(p0BindingProp)
 
+  def bindEndPoint(box: ABoxSpec): Unit = bindEndPoint(ARect(box.pos, box.dim).center, ARect(box.pos, box.dim))
   def bindEndPoint(p: => APoint, clipBounds: => ARect) {
     digest.unbind(p1BindingProp)
     digest.bind(p1BindingProp, (p, clipBounds))

@@ -37,8 +37,8 @@ class MoveShapesMain extends javafx.application.Application {
   diagram += new ATextSpec((100.0, 600.0), (300.0, 80.0), "Hey Dude", textStyle)
 
   val connectingLine = new ALineSpec((0.0, 0.0), (0.0, 0.0), Some("Connecting"), lineStyle, lineTextStyle)
-  connectingLine.bindStartPoint(box1.pos, ARect(box1.pos, box1.dim)) //TODO center
-  connectingLine.bindEndPoint  (box2.pos, ARect(box2.pos, box2.dim))
+  connectingLine.bindStartPoint(box1)
+  connectingLine.bindEndPoint  (box2)
 
   diagram += connectingLine
 
