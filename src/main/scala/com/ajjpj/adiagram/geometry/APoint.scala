@@ -1,5 +1,8 @@
 package com.ajjpj.adiagram.geometry
 
+import scala.language.implicitConversions
+
+
 /**
  * @author arno
  */

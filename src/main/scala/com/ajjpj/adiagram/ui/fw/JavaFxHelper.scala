@@ -8,7 +8,6 @@ import javafx.scene.control.Button
 import javafx.geometry.Pos
 import javafx.event.{EventHandler, ActionEvent}
 import javafx.scene.input.KeyCombination
-import com.ajjpj.adiagram.ui.fw.Digest
 import javafx.application.Platform
 import java.util.concurrent.CountDownLatch
 
@@ -17,6 +16,7 @@ import java.util.concurrent.CountDownLatch
  * @author arno
  */
 object JavaFxHelper {
+  import scala.language.implicitConversions
   implicit def keyCombinationFromString(s: String) = KeyCombination.keyCombination(s)
 
   /**

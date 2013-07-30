@@ -9,7 +9,7 @@ import javafx.scene.shape.{StrokeLineJoin, StrokeLineCap}
 /**
  * @author arno
  */
-class RoundPointedArrowLineEnd(arrowLineLength: Double = 30., arrowAngle: Double = Math.PI/6) extends ALineEnd {
+class RoundPointedArrowLineEnd(arrowLineLength: Double = 30.0, arrowAngle: Double = Math.PI/6) extends ALineEnd {
   val sinA = Math.sin(arrowAngle)
 
   def shortenLength(style: LineStyle) = style.width / sinA * .75

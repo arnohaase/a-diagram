@@ -11,7 +11,7 @@ import javafx.scene.shape.ArcType
  */
 class SemiCircleLineEnd extends ALineEnd {
   override def shortenLength(style: LineStyle) = Math.max(0, style.width / 2 - OVERLAP)
-  override def width(style: LineStyle) = 0.
+  override def width(style: LineStyle) = 0.0
 
   override def paint(gc: GraphicsContext, p: APoint, angle: Angle, style: LineStyle, t: Translation) {
     val r = style.width / 2

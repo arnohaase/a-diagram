@@ -3,6 +3,7 @@ package com.ajjpj.adiagram.ui.fw
 import javafx.beans.property.Property
 import scala.collection.mutable
 import javafx.event.{EventHandler, Event}
+import scala.language.implicitConversions
 
 
 /**

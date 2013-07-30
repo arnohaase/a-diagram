@@ -12,8 +12,8 @@ import javafx.scene.shape.ArcType
 class RoundedCornerLineEnd(cornerFraction: Double) extends ALineEnd {
   def cornerRadius(width: Double) = width/2 * cornerFraction
 
-  override def shortenLength(style: LineStyle): Double = Math.max(0, cornerRadius(style.width) - OVERLAP);
-  override def width(style: LineStyle) = 0.
+  override def shortenLength(style: LineStyle): Double = Math.max(0, cornerRadius(style.width) - OVERLAP)
+  override def width(style: LineStyle) = 0.0
 
   override def paint(gc: GraphicsContext, p: APoint, angle: Angle, style: LineStyle, t: Translation) {
     val r = style.width / 2
