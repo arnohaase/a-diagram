@@ -1,0 +1,60 @@
+todo
+----
+* cleanup
+  * test with Windows --> performance with accelerator engine?
+  * automatically delete empty text shapes
+  * text clipped for horizontal / vertical lines
+  * add four missing resize handles
+  * limit re-rendering of shapes during interactive 'resize' etc.
+  * command (i.e. undo / redo) for selection
+  * special treatment for 'select click' --> no 'move' operation - but what are good criteria?!
+  * serialize update rendering per shape
+    * delay re-rendering during drag: only one concurrently running re-rendering?
+    * limit thread pool size for background tasks
+    * queue per shape (?), remove all but the latest
+    * counter --> ignore earlier bitmaps when later bitmaps are already rendered
+  * height / width of a box: derive from font
+  * restore window position when leaving full screen mode
+  * remove 'press ESC to leave full screen mode' message
+  * add tic marks to 'view' menu items
+  * Boxes: strokeType.INSIDE (instead of CENTER)
+* features
+  * '+' / '-' moves shape forward / backward in Z Order
+  * loading / saving diagrams
+  * new diagram (another window)
+  * dirty state of a diagram --> 'are you sure' dialog
+  * delete diagram element
+  * new diagram element
+  * double click --> details dialog
+  * grid (optional) in the background
+  * Ctrl-Resize, Shift-Resize
+  * Ctrl-Move, Shift-Move
+  * zoom
+  * line ends
+    * full triangle
+    * empty triangle
+    * "elegant" arrow
+  * dashed / dotted lines
+  * lines *between* boxes --> find point of intersection between line and box
+  * different line style for lines 'behind' a box (e.g. dashed)
+  * 'background boxes', i.e. borders used for visually grouping stuff
+* JavaFX APIs
+  * FontSmoothingType
+  * lighting
+  * reflection
+  * changed menu item text --> re-render problem?!
+* application
+  * tool bar, status bar
+  * accordion on the left
+  * tree view with the logical structure
+  * arrow between two boxes / shapes
+  * different scaling for screen and export
+  * manual / explicit *relative* correction for visual start / end point of lines (x / y / *axial*)
+* thoughts
+  * shadow for lines (?)
+  * OVERLAP for bounding line around boxes (?)
+  * sub-pixel anti-aliasing on rotated fonts
+
+
+* visual test suite (render to windows and files --> potentially different rendering engine?)
+  * line endings at different angles and different line widths --> 'overlap' vs 'gap'
