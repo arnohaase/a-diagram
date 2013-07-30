@@ -1,4 +1,4 @@
-package com.ajjpj.adiagram.snippets
+package com.ajjpj.adiagram
 
 import com.ajjpj.adiagram.ui.fw.Digest
 import javafx.stage.Stage
@@ -15,11 +15,11 @@ import com.ajjpj.adiagram.geometry.{ARect, ADim, APoint}
 /**
  * @author arno
  */
-object MoveShapesMain extends App {
-  javafx.application.Application.launch(classOf[MoveShapesMain])
+object ADiagramMain extends App {
+  javafx.application.Application.launch(classOf[ADiagramMain])
 }
 
-class MoveShapesMain extends javafx.application.Application {
+class ADiagramMain extends javafx.application.Application {
   implicit val digest = new Digest()
 
   val fillStyle = new FillStyle(new LinearGradient(0.3, 0, .7, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.LIGHTBLUE), new Stop(1, Color.AZURE)))
@@ -33,7 +33,7 @@ class MoveShapesMain extends javafx.application.Application {
   val box2 = createBoxSpec((400.0, 400.0), (250.0, 80.0), Some("Yeah!"))
   diagram += box1
   diagram += box2
-  diagram += new ALineSpec((400.0, 100.0), (700.0, 500.0), Some("Arrow Text"), lineStyle, lineTextStyle)
+  diagram += new ALineSpec((1400.0, 100.0), (900.0, 500.0), Some("Arrow Text"), lineStyle, lineTextStyle)
   diagram += new ATextSpec((100.0, 600.0), (300.0, 80.0), "Hey Dude", textStyle)
 
   val connectingLine = new ALineSpec((0.0, 0.0), (0.0, 0.0), Some("Connecting"), lineStyle, lineTextStyle)
