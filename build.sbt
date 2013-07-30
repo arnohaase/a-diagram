@@ -22,6 +22,8 @@ scalaVersion := "2.10.2"
 
 scalacOptions ++= List("-deprecation", "-feature")
 
+testOptions in Test += Tests.Argument("-oF")
+
 libraryDependencies ++= Seq(
     "junit" % "junit" % "4.11" % "test",
     "org.scalatest" % "scalatest_2.10" % "2.0.M5b" % "test"

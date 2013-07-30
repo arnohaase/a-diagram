@@ -21,7 +21,7 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
     def changed(o: ObservableValue[_ <: (APoint, ARect)], oldValue: (APoint, ARect), newValue: (APoint, ARect)) {
       if(oldValue != newValue) {
         atomicUpdate {
-          p0 = newValue._1 //TODO clipping
+          refreshPos()
         }
       }
     }
@@ -30,11 +30,24 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
     def changed(o: ObservableValue[_ <: (APoint, ARect)], oldValue: (APoint, ARect), newValue: (APoint, ARect)) {
       if(oldValue != newValue) {
         atomicUpdate {
-          p1 = newValue._1 //TODO clipping
+          refreshPos()
         }
       }
     }
   })
+
+  private def refreshPos() {
+    val p0Raw = if(digest.isBound(p0BindingProp)) p0BindingProp.getValue._1 else p0
+    val p1Raw = if(digest.isBound(p1BindingProp)) p1BindingProp.getValue._1 else p1
+
+    if(digest.isBound(p0BindingProp)) {
+      p0 = p0BindingProp.getValue._2.intersection(p0Raw, p1Raw)
+    }
+    if(digest.isBound(p1BindingProp)) {
+      p1 = p1BindingProp.getValue._2.intersection(p0Raw, p1Raw)
+    }
+  }
+
 
   def bindStartPoint(box: ABoxSpec): Unit = bindStartPoint(ARect(box.pos, box.dim).center, ARect(box.pos, box.dim))
   def bindStartPoint(p: => APoint, clipBounds: => ARect): Unit = {

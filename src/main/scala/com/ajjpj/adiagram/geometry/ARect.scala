@@ -19,6 +19,57 @@ case class ARect(topLeft: APoint, dim: ADim) extends GeometricShape {
     topLeft.y <= p.y && topLeft.y+dim.height >= p.y
 
   override def toString = "ARect{" + topLeft + ", dim " + dim + "}"
+
+  private def segmentIntersectionVertical(p1: APoint, p2: APoint, x: Double, y3: Double, y4: Double): Option[APoint] = {
+    if(x < Math.min(p1.x, p2.x) || x > Math.max(p1.x, p2.x)) {
+      None
+    }
+    else {
+      val det = (p1.x - p2.x)*(y3 - y4)
+      if (det == 0.0) {
+        None
+      }
+      else {
+        val y_res = ((p1.x*p2.y - p1.y*p2.x)*(y3 - y4) - x*(p1.y - p2.y)*(y4 - y3)) / det
+
+        if(y_res >= Math.min(y3, y4) && y_res <= Math.max(y3, y4))
+          Some(APoint(x, y_res))
+        else
+          None
+      }
+    }
+  }
+
+  private def segmentIntersectionHorizontal(p1: APoint, p2: APoint, x3: Double, x4: Double, y: Double): Option[APoint] = {
+    if(y < Math.min(p1.y, p2.y) || y > Math.max(p1.y, p2.y)) {
+      None
+    }
+    else {
+      val det = -(x3 - x4)*(p1.y - p2.y)
+      if (det == 0.0) {
+        None
+      }
+      else {
+        val x_res = ((p1.x*p2.y - p1.y*p2.x)*(x3 - x4) - y*(p1.x - p2.x)*(x3 - x4)) / det
+
+        if(x_res >= Math.min(x3, x4) && x_res <= Math.max(x3, x4))
+          Some(APoint(x_res, y))
+        else
+          None
+      }
+    }
+  }
+
+  def intersection(inside: APoint, outside: APoint) = {
+    val result =
+    segmentIntersectionHorizontal (inside, outside, topLeft.x,         topLeft.x + width, topLeft.y).getOrElse (
+    segmentIntersectionHorizontal (inside, outside, topLeft.x,         topLeft.x + width, topLeft.y + height).getOrElse (
+    segmentIntersectionVertical   (inside, outside, topLeft.x,         topLeft.y        , topLeft.y + height).getOrElse (
+    segmentIntersectionVertical   (inside, outside, topLeft.x + width, topLeft.y        , topLeft.y + height).get
+    )))
+
+    result
+  }
 }
 
 object ARect {

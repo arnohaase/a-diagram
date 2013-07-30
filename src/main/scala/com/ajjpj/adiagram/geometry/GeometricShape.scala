@@ -6,4 +6,5 @@ package com.ajjpj.adiagram.geometry
  */
 trait GeometricShape {
   def contains(p: APoint): Boolean
+  def intersection(inside: APoint, outside: APoint): APoint
 }

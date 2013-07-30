@@ -20,7 +20,7 @@ class ALineShape(p0: APoint, p1: APoint, style: LineStyle, textStyle: TextStyle,
   override val bounds = {
     var decorationWidth = Math.max(startDecoration.width(style), endDecoration.width(style))
     text match {
-      case Some(_) => decorationWidth = Math.max(decorationWidth, style.width + textStyle.fontSizeInPixels)
+      case Some(_) => decorationWidth = Math.max(decorationWidth, style.width + textStyle.fontSizeInPixels*2)
       case None =>
     }
     val padding = Math.max(style.width, decorationWidth) / 2

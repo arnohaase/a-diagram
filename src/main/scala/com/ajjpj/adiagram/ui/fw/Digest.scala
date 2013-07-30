@@ -51,6 +51,7 @@ class Digest() {
   def bindBoolean                      (property: Property[java.lang.Boolean], expression: => Boolean) = bindings.bind(property, () => expression.asInstanceOf[java.lang.Boolean])
   def bindDouble[T <: java.lang.Number](property: Property[T],                 expression: => Double)  = bindings.bind(property, () => expression.asInstanceOf[T])
   def unbind(property: Property[_]) = bindings.unbind(property)
+  def isBound(property: Property[_]) = bindings.isBound(property)
 
   implicit def createEventHandler[T <: Event, R] (handler: T => R) = new EventHandler[T]() {
     def handle(p1: T) = execute (handler(p1))
@@ -73,6 +74,7 @@ class Digest() {
 
     def unbind(property: Property[_]) = bindings -= property
     def refreshAll() = bindings.values.foreach(_.refresh())
+    def isBound(property: Property[_]) = bindings.contains(property)
   }
 }
 

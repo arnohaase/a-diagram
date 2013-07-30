@@ -1,6 +1,7 @@
 todo
 ----
 * cleanup
+  * select arrow / line only when clicking close to the line, *not* on the entire bounding rectangle
   * test with Windows --> performance with accelerator engine?
   * automatically delete empty text shapes
   * text clipped for horizontal / vertical lines
@@ -49,7 +50,7 @@ todo
   * tree view with the logical structure
   * arrow between two boxes / shapes
   * different scaling for screen and export
-  * manual / explicit *relative* correction for visual start / end point of lines (x / y / *axial*)
+  * manual / explicit *relative* correction for visual start / end point of lines (x / y / *axial* / *distance from box*)
 * thoughts
   * shadow for lines (?)
   * OVERLAP for bounding line around boxes (?)
