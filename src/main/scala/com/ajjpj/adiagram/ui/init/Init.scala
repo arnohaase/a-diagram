@@ -12,8 +12,8 @@ import javafx.scene.control.ScrollPane
  * @author arno
  */
 object Init {
-  def initStage(stage: Stage, diagram: ADiagram) {
-    implicit val digest = new Digest()
+  def initStage(stage: Stage, diagram: ADiagram)(implicit digest: Digest) { //TODO move digest creation here at a later time?
+//    implicit val digest = new Digest()
 
 
     //TODO loosen the references using listeners?

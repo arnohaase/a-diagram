@@ -4,7 +4,7 @@ package com.ajjpj.adiagram.geometry
 /**
  * @author arno
  */
-class ARect(val topLeft: APoint, val dim: ADim) extends GeometricShape {
+case class ARect(topLeft: APoint, dim: ADim) extends GeometricShape {
   def topRight    = topLeft + ((dim.width, .0))
   def bottomLeft  = topLeft + ((.0, dim.height))
   def bottomRight = topLeft + ((dim.width, dim.height))
@@ -20,9 +20,8 @@ class ARect(val topLeft: APoint, val dim: ADim) extends GeometricShape {
 }
 
 object ARect {
-  def apply(p0: APoint, p1: APoint) = createWithPadding(0, p0, p1)
-  def apply(p: APoint, dim: ADim) = new ARect(p, dim)
-  def apply(p: APoint, width: Double, height: Double) = new ARect(p, ADim(width, height))
+  def apply(p0: APoint, p1: APoint): ARect = createWithPadding(0, p0, p1)
+  def apply(p: APoint, width: Double, height: Double): ARect = ARect(p, ADim(width, height))
 
   def fromCoordinates(x0: Double, y0: Double, x1: Double, y1: Double) = apply(APoint(x0, y0), APoint(x1, y1))
 

@@ -29,7 +29,7 @@ class Digest() {
     }
     finally {
       try {
-         postprocessors.foreach((p: () => Unit) => p())
+        postprocessors.foreach((p: () => Unit) => p())
       }
       catch {
         case exc: Throwable => handleCaughtException(exc)
@@ -62,6 +62,7 @@ class Digest() {
 
   private class Bindings {
     private val bindings = new mutable.WeakHashMap[Property[_], Binding[_]] ()
+//    private val bindings = new mutable.WeakHashMap[Property[_], Binding[_]] ()
     //TODO warning if a weak reference actually gets collected?!
 
     def bind[T](property: Property[T], expression: ()=>T) {
