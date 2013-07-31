@@ -1,7 +1,6 @@
 package com.ajjpj.adiagram.ui.fw
 
 import javafx.beans.property.Property
-import scala.collection.mutable
 import javafx.event.{EventHandler, Event}
 import scala.language.implicitConversions
 
@@ -48,12 +47,13 @@ class Digest() {
 
   //TODO bidirectional bindings (?)
   def bind[T] (target: T => _, source: => T) = bindings.bind(target, () => source)
+  def unbind[T] (target: T => _) = bindings.unbind(target)
 
-  def bind[T]                          (property: Property[T],                 expression: => T)       = bindings.bind(property, () => expression)
-  def bindBoolean                      (property: Property[java.lang.Boolean], expression: => Boolean) = bindings.bind(property, () => expression.asInstanceOf[java.lang.Boolean])
-  def bindDouble[T <: java.lang.Number](property: Property[T],                 expression: => Double)  = bindings.bind(property, () => expression.asInstanceOf[T])
-  def unbind(property: Property[_]) = bindings.unbind(property)
-  def isBound(property: Property[_]) = bindings.isBound(property)
+  def bind[T]                          (property: Property[T],                 expression: => T)       = bindings.bind(PropertyTarget(property), () => expression)
+  def bindBoolean                      (property: Property[java.lang.Boolean], expression: => Boolean) = bindings.bind(PropertyTarget(property), () => expression.asInstanceOf[java.lang.Boolean])
+  def bindDouble[T <: java.lang.Number](property: Property[T],                 expression: => Double)  = bindings.bind(PropertyTarget(property), () => expression.asInstanceOf[T])
+  def unbind(property: Property[_]) = bindings.unbind(PropertyTarget(property))
+  def isBound(property: Property[_]) = bindings.isBound(PropertyTarget(property))
 
   implicit def createEventHandler[T <: Event, R] (handler: T => R) = new EventHandler[T]() {
     def handle(p1: T) = execute (handler(p1))
@@ -71,20 +71,17 @@ class Digest() {
   }
 
   private class Bindings {
-    private val bindings = new mutable.WeakHashMap[Function1[_, _], Binding[_]] ()
-    //TODO warning if a weak reference actually gets collected?!
+    private var bindings = Map[Function1[_, _], Binding[_]] ()
 
     def bind[T](target: T => _, source: ()=>T) {
       val binding = new Binding(target, source)
       bindings += ((target, binding))
       binding.eval.update()
     }
-    def bind[T](property: Property[T], expression: ()=>T) {
-      bind(PropertyTarget(property), expression)
-    }
 
-    def isBound(property: Property[_]) = bindings contains PropertyTarget(property)
-    def unbind(property: Property[_]) = bindings -= PropertyTarget(property)
+    def isBound[T] (target: T => _) = bindings contains target
+
+    def unbind[T] (target: T => _):    Unit = if(isBound(target)) bindings -= target  else throw new IllegalArgumentException("target not bound")
 
     def refreshAll() = {
       var iterThreshold = SystemConfiguration.maxBindingRefreshIterations
