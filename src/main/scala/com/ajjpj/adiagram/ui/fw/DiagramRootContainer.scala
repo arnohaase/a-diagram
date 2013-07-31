@@ -3,7 +3,7 @@ package com.ajjpj.adiagram.ui.fw
 import javafx.scene.Node
 import javafx.collections.FXCollections
 import java.util.Comparator
-import javafx.scene.layout.Pane
+import javafx.scene.layout.{StackPane, Pane}
 
 /**
  * @author arno

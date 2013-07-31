@@ -5,7 +5,6 @@ todo
   * select arrow / line only when clicking close to the line, *not* on the entire bounding rectangle
   * test with Windows --> performance with accelerator engine?
   * automatically delete empty text shapes
-  * text clipped for horizontal / vertical lines
   * add four missing resize handles
   * limit re-rendering of shapes during interactive 'resize' etc.
   * serialize update rendering per shape
@@ -18,7 +17,11 @@ todo
   * remove 'press ESC to leave full screen mode' message
   * add tic marks to 'view' menu items
   * Boxes: strokeType.INSIDE (instead of CENTER)
+  * http://stackoverflow.com/questions/10403838/prevent-an-accordion-in-javafx-from-collapsing
 * features
+  * multi select
+    * drag a rectangle around shapes
+    * Shift+Click adds / removes
   * '+' / '-' moves shape forward / backward in Z Order
   * loading / saving diagrams
   * new diagram (another window)
@@ -38,12 +41,6 @@ todo
   * lines *between* boxes --> find point of intersection between line and box
   * different line style for lines 'behind' a box (e.g. dashed)
   * 'background boxes', i.e. borders used for visually grouping stuff
-* JavaFX APIs
-  * FontSmoothingType
-  * lighting
-  * reflection
-  * changed menu item text --> re-render problem?!
-* application
   * tool bar, status bar
   * accordion on the left
   * tree view with the logical structure
@@ -51,6 +48,11 @@ todo
   * different scaling for screen and export
   * manual / explicit *relative* correction for visual start / end point of lines (x / y / *axial* / *distance from box*)
   * text on line: correction (forward / backward and distance to line)
+* JavaFX APIs
+  * FontSmoothingType
+  * lighting
+  * reflection
+  * changed menu item text --> re-render problem?!
 * thoughts
   * shadow for lines (?)
   * OVERLAP for bounding line around boxes (?)

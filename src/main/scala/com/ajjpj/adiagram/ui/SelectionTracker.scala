@@ -1,9 +1,10 @@
-package com.ajjpj.adiagram.ui.fw
+package com.ajjpj.adiagram.ui
 
 import com.ajjpj.adiagram.model.{ALineSpec, AShapeSpec, ADiagram}
 import javafx.scene.shape.Rectangle
 import javafx.scene.paint.Color
 import com.ajjpj.adiagram.geometry.{Angle, APoint, ARect}
+import com.ajjpj.adiagram.ui.fw.{ZOrdered, SystemConfiguration, Digest, DiagramRootContainer}
 
 /**
  * @author arno

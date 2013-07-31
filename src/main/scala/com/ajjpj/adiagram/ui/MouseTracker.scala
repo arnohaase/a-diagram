@@ -1,8 +1,13 @@
-package com.ajjpj.adiagram.ui.fw
+package com.ajjpj.adiagram.ui
 
 import com.ajjpj.adiagram.model.{ALineSpec, AShapeSpec, ADiagram}
 import javafx.scene.input.MouseEvent
 import com.ajjpj.adiagram.geometry.APoint
+import com.ajjpj.adiagram.ui.fw._
+import scala.Some
+import com.ajjpj.adiagram.ui.ResizeDirection
+import scala.Some
+import com.ajjpj.adiagram.ui.ResizeDirection
 
 
 /**

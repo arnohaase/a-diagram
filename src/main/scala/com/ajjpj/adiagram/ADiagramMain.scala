@@ -10,6 +10,9 @@ import javafx.scene.text.TextAlignment
 import javafx.geometry.VPos
 import com.ajjpj.adiagram.ui.init.Init
 import com.ajjpj.adiagram.geometry.{ARect, ADim, APoint}
+import javafx.scene.control.{Button, SplitPane}
+import javafx.scene.Scene
+import javafx.scene.layout.StackPane
 
 
 /**

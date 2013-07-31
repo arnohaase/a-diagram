@@ -10,6 +10,8 @@ import com.ajjpj.adiagram.ui.fw._
 import javafx.scene.text.Text
 import scala.beans.BeanProperty
 import scala.Some
+import javafx.application.Platform
+import javafx.beans.value.{ChangeListener, ObservableValue}
 
 /**
  * @author arno
@@ -76,7 +78,7 @@ class JavaFxMain extends javafx.application.Application {
   }
 
   val accordion = {
-    val result=new Accordion()
+    val result = JavaFxHelper.createUncollapsableAccordion()
     result.getPanes().add(new TitledPane("asdf", new Button("asdf")))
     result.getPanes().add(new TitledPane("jklö", new Button("jklö")))
     result.getPanes().add(new TitledPane("123", new Button("123")))

@@ -4,12 +4,13 @@ import javafx.stage.{Modality, StageStyle, Stage}
 import javafx.scene.{Scene, Node}
 import java.util.concurrent.atomic.{AtomicReference, AtomicBoolean}
 import javafx.scene.layout.{HBox, BorderPane}
-import javafx.scene.control.Button
+import javafx.scene.control.{TitledPane, Accordion, Button}
 import javafx.geometry.Pos
 import javafx.event.{EventHandler, ActionEvent}
 import javafx.scene.input.KeyCombination
 import javafx.application.Platform
 import java.util.concurrent.CountDownLatch
+import javafx.beans.value.{ObservableValue, ChangeListener}
 
 
 /**
@@ -18,6 +19,25 @@ import java.util.concurrent.CountDownLatch
 object JavaFxHelper {
   import scala.language.implicitConversions
   implicit def keyCombinationFromString(s: String) = KeyCombination.keyCombination(s)
+
+  def createUncollapsableAccordion() = {
+    val result = new Accordion()
+    result.expandedPaneProperty().addListener(new ChangeListener[TitledPane]() {
+      override def changed(property: ObservableValue[_ <:  TitledPane], oldPane: TitledPane, newPane: TitledPane) {
+        if (oldPane != null) {
+          oldPane.setCollapsible(true)
+        }
+        if (newPane != null) {
+          Platform.runLater(new Runnable() {
+            override def run() {
+              newPane.setCollapsible(false)
+            }
+          })
+        }
+      }
+    })
+    result
+  }
 
   /**
    * runs a piece of code in the UI thread in the context of a Digest
