@@ -29,7 +29,9 @@ class Digest() {
     }
     finally {
       try {
+        val start = System.nanoTime
         postprocessors.foreach((p: () => Unit) => p())
+        println ("postprocessing: " + (System.nanoTime - start) + "ns")
       }
       catch {
         case exc: Throwable => handleCaughtException(exc)
@@ -47,7 +49,8 @@ class Digest() {
   }
 
   //TODO bidirectional bindings
-  def bind[T](property: Property[T], expression: => T)                        = bindings.bind(property, () => expression)
+  //TODO cascading bindings
+  def bind[T]                          (property: Property[T],                 expression: => T)       = bindings.bind(property, () => expression)
   def bindBoolean                      (property: Property[java.lang.Boolean], expression: => Boolean) = bindings.bind(property, () => expression.asInstanceOf[java.lang.Boolean])
   def bindDouble[T <: java.lang.Number](property: Property[T],                 expression: => Double)  = bindings.bind(property, () => expression.asInstanceOf[T])
   def unbind(property: Property[_]) = bindings.unbind(property)
@@ -57,24 +60,45 @@ class Digest() {
     def handle(p1: T) = execute (handler(p1))
   }
 
-  private[Digest] class Binding[T] (property: Property[T], expression: () => T) {
-    def refresh() = property.setValue(expression())
+  private[Digest] case class Binding[T] (property: Property[T], expression: () => T) {
+    def eval = Eval[T] (this, expression())
+  }
+  private[Digest] case class Eval[T] (binding: Binding[T], value: T) {
+    def update() = binding.property.setValue(value)
   }
 
   private class Bindings {
     private val bindings = new mutable.WeakHashMap[Property[_], Binding[_]] ()
-//    private val bindings = new mutable.WeakHashMap[Property[_], Binding[_]] ()
     //TODO warning if a weak reference actually gets collected?!
 
     def bind[T](property: Property[T], expression: ()=>T) {
       val binding = new Binding(property, expression)
       bindings += ((property, binding))
-      binding.refresh()
+      binding.eval.update()
     }
 
-    def unbind(property: Property[_]) = bindings -= property
-    def refreshAll() = bindings.values.foreach(_.refresh())
     def isBound(property: Property[_]) = bindings.contains(property)
+    def unbind(property: Property[_]) = bindings -= property
+
+    def refreshAll() = {
+      var iterThreshold = SystemConfiguration.maxBindingRefreshIterations
+
+      def eval = bindings.values.map(_.eval)
+
+      var prevValues: Traversable[Eval[_]] = Nil
+      var newValues = eval
+
+      while(newValues != prevValues) {
+        newValues.foreach(_.update()) //TODO is it more efficient to only update those values that changed since last time?
+        prevValues = newValues
+        newValues = eval
+
+        iterThreshold -= 1
+        if(iterThreshold < 0) {
+          throw new IllegalStateException("binding values do not converge - terminating")
+        }
+      }
+    }
   }
 }
 

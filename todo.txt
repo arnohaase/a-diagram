@@ -1,8 +1,12 @@
 todo
 ----
+* next
+  * flesh out 'current selection' dialog
+  * attach / detach line to boxes via mouse
+
 * cleanup
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
-  * select arrow / line only when clicking close to the line, *not* on the entire bounding rectangle
+  * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
   * test with Windows --> performance with accelerator engine?
   * automatically delete empty text shapes
   * add four missing resize handles
@@ -17,8 +21,8 @@ todo
   * remove 'press ESC to leave full screen mode' message
   * add tic marks to 'view' menu items
   * Boxes: strokeType.INSIDE (instead of CENTER)
-  * http://stackoverflow.com/questions/10403838/prevent-an-accordion-in-javafx-from-collapsing
 * features
+  * view menu: show / hide accordion
   * multi select
     * drag a rectangle around shapes
     * Shift+Click adds / removes
@@ -28,7 +32,6 @@ todo
   * dirty state of a diagram --> 'are you sure' dialog
   * delete diagram element
   * new diagram element
-  * double click --> details dialog
   * grid (optional) in the background
   * Ctrl-Resize, Shift-Resize
   * Ctrl-Move, Shift-Move
