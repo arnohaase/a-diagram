@@ -40,8 +40,14 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
       case ShapeTarget(sh) =>
         initialSelectOnly = true
         dragState = Some(DragState(p, p))
+
+        val prevSelection = selections.selectedShapes
         selections.setSelection(sh)
+        digest.undoRedo.push(new SelectShapeCommand(prevSelection, List(sh)))
       case NoMouseTarget =>
+        if(! selections.selectedShapes.isEmpty) {
+          digest.undoRedo.push(new SelectShapeCommand(selections.selectedShapes, Nil))
+        }
         selections.clearSelection()
     }
 
@@ -134,6 +140,12 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
   }
 
 
+
+  case class SelectShapeCommand(prevSelection: Iterable[AShapeSpec], newSelection: Iterable[AShapeSpec]) extends Command {
+    def name = "Select"
+    def undo() = selections.setSelection(prevSelection)
+    def redo() = selections.setSelection(newSelection)
+  }
 
   class LineEndMoveCommand(lineSpec: ALineSpec, isStartEnd: Boolean, deltaSnapshot: APoint) extends Command {
     def name = "Move Line End"

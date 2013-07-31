@@ -1,15 +1,13 @@
 todo
 ----
 * cleanup
-  * dragging: combine 'move' and 'resize' into a single operation, i.e. apply the entire operation only after the new rendered image is available
+  * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
   * select arrow / line only when clicking close to the line, *not* on the entire bounding rectangle
   * test with Windows --> performance with accelerator engine?
   * automatically delete empty text shapes
   * text clipped for horizontal / vertical lines
   * add four missing resize handles
   * limit re-rendering of shapes during interactive 'resize' etc.
-  * command (i.e. undo / redo) for selection
-  * special treatment for 'select click' --> no 'move' operation - but what are good criteria?!
   * serialize update rendering per shape
     * delay re-rendering during drag: only one concurrently running re-rendering?
     * limit thread pool size for background tasks
