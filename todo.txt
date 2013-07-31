@@ -5,6 +5,8 @@ todo
   * attach / detach line to boxes via mouse
 
 * cleanup
+  * undo redo stack should merge commands (i.e. ask them to merge if they can
+  * undo redo stack should support 'snapshot' for rollbacks --> 'cancel' / 'reset' in a dialog
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
   * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
   * test with Windows --> performance with accelerator engine?

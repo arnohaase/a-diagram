@@ -17,6 +17,7 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
   private val p0BindingProp = new SimpleObjectProperty[(APoint, ARect)]()
   private val p1BindingProp = new SimpleObjectProperty[(APoint, ARect)]()
 
+
   p0BindingProp.addListener(new ChangeListener[(APoint, ARect)]() {
     def changed(o: ObservableValue[_ <: (APoint, ARect)], oldValue: (APoint, ARect), newValue: (APoint, ARect)) {
       if(oldValue != newValue) {

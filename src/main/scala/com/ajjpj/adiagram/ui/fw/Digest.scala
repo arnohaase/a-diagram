@@ -29,9 +29,7 @@ class Digest() {
     }
     finally {
       try {
-        val start = System.nanoTime
         postprocessors.foreach((p: () => Unit) => p())
-        println ("postprocessing: " + (System.nanoTime - start) + "ns")
       }
       catch {
         case exc: Throwable => handleCaughtException(exc)
@@ -48,8 +46,9 @@ class Digest() {
     None
   }
 
-  //TODO bidirectional bindings
-  //TODO cascading bindings
+  //TODO bidirectional bindings (?)
+  def bind[T] (target: T => _, source: => T) = bindings.bind(target, () => source)
+
   def bind[T]                          (property: Property[T],                 expression: => T)       = bindings.bind(property, () => expression)
   def bindBoolean                      (property: Property[java.lang.Boolean], expression: => Boolean) = bindings.bind(property, () => expression.asInstanceOf[java.lang.Boolean])
   def bindDouble[T <: java.lang.Number](property: Property[T],                 expression: => Double)  = bindings.bind(property, () => expression.asInstanceOf[T])
@@ -60,25 +59,32 @@ class Digest() {
     def handle(p1: T) = execute (handler(p1))
   }
 
-  private[Digest] case class Binding[T] (property: Property[T], expression: () => T) {
-    def eval = Eval[T] (this, expression())
+  private[Digest] case class Binding[T] (target: T => _, source: () => T) {
+    def eval = Eval[T] (this, source())
   }
   private[Digest] case class Eval[T] (binding: Binding[T], value: T) {
-    def update() = binding.property.setValue(value)
+    def update() = binding.target(value)
+  }
+
+  private[Digest] case class PropertyTarget[T] (prop: Property[T]) extends Function1[T, Unit] {
+    override def apply(value: T) = prop.setValue(value)
   }
 
   private class Bindings {
-    private val bindings = new mutable.WeakHashMap[Property[_], Binding[_]] ()
+    private val bindings = new mutable.WeakHashMap[Function1[_, _], Binding[_]] ()
     //TODO warning if a weak reference actually gets collected?!
 
-    def bind[T](property: Property[T], expression: ()=>T) {
-      val binding = new Binding(property, expression)
-      bindings += ((property, binding))
+    def bind[T](target: T => _, source: ()=>T) {
+      val binding = new Binding(target, source)
+      bindings += ((target, binding))
       binding.eval.update()
     }
+    def bind[T](property: Property[T], expression: ()=>T) {
+      bind(PropertyTarget(property), expression)
+    }
 
-    def isBound(property: Property[_]) = bindings.contains(property)
-    def unbind(property: Property[_]) = bindings -= property
+    def isBound(property: Property[_]) = bindings contains PropertyTarget(property)
+    def unbind(property: Property[_]) = bindings -= PropertyTarget(property)
 
     def refreshAll() = {
       var iterThreshold = SystemConfiguration.maxBindingRefreshIterations
