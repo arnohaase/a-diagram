@@ -12,7 +12,10 @@ import com.ajjpj.adiagram.ui.fw.{ZOrdered, SystemConfiguration, Digest, DiagramR
 class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit digest: Digest) {
   val HANDLE_SIZE = 10
 
+  type ChangeListener = (Traversable[AShapeSpec], Traversable[AShapeSpec]) => Unit
+
   private var _selectedShapes = Set[AShapeSpec]()
+  var selectionChangeListeners = Set[ChangeListener] ()
 
   private val topLeftHandle     = new BoxSelectionHandle(ResizeDirection(left = true,  top = true,  right = false, bottom = false))
   private val topRightHandle    = new BoxSelectionHandle(ResizeDirection(left = false, top = true,  right = true,  bottom = false))
@@ -30,16 +33,25 @@ class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit 
 
   def selectedShapes = _selectedShapes
 
-  def setSelection(sel: AShapeSpec):           Unit = _selectedShapes = Set(sel)
-  def setSelection(sel: Iterable[AShapeSpec]): Unit = _selectedShapes = Set() ++ sel
+  private def withChangeEvent[T] (code: => T): T = {
+    val oldSel = selectedShapes
+    val result = code
+    if(oldSel != selectedShapes) {
+      selectionChangeListeners.foreach(l => l(oldSel, selectedShapes))
+    }
+    result
+  }
 
-  def addSelection(sel: AShapeSpec):           Unit = _selectedShapes += sel
-  def addSelection(sel: Iterable[AShapeSpec]): Unit = _selectedShapes ++= sel
+  def setSelection(sel: AShapeSpec):           Unit = withChangeEvent { _selectedShapes = Set(sel) }
+  def setSelection(sel: Iterable[AShapeSpec]): Unit = withChangeEvent { _selectedShapes = Set() ++ sel }
 
-  def removeSelection(sel: AShapeSpec):           Unit = _selectedShapes -= sel
-  def removeSelection(sel: Iterable[AShapeSpec]): Unit = _selectedShapes --= sel
+  def addSelection(sel: AShapeSpec):           Unit = withChangeEvent { _selectedShapes += sel }
+  def addSelection(sel: Iterable[AShapeSpec]): Unit = withChangeEvent { _selectedShapes ++= sel }
 
-  def clearSelection() = _selectedShapes = Set()
+  def removeSelection(sel: AShapeSpec):           Unit = withChangeEvent { _selectedShapes -= sel }
+  def removeSelection(sel: Iterable[AShapeSpec]): Unit = withChangeEvent { _selectedShapes --= sel }
+
+  def clearSelection() = withChangeEvent { _selectedShapes = Set() }
 
   def resizeDirFor (p: APoint): Option[ResizeDirection] =
     if(topLeftHandle.isVisible)

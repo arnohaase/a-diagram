@@ -11,6 +11,7 @@ import javafx.scene.input.KeyCombination
 import javafx.application.Platform
 import java.util.concurrent.CountDownLatch
 import javafx.beans.value.{ObservableValue, ChangeListener}
+import scala.reflect.ClassTag
 
 
 /**
@@ -19,6 +20,23 @@ import javafx.beans.value.{ObservableValue, ChangeListener}
 object JavaFxHelper {
   import scala.language.implicitConversions
   implicit def keyCombinationFromString(s: String) = KeyCombination.keyCombination(s)
+
+  def enclosingNode[T <: Node](node: Node)(implicit ct: ClassTag[T]): Option[T] = {
+    var candidate = node
+    while(candidate.getParent != null) {
+      candidate = candidate.getParent
+      if(candidate.getClass == ct.runtimeClass) {
+        return Some(candidate.asInstanceOf[T])
+      }
+    }
+    None
+  }
+
+  def expandAccordionPaneFor(n: Node) {
+    val titledPane = enclosingNode[TitledPane](n).get
+    val accordion = enclosingNode[Accordion](titledPane).get
+    accordion.setExpandedPane(titledPane)
+  }
 
   def createUncollapsableAccordion() = {
     val result = new Accordion()
