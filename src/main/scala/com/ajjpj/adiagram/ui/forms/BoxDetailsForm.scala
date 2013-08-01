@@ -5,7 +5,6 @@ import javafx.geometry.{Insets, Pos}
 import javafx.scene.control.{TextField, Label}
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
 import com.ajjpj.adiagram.model.ABoxSpec
-import javafx.beans.value.{ObservableValue, ChangeListener}
 
 /**
  * @author arno
@@ -26,15 +25,14 @@ class BoxDetailsForm (implicit digest: Digest) extends GridPane {
   def bind(boxSpec: ABoxSpec)(implicit digest: Digest) = {
     //TODO request focus - calling txtText.requestFocus does not appear to work...
 
-    txtText.setText(boxSpec.text.getOrElse(""))
+    digest.bind(txtText.textProperty, boxSpec.text.getOrElse(""))
 
     digest.bind((txt: String) => { //TODO bind bidirectionally - necessary for 'undo' to work!!!
-      println("txt")
       val txtOption = if (txt.trim.isEmpty) None else Some(txt)
 
       if(txtOption != boxSpec.text) {
         digest.undoRedo.push(new ChangeTextCommand(boxSpec, boxSpec.text, txtOption))
-        boxSpec.atomicUpdate {println ("+"); boxSpec.text = Some(txt)}
+        boxSpec.atomicUpdate {boxSpec.text = Some(txt)}
       }
     }, txtText.getText)
   }

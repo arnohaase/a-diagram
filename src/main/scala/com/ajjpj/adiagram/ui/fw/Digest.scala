@@ -60,11 +60,11 @@ class Digest() {
    */
   def registerEventSource[T] (prop: Property[T]) {
     prop.addListener(new ChangeListener[T] {
-      var executing = false
+      var propChangeInProgress = false
 
       def changed(o: ObservableValue[_ <: T], oldValue: T, newValue: T) {
-        if(! executing) {
-          executing = true
+        if(! propChangeInProgress && !isExecuting) {
+          propChangeInProgress = true
           try {
             prop.setValue(oldValue)
             execute {
@@ -72,7 +72,7 @@ class Digest() {
             }
           }
           finally {
-            executing = false
+            propChangeInProgress = false
           }
         }
       }
@@ -80,7 +80,7 @@ class Digest() {
   }
 
   //TODO bidirectional bindings (?)
-  def bind[T] (target: T => _, source: => T) = bindings.bind(target, () => source)
+  def bind[T]   (target: T => _, source: => T) = bindings.bind(target, () => source)
   def unbind[T] (target: T => _) = bindings.unbind(target)
 
   def bind[T]                          (property: Property[T],                 expression: => T)       = bindings.bind(PropertyTarget(property), () => expression)
@@ -128,7 +128,9 @@ class Digest() {
       var newValues = snapshot
 
       while(newValues != prevValues) {
-        newValues.foreach(_._2.update()) //TODO is it more efficient to only update those values that changed since last time?
+        val changedFilter = (e: (BindingKey, Eval[_])) => e._2.value != prevValues.get(e._1).map(_.value).getOrElse(this)
+
+        newValues.withFilter(changedFilter).foreach(_._2.update())
         prevValues = newValues
         newValues = snapshot
 
