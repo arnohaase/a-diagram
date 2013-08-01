@@ -3,6 +3,7 @@ package com.ajjpj.adiagram.ui.fw
 import javafx.beans.property.Property
 import javafx.event.{EventHandler, Event}
 import scala.language.implicitConversions
+import javafx.beans.value.{ObservableValue, ChangeListener}
 
 
 /**
@@ -17,23 +18,33 @@ class Digest() {
   private val bindings = new Bindings()
   private var postprocessors: List[() => Unit] = Nil
 
+  private var _isExecuting = false
+  def isExecuting = _isExecuting
+
   def registerPostprocessor(p: () => Unit) = postprocessors = p :: postprocessors
 
   def execute[T](callback: => T): Option[T] = {
-    val initialSnapshot = bindings.snapshot
-    try {
+    if(isExecuting)
       Some(callback)
-    }
-    catch {
-      case exc: Exception => handleCaughtException(exc)
-    }
-    finally {
+    else {
+      _isExecuting = true
+
+      val initialSnapshot = bindings.snapshot
       try {
-        bindings.refreshAll(initialSnapshot)
-        postprocessors.foreach((p: () => Unit) => p())
+        Some(callback)
       }
       catch {
-        case exc: Throwable => handleCaughtException(exc)
+        case exc: Exception => handleCaughtException(exc)
+      }
+      finally {
+        try {
+          bindings.refreshAll(initialSnapshot)
+          postprocessors.foreach((p: () => Unit) => p())
+        }
+        catch {
+          case exc: Throwable => handleCaughtException(exc)
+        }
+        _isExecuting = false
       }
     }
   }
@@ -41,6 +52,31 @@ class Digest() {
   def handleCaughtException(exc: Throwable) = {
     exc.printStackTrace() //TODO exception handling
     None
+  }
+
+  /**
+   * This causes changes to a JavaFX property to be fired through the Digest - i.e. even if a change to
+   *  the property happens *outside* an 'execute' call, that change triggers a Digest loop
+   */
+  def registerEventSource[T] (prop: Property[T]) {
+    prop.addListener(new ChangeListener[T] {
+      var executing = false
+
+      def changed(o: ObservableValue[_ <: T], oldValue: T, newValue: T) {
+        if(! executing) {
+          executing = true
+          try {
+            prop.setValue(oldValue)
+            execute {
+              prop.setValue(newValue)
+            }
+          }
+          finally {
+            executing = false
+          }
+        }
+      }
+    })
   }
 
   //TODO bidirectional bindings (?)

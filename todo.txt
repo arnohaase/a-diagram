@@ -7,7 +7,6 @@ todo
   * attach / detach line to boxes via mouse
 
 * cleanup
-  * repaint problem: select box, change text: change only visible after mouse move on diagram
   * undo redo stack should merge commands (i.e. ask them to merge if they can
   * undo redo stack should support 'snapshot' for rollbacks --> 'cancel' / 'reset' in a dialog
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
