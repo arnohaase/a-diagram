@@ -2,9 +2,13 @@ todo
 ----
 * next
   * flesh out 'current selection' dialog
+    * line
   * attach / detach line to boxes via mouse
 
-* cleanup
+* features
+  * Style Repository
+    * additional accordion entry
+    * offer in text / line / box details form ('live' binding)
   * TextDetailsForm
     * 'fit to text' checkbox
   * undo redo stack should merge commands (i.e. ask them to merge if they can
@@ -25,11 +29,11 @@ todo
   * remove 'press ESC to leave full screen mode' message
   * add tic marks to 'view' menu items
   * Boxes: strokeType.INSIDE (instead of CENTER)
-* features
   * view menu: show / hide accordion
   * multi select
     * drag a rectangle around shapes
     * Shift+Click adds / removes
+    * selection details form
   * '+' / '-' moves shape forward / backward in Z Order
   * loading / saving diagrams
   * new diagram (another window)
