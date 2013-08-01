@@ -3,10 +3,13 @@ package com.ajjpj.adiagram.ui.fw
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.FunSuite
 import javafx.beans.property.SimpleStringProperty
+import org.junit.runner.RunWith
+import org.scalatest.junit.JUnitRunner
 
 /**
  * @author arno
  */
+@RunWith(classOf[JUnitRunner])
 class DigestTest extends FunSuite with ShouldMatchers {
   test("bind target function") {
     val digest = new Digest()

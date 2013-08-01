@@ -37,7 +37,7 @@ object Init {
     stage.setScene(scene)
   }
 
-  private def createAccordion(selections: SelectionTracker) = {
+  private def createAccordion(selections: SelectionTracker)(implicit digest: Digest) = {
     import JavaConversions._
 
     val accordion = JavaFxHelper.createUncollapsableAccordion()
@@ -48,7 +48,7 @@ object Init {
     accordion.getPanes().add(new TitledPane("jklö", new Button("jklö")))
     accordion.getPanes().add(new TitledPane("123", new Button("123")))
 
-    val width = 200 //TODO better approach? Must not change when content changes, though...
+    val width = SystemConfiguration.leftAccordionWidth //TODO better approach? Must not change when content changes, though...
     accordion.getPanes.foreach (p => {
       p.setMinWidth(width)
       p.setMaxWidth(width)

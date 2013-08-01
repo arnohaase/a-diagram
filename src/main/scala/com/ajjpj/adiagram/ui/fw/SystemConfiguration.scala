@@ -4,6 +4,8 @@ package com.ajjpj.adiagram.ui.fw
  * @author arno
  */
 object SystemConfiguration {
+  val leftAccordionWidth = 250
+
   val maxBindingRefreshIterations = 10
 
   val selectToDragThreshold = 10.0

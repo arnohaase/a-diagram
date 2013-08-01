@@ -15,11 +15,12 @@ class Digest() {
   val undoRedo = new UndoRedoStack
 
   private val bindings = new Bindings()
-  private var postprocessors: List[() => Unit] = List(refreshAllBindings _)
+  private var postprocessors: List[() => Unit] = Nil
 
   def registerPostprocessor(p: () => Unit) = postprocessors = p :: postprocessors
 
   def execute[T](callback: => T): Option[T] = {
+    val initialSnapshot = bindings.snapshot
     try {
       Some(callback)
     }
@@ -28,16 +29,13 @@ class Digest() {
     }
     finally {
       try {
+        bindings.refreshAll(initialSnapshot)
         postprocessors.foreach((p: () => Unit) => p())
       }
       catch {
         case exc: Throwable => handleCaughtException(exc)
       }
     }
-  }
-
-  private def refreshAllBindings() {
-    bindings.refreshAll()
   }
 
   def handleCaughtException(exc: Throwable) = {
@@ -71,7 +69,9 @@ class Digest() {
   }
 
   private class Bindings {
-    private var bindings = Map[Function1[_, _], Binding[_]] ()
+    type BindingKey = Function1[_,_]
+
+    private var bindings = Map[BindingKey, Binding[_]] ()
 
     def bind[T](target: T => _, source: ()=>T) {
       val binding = new Binding(target, source)
@@ -81,20 +81,20 @@ class Digest() {
 
     def isBound[T] (target: T => _) = bindings contains target
 
-    def unbind[T] (target: T => _):    Unit = if(isBound(target)) bindings -= target  else throw new IllegalArgumentException("target not bound")
+    def unbind[T] (target: T => _): Unit = if(isBound(target)) bindings -= target else throw new IllegalArgumentException("target not bound")
 
-    def refreshAll() = {
+    def snapshot: Map[BindingKey, Eval[_]] = bindings.transform((k, v) => v.eval)
+
+    def refreshAll(initialSnapshot: Map[BindingKey, Eval[_]]) = {
       var iterThreshold = SystemConfiguration.maxBindingRefreshIterations
 
-      def eval = bindings.values.map(_.eval)
-
-      var prevValues: Traversable[Eval[_]] = Nil
-      var newValues = eval
+      var prevValues = initialSnapshot
+      var newValues = snapshot
 
       while(newValues != prevValues) {
-        newValues.foreach(_.update()) //TODO is it more efficient to only update those values that changed since last time?
+        newValues.foreach(_._2.update()) //TODO is it more efficient to only update those values that changed since last time?
         prevValues = newValues
-        newValues = eval
+        newValues = snapshot
 
         iterThreshold -= 1
         if(iterThreshold < 0) {
