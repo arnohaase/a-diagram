@@ -1,12 +1,12 @@
 todo
 ----
 * next
-  * bidirectional mapping
-  * fix change text command for boxes
   * flesh out 'current selection' dialog
   * attach / detach line to boxes via mouse
 
 * cleanup
+  * TextDetailsForm
+    * 'fit to text' checkbox
   * undo redo stack should merge commands (i.e. ask them to merge if they can
   * undo redo stack should support 'snapshot' for rollbacks --> 'cancel' / 'reset' in a dialog
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
@@ -65,6 +65,10 @@ todo
   * OVERLAP for bounding line around boxes (?)
   * sub-pixel anti-aliasing on rotated fonts
 
+* problems (--> JavaFX 8)
+  * disable context menu for TextField (interferes with 'undo' / Ctrl+Z)
+  * Stage with owner can still go to the background
+  * Accordion allows unexpanding of all elements
 
 * visual test suite (render to windows and files --> potentially different rendering engine?)
   * line endings at different angles and different line widths --> 'overlap' vs 'gap'
