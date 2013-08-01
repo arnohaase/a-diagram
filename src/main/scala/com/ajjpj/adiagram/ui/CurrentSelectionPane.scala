@@ -1,9 +1,9 @@
 package com.ajjpj.adiagram.ui
 
 import javafx.scene.layout.Pane
-import com.ajjpj.adiagram.model.{ATextSpec, ABoxSpec, AShapeSpec}
+import com.ajjpj.adiagram.model.{ALineSpec, ATextSpec, ABoxSpec, AShapeSpec}
 import com.ajjpj.adiagram.ui.fw.{Digest, JavaFxHelper}
-import com.ajjpj.adiagram.ui.forms.{TextDetailsForm, AbstractForm, BoxDetailsForm}
+import com.ajjpj.adiagram.ui.forms.{LineDetailsForm, TextDetailsForm, AbstractForm, BoxDetailsForm}
 
 
 /**
@@ -27,6 +27,7 @@ class CurrentSelectionPane(selections: SelectionTracker)(implicit digest: Digest
     curForm = selections.selectedShapes.toList match {
       case List(box:  ABoxSpec)  => Some(new BoxDetailsForm(box))
       case List(text: ATextSpec) => Some(new TextDetailsForm(text))
+      case List(line: ALineSpec) => Some(new LineDetailsForm(line))
       case _ => None
     }
 
