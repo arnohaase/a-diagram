@@ -191,7 +191,6 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
                                  oldStartBinding: Option[LineEndBindingSource], newStartBinding: Option[LineEndBindingSource],
                                  oldEndBinding:   Option[LineEndBindingSource], newEndBinding:   Option[LineEndBindingSource]) extends Command {
     def name = "Attach Line Ends"
-
     def isNop = oldStartBinding == newStartBinding && oldEndBinding == newEndBinding
 
     private def applyBinding(bindable: BindableLineEnd, bindingSource: Option[LineEndBindingSource]) {

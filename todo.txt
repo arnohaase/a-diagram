@@ -1,7 +1,7 @@
 todo
 ----
 * next
-  * attach / detach line to boxes via mouse
+  * zoom
 
 * features
   * Style Repository
@@ -41,7 +41,6 @@ todo
   * grid (optional) in the background
   * Ctrl-Resize, Shift-Resize
   * Ctrl-Move, Shift-Move
-  * zoom
   * line ends
     * full triangle
     * empty triangle
@@ -71,6 +70,7 @@ todo
   * disable context menu for TextField (interferes with 'undo' / Ctrl+Z)
   * Stage with owner can still go to the background
   * Accordion allows unexpanding of all elements
+  * repaint of changed menu item
 
 * visual test suite (render to windows and files --> potentially different rendering engine?)
   * line endings at different angles and different line widths --> 'overlap' vs 'gap'
