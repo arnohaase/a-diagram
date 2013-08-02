@@ -14,13 +14,13 @@ import javafx.beans.value.{ObservableValue, ChangeListener}
 class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineStyle: LineStyle, textStyle: TextStyle)(implicit digest: Digest) extends AShapeSpec {
   protected override def shape = new ALineShape(p0, p1, lineStyle, textStyle, new RoundedCornerLineEnd(.5), new RoundPointedArrowLineEnd(), text) //TODO configurable line ends
 
-  private val p0Binding = new BindableLineEnd(p0)
-  private val p1Binding = new BindableLineEnd(p1)
+  val p0Binding = new BindableLineEnd(this, p0)
+  val p1Binding = new BindableLineEnd(this, p1)
 
   p0Binding.opposite = () => p1Binding.unclippedValue
   p1Binding.opposite = () => p0Binding.unclippedValue
 
-  private def refreshPos() {
+  def refreshPos() {
     p0 = p0Binding.value
     p1 = p1Binding.value
   }
@@ -53,78 +53,48 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
   }
 
   protected def doMoveBy(delta: APoint) {
-    if(delta != APoint.ZERO) {
-      digest.undoRedo.push(new BindLineEndsCommand(p0Binding.bindingSource, None, p1Binding.bindingSource, None))
-      unbindStartPoint()
-      unbindEndPoint()
-    }
-
     p0 += delta
     p1 += delta
   }
-
-  private case class LineEndBindingSource (point: () => APoint, clipRect: () => ARect)
-  private case class BindLineEndsCommand(oldStartBinding: Option[LineEndBindingSource], newStartBinding: Option[LineEndBindingSource],
-                                         oldEndBinding:   Option[LineEndBindingSource], newEndBinding:   Option[LineEndBindingSource]) extends Command {
-    def name = "Attach Line Ends"
-
-    def isNop = oldStartBinding == newStartBinding && oldEndBinding == newEndBinding
-
-    private def applyBinding(bindable: BindableLineEnd, bindingSource: Option[LineEndBindingSource]) {
-      bindingSource match {
-        case Some(b) => bindable.bind(b.point(), b.clipRect())
-        case None    => bindable.unbind()
-      }
-    }
-
-    def undo() {
-      applyBinding(p0Binding, oldStartBinding)
-      applyBinding(p1Binding, oldEndBinding)
-    }
-
-    def redo() {
-      applyBinding(p0Binding, newStartBinding)
-      applyBinding(p1Binding, newEndBinding)
-    }
-  }
-
-  private case class PointAndClipRect (point: APoint, clipBounds: ARect)
-
-  private class BindableLineEnd(defaultValue: => APoint) {
-    var opposite: () => APoint = _
-
-    private val prop = new SimpleObjectProperty[PointAndClipRect]()
-    prop.addListener(new ChangeListener[PointAndClipRect] {
-      def changed(o: ObservableValue[_ <: PointAndClipRect], oldValue: PointAndClipRect, newValue: PointAndClipRect) {
-        atomicUpdate { refreshPos() }
-      }
-    })
-
-    private var point:      Option[() => APoint] = None
-    private var clipBounds: Option[() => ARect]  = None
-
-    def bindingSource = if(point.isDefined) Some(LineEndBindingSource(point.get, clipBounds.get)) else None
-
-    def unclippedValue = if(isBound) prop.getValue.point else defaultValue
-    def value = if(isBound) prop.getValue.clipBounds.intersection(prop.getValue.point, opposite()) else  defaultValue
-
-    def isBound = point.isDefined
-
-    def bind(box: ABoxSpec): Unit = bind(ARect(box.pos, box.dim).center, ARect(box.pos, box.dim))
-    def bind(p: => APoint, clipBounds: => ARect) {
-      unbind()
-      point = Some (() => p)
-      this.clipBounds = Some(() => clipBounds)
-      digest.bind(prop, PointAndClipRect(p, clipBounds))
-    }
-
-    def unbind() = {
-      if(isBound) {
-        digest.unbind(prop)
-        point = None
-        clipBounds = None
-      }
-    }
-  }
-
 }
+
+case class PointAndClipRect (point: APoint, clipBounds: ARect)
+case class LineEndBindingSource (point: () => APoint, clipRect: () => ARect)
+
+class BindableLineEnd(lineSpec: ALineSpec, defaultValue: => APoint)(implicit digest: Digest) {
+  var opposite: () => APoint = _
+
+  private val prop = new SimpleObjectProperty[PointAndClipRect]()
+  prop.addListener(new ChangeListener[PointAndClipRect] {
+    def changed(o: ObservableValue[_ <: PointAndClipRect], oldValue: PointAndClipRect, newValue: PointAndClipRect) {
+      lineSpec.atomicUpdate { lineSpec.refreshPos() }
+    }
+  })
+
+  private var point:      Option[() => APoint] = None
+  private var clipBounds: Option[() => ARect]  = None
+
+  def bindingSource = if(point.isDefined) Some(LineEndBindingSource(point.get, clipBounds.get)) else None
+
+  def unclippedValue = if(isBound) prop.getValue.point else defaultValue
+  def value = if(isBound) prop.getValue.clipBounds.intersection(prop.getValue.point, opposite()) else  defaultValue
+
+  def isBound = point.isDefined
+
+  def bind(box: ABoxSpec): Unit = bind(ARect(box.pos, box.dim).center, ARect(box.pos, box.dim))
+  def bind(p: => APoint, clipBounds: => ARect) {
+    unbind()
+    point = Some (() => p)
+    this.clipBounds = Some(() => clipBounds)
+    digest.bind(prop, PointAndClipRect(p, clipBounds))
+  }
+
+  def unbind() = {
+    if(isBound) {
+      digest.unbind(prop)
+      point = None
+      clipBounds = None
+    }
+  }
+}
+

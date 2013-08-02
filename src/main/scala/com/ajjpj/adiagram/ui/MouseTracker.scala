@@ -1,6 +1,6 @@
 package com.ajjpj.adiagram.ui
 
-import com.ajjpj.adiagram.model.{ABoxSpec, ALineSpec, AShapeSpec, ADiagram}
+import com.ajjpj.adiagram.model._
 import javafx.scene.input.MouseEvent
 import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.fw._
@@ -110,19 +110,27 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
       case Some(s) =>
         lineDragOverlay match {
           case Some(o) if o.activeItem.isDefined =>
-            if(s.isStartEnd)
-              selections.singleSelectedLine.bindStartPoint(o.activeItem.get.asInstanceOf[ABoxSpec])
-            else
-              selections.singleSelectedLine.bindEndPoint(o.activeItem.get.asInstanceOf[ABoxSpec])
-            //TODO command
-          case Some(o) =>
-            if(s.isStartEnd)
-              selections.singleSelectedLine.unbindStartPoint()
-            else
-              selections.singleSelectedLine.unbindEndPoint()
-            //TODO command
-            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+            val line = selections.singleSelectedLine
+            val oldStartBinding = line.p0Binding.bindingSource
+            val oldEndBinding   = line.p1Binding.bindingSource
 
+            if(s.isStartEnd)
+              line.atomicUpdate { line.bindStartPoint(o.activeItem.get.asInstanceOf[ABoxSpec]) }
+            else
+              line atomicUpdate { line.bindEndPoint(o.activeItem.get.asInstanceOf[ABoxSpec]) }
+            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+            digest.undoRedo.push(new BindLineEndsCommand (line.p0Binding, line.p1Binding, oldStartBinding, line.p0Binding.bindingSource, oldEndBinding, line.p1Binding.bindingSource))
+          case Some(o) =>
+            val line = selections.singleSelectedLine
+            val oldStartBinding = line.p0Binding.bindingSource
+            val oldEndBinding   = line.p1Binding.bindingSource
+
+            if(s.isStartEnd)
+              line.atomicUpdate { line.unbindStartPoint() }
+            else
+              line.atomicUpdate { line.unbindEndPoint() }
+            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+            digest.undoRedo.push(new BindLineEndsCommand (line.p0Binding, line.p1Binding, oldStartBinding, line.p0Binding.bindingSource, oldEndBinding, line.p1Binding.bindingSource))
           case None =>
             digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
         }
@@ -132,6 +140,13 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
     dragState match {
       case Some(s) =>
         if(! initialSelectOnly) {
+          selections.singleSelection[ALineSpec] match { //TODO mixed multi selection - unbind or bind?!
+            case Some(line) =>
+              digest.undoRedo.push(new BindLineEndsCommand (line.p0Binding, line.p1Binding, line.p0Binding.bindingSource, None, line.p1Binding.bindingSource, None))
+              line.unbindStartPoint()
+              line.unbindEndPoint()
+            case _ =>
+          }
           digest.undoRedo.push(new MoveCommand(selections.selectedShapes, p - s.initialPos))
         }
       case None =>
@@ -172,6 +187,30 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
   }
 
 
+  case class BindLineEndsCommand(bindableStart: BindableLineEnd, bindableEnd: BindableLineEnd,
+                                 oldStartBinding: Option[LineEndBindingSource], newStartBinding: Option[LineEndBindingSource],
+                                 oldEndBinding:   Option[LineEndBindingSource], newEndBinding:   Option[LineEndBindingSource]) extends Command {
+    def name = "Attach Line Ends"
+
+    def isNop = oldStartBinding == newStartBinding && oldEndBinding == newEndBinding
+
+    private def applyBinding(bindable: BindableLineEnd, bindingSource: Option[LineEndBindingSource]) {
+      bindingSource match {
+        case Some(b) => bindable.bind(b.point(), b.clipRect())
+        case None    => bindable.unbind()
+      }
+    }
+
+    def undo() {
+      applyBinding(bindableStart, oldStartBinding)
+      applyBinding(bindableEnd, oldEndBinding)
+    }
+
+    def redo() {
+      applyBinding(bindableStart, newStartBinding)
+      applyBinding(bindableEnd, newEndBinding)
+    }
+  }
 
   case class SelectShapeCommand(prevSelection: Iterable[AShapeSpec], newSelection: Iterable[AShapeSpec]) extends Command {
     def name = "Select"

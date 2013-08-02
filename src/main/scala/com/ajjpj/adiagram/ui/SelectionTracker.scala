@@ -5,6 +5,7 @@ import javafx.scene.shape.Rectangle
 import javafx.scene.paint.Color
 import com.ajjpj.adiagram.geometry.{Angle, APoint, ARect}
 import com.ajjpj.adiagram.ui.fw.{ZOrdered, SystemConfiguration, Digest, DiagramRootContainer}
+import scala.reflect.ClassTag
 
 /**
  * @author arno
@@ -87,7 +88,12 @@ class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit 
       sh.isInstanceOf[ALineSpec]
     }
 
-  def singleSelectedLine = selectedShapes.find(_=>true).get.asInstanceOf[ALineSpec]
+  def singleSelectedLine = singleSelection[ALineSpec].get
+
+  def singleSelection[T](implicit ct: ClassTag[T]): Option[T] = selectedShapes.toList match {
+    case h :: Nil if ct.runtimeClass.isInstance(h) => Some(h.asInstanceOf[T])
+    case _ => None
+  }
 
 
   private def selectionRect = if(selectedShapes.isEmpty)
