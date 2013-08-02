@@ -5,7 +5,7 @@ import com.ajjpj.adiagram.render.shapes.ALineShape
 import com.ajjpj.adiagram.render.base.{TextStyle, LineStyle}
 import com.ajjpj.adiagram.render.shapes.lineend.{RoundPointedArrowLineEnd, RoundedCornerLineEnd}
 import javafx.beans.property.SimpleObjectProperty
-import com.ajjpj.adiagram.ui.fw.Digest
+import com.ajjpj.adiagram.ui.fw.{Command, Digest}
 import javafx.beans.value.{ObservableValue, ChangeListener}
 
 /**
@@ -54,7 +54,7 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
 
   protected def doMoveBy(delta: APoint) {
     if(delta != APoint.ZERO) {
-//      digest.undoRedo.push(new BindLineEndsCommand(startPointBinding, None, endPointBinding, None))
+      digest.undoRedo.push(new BindLineEndsCommand(p0Binding.bindingSource, None, p1Binding.bindingSource, None))
       unbindStartPoint()
       unbindEndPoint()
     }
@@ -63,7 +63,32 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
     p1 += delta
   }
 
-  private[ALineSpec] case class PointAndClipRect (point: APoint, clipBounds: ARect)
+  private case class LineEndBindingSource (point: () => APoint, clipRect: () => ARect)
+  private case class BindLineEndsCommand(oldStartBinding: Option[LineEndBindingSource], newStartBinding: Option[LineEndBindingSource],
+                                         oldEndBinding:   Option[LineEndBindingSource], newEndBinding:   Option[LineEndBindingSource]) extends Command {
+    def name = "Attach Line Ends"
+
+    def isNop = oldStartBinding == newStartBinding && oldEndBinding == newEndBinding
+
+    private def applyBinding(bindable: BindableLineEnd, bindingSource: Option[LineEndBindingSource]) {
+      bindingSource match {
+        case Some(b) => bindable.bind(b.point(), b.clipRect())
+        case None    => bindable.unbind()
+      }
+    }
+
+    def undo() {
+      applyBinding(p0Binding, oldStartBinding)
+      applyBinding(p1Binding, oldEndBinding)
+    }
+
+    def redo() {
+      applyBinding(p0Binding, newStartBinding)
+      applyBinding(p1Binding, newEndBinding)
+    }
+  }
+
+  private case class PointAndClipRect (point: APoint, clipBounds: ARect)
 
   private class BindableLineEnd(defaultValue: => APoint) {
     var opposite: () => APoint = _
@@ -77,6 +102,8 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
 
     private var point:      Option[() => APoint] = None
     private var clipBounds: Option[() => ARect]  = None
+
+    def bindingSource = if(point.isDefined) Some(LineEndBindingSource(point.get, clipBounds.get)) else None
 
     def unclippedValue = if(isBound) prop.getValue.point else defaultValue
     def value = if(isBound) prop.getValue.clipBounds.intersection(prop.getValue.point, opposite()) else  defaultValue

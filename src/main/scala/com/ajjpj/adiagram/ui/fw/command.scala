@@ -4,6 +4,7 @@ package com.ajjpj.adiagram.ui.fw
 
 trait Command {
   def name: String
+  def isNop: Boolean
   def undo(): Unit
   def redo(): Unit
 }
@@ -27,8 +28,10 @@ class UndoRedoStack {
 
   def push(cmd: Command) {
     //TODO limit size
-    undoStack = cmd :: undoStack
-    redoStack = Nil
+    if (! cmd.isNop) {
+      undoStack = cmd :: undoStack
+      redoStack = Nil
+    }
   }
 
   def undo() = undoStack match {

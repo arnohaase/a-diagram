@@ -24,7 +24,7 @@ class TextDetailsForm (textSpec: ATextSpec)(implicit digest: Digest) extends Abs
 
   private case class ChangeTextCommand(textSpec: ATextSpec, oldText: String, newText: String) extends Command {
     def name = "Change Text"
-
+    def isNop = oldText == newText
     def undo() {textSpec.atomicUpdate {textSpec.text = oldText}}
     def redo() {textSpec.atomicUpdate {textSpec.text = newText}}
   }

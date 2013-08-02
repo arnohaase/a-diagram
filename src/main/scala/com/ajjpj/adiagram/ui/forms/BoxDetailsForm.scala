@@ -24,7 +24,7 @@ class BoxDetailsForm (boxSpec: ABoxSpec)(implicit digest: Digest) extends Abstra
 
   private case class ChangeTextCommand(boxSpec: ABoxSpec, oldText: Option[String], newText: Option[String]) extends Command {
     def name = "Change Box Text"
-
+    def isNop = oldText == newText
     def undo() {boxSpec.atomicUpdate {boxSpec.text = oldText}}
     def redo() {boxSpec.atomicUpdate {boxSpec.text = newText}}
   }

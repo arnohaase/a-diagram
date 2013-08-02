@@ -145,24 +145,28 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
 
   case class SelectShapeCommand(prevSelection: Iterable[AShapeSpec], newSelection: Iterable[AShapeSpec]) extends Command {
     def name = "Select"
+    def isNop = prevSelection == newSelection
     def undo() = selections.setSelection(prevSelection)
     def redo() = selections.setSelection(newSelection)
   }
 
   class LineEndMoveCommand(lineSpec: ALineSpec, isStartEnd: Boolean, deltaSnapshot: APoint) extends Command {
     def name = "Move Line End"
+    def isNop = deltaSnapshot == APoint.ZERO
     def undo() = lineSpec.atomicUpdate {if(isStartEnd) lineSpec.p0 -= deltaSnapshot else lineSpec.p1 -= deltaSnapshot}
     def redo() = lineSpec.atomicUpdate {if(isStartEnd) lineSpec.p0 += deltaSnapshot else lineSpec.p1 += deltaSnapshot}
   }
 
   class ResizeCommand(selSnapshot: Iterable[AShapeSpec], dirSnapshot: ResizeDirection, deltaSnapshot: APoint) extends Command {
     def name = "Resize" //TODO add type of shape
+    def isNop = deltaSnapshot == APoint.ZERO
     def undo() {selSnapshot.foreach(doDrag(_, dirSnapshot, deltaSnapshot.inverse))}
     def redo() {selSnapshot.foreach(doDrag(_, dirSnapshot, deltaSnapshot))}
   }
 
   class MoveCommand(selSnapshot: Iterable[AShapeSpec], deltaSnapshot: APoint) extends Command {
     def name = "Move" //TODO add type of shape
+    def isNop = deltaSnapshot == APoint.ZERO
     def undo() {selSnapshot.foreach(sh => sh.moveBy(deltaSnapshot.inverse))}
     def redo() {selSnapshot.foreach(sh => sh.moveBy(deltaSnapshot))}
   }

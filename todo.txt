@@ -4,8 +4,6 @@ todo
   * attach / detach line to boxes via mouse
 
 * features
-  * Command.isNop --> ignore digest.push
-
   * Style Repository
     * additional accordion entry
     * offer in text / line / box details form ('live' binding)

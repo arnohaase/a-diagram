@@ -24,7 +24,7 @@ class LineDetailsForm (lineSpec: ALineSpec)(implicit digest: Digest) extends Abs
 
   private case class ChangeTextCommand(lineSpec: ALineSpec, oldText: Option[String], newText: Option[String]) extends Command {
     def name = "Change Line Text"
-
+    def isNop = oldText == newText
     def undo() {lineSpec.atomicUpdate {lineSpec.text = oldText}}
     def redo() {lineSpec.atomicUpdate {lineSpec.text = newText}}
   }
