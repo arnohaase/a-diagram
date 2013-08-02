@@ -6,7 +6,7 @@ import com.ajjpj.adiagram.model.ADiagram
 import javafx.scene.Scene
 import javafx.scene.layout.BorderPane
 import javafx.scene.control.{Button, TitledPane, ScrollPane}
-import com.ajjpj.adiagram.ui.{CurrentSelectionPane, SelectionTracker, MouseTracker}
+import com.ajjpj.adiagram.ui.{ADiagramController, CurrentSelectionPane, SelectionTracker}
 import scala.collection.JavaConversions
 
 
@@ -20,12 +20,11 @@ object Init {
     val root = new DiagramRootContainer()
     diagram.initRootContainer(root)
 
-    val selections = new SelectionTracker(diagram, root)
-    new MouseTracker(root, diagram, selections)
+    val controller = new ADiagramController(root, diagram)
 
     val appPane = new BorderPane
     appPane.setTop(ADiagramMenuBar.create())
-    appPane.setLeft(createAccordion(selections))
+    appPane.setLeft(createAccordion(controller.selections))
 
     val scrollPane = new ScrollPane()
     scrollPane.setContent(root)
