@@ -73,8 +73,8 @@ trait AShapeSpec {
     doMoveBy(delta)
     shapeCanvas.setLayoutX((pos + shapeOffset).x)
     shapeCanvas.setLayoutY((pos + shapeOffset).y)
-    shadowCanvas.setLayoutX(((pos + shadowOffset).x))
-    shadowCanvas.setLayoutY(((pos + shadowOffset).y))
+    shadowCanvas.setLayoutX((pos + shadowOffset).x)
+    shadowCanvas.setLayoutY((pos + shadowOffset).y)
   }
 
   protected def doMoveBy(delta: APoint): Unit
