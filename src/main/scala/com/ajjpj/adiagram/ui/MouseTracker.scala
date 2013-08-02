@@ -1,6 +1,6 @@
 package com.ajjpj.adiagram.ui
 
-import com.ajjpj.adiagram.model.{ALineSpec, AShapeSpec, ADiagram}
+import com.ajjpj.adiagram.model.{ABoxSpec, ALineSpec, AShapeSpec, ADiagram}
 import javafx.scene.input.MouseEvent
 import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.fw._
@@ -18,6 +18,8 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
   private var dragState: Option[DragState] = None
   private var resizeState: Option[ResizeState] = None
   private var lineEndDragState: Option[LineEndDragState] = None
+
+  private var lineDragOverlay: Option[DragTargetOverlay] = None
 
   root.addEventHandler(MouseEvent.ANY, handle _)
 
@@ -39,6 +41,8 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
         resizeState = Some(ResizeState(dir, p, p))
       case LineHandleTarget(start) =>
         lineEndDragState = Some(LineEndDragState(start, p, p))
+        lineDragOverlay = Some(new DragTargetOverlay(diagram))
+        root.showOverlay(lineDragOverlay.get)
       case ShapeTarget(sh) =>
         initialSelectOnly = true
         dragState = Some(DragState(p, p))
@@ -54,6 +58,11 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
     }
 
   private def onDragged(p: APoint) {
+    lineDragOverlay match {
+      case Some(o) => o.onMouseMoved(p)
+      case None =>
+    }
+
     resizeState match {
       case Some(s) => onDraggedBoxHandle(s, p)
       case None =>
@@ -98,7 +107,25 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
     }
 
     lineEndDragState match {
-      case Some(s) => digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+      case Some(s) =>
+        lineDragOverlay match {
+          case Some(o) if o.activeItem.isDefined =>
+            if(s.isStartEnd)
+              selections.singleSelectedLine.bindStartPoint(o.activeItem.get.asInstanceOf[ABoxSpec])
+            else
+              selections.singleSelectedLine.bindEndPoint(o.activeItem.get.asInstanceOf[ABoxSpec])
+            //TODO command
+          case Some(o) =>
+            if(s.isStartEnd)
+              selections.singleSelectedLine.unbindStartPoint()
+            else
+              selections.singleSelectedLine.unbindEndPoint()
+            //TODO command
+            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+
+          case None =>
+            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+        }
       case None =>
     }
 
@@ -109,6 +136,9 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
         }
       case None =>
     }
+
+    lineDragOverlay = None
+    root.clearOverlay()
 
     dragState = None
     resizeState = None

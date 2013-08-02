@@ -11,6 +11,25 @@ import javafx.scene.layout.{StackPane, Pane}
 class DiagramRootContainer(implicit digest: Digest) extends Pane {
   digest.registerPostprocessor(sortByZ _)
 
+  private var curOverlay: Option[Pane] = None
+
+  def showOverlay(overlay: Pane) = {
+    clearOverlay()
+
+    val decorated = new Pane() with ZOrdered {
+      getChildren.add(overlay)
+      def z = Integer.MAX_VALUE
+    }
+
+    getChildren.add(decorated)
+    curOverlay = Some(decorated)
+  }
+
+  def clearOverlay() = curOverlay match {
+    case Some(o) => getChildren.remove(o); curOverlay = None
+    case None =>
+  }
+
   val byZComparator = new Comparator[Node] {
     def compare(o1: Node, o2: Node): Int = (o1, o2) match {
       case (n1: ZOrdered, n2: ZOrdered) =>
