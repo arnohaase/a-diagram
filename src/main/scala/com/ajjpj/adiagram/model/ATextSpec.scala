@@ -8,9 +8,12 @@ import com.ajjpj.adiagram.render.base.TextStyle
  * @author arno
  */
 class ATextSpec(var pos: APoint, var dim: ADim, var text: String, var textStyle: TextStyle) extends AShapeSpec {
-  protected def shape = new ATextShape(ARect(pos, dim), text, textStyle)
+  override def shape = new ATextShape(ARect(pos, dim), text, textStyle)
 
-  def resizeBy(delta: ADim) = dim += delta
+  override def resizeBy(delta: ADim) = dim += delta
+  override protected def doMoveBy(delta: APoint) = pos += delta
 
-  protected def doMoveBy(delta: APoint) = pos += delta
+  override def snapshot = TextSpecSnapshot (dim, text, textStyle)
+
+  case class TextSpecSnapshot(dim: ADim, text: String, textStyle: TextStyle) extends ShapeSpecReRenderSnapshot
 }

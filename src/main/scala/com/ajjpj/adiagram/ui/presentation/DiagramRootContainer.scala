@@ -1,9 +1,12 @@
-package com.ajjpj.adiagram.ui.fw
+package com.ajjpj.adiagram.ui.presentation
 
 import javafx.scene.Node
 import javafx.collections.FXCollections
 import java.util.Comparator
 import javafx.scene.layout.{StackPane, Pane}
+import com.ajjpj.adiagram.ui.fw.Digest
+import javafx.scene.input.MouseEvent
+import javafx.event.EventHandler
 
 /**
  * @author arno
@@ -49,6 +52,3 @@ class DiagramRootContainer(implicit digest: Digest) extends Pane {
   }
 }
 
-trait ZOrdered {
-  def z: Int
-}

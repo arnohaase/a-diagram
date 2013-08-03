@@ -6,8 +6,9 @@ import com.ajjpj.adiagram.model.ADiagram
 import javafx.scene.Scene
 import javafx.scene.layout.BorderPane
 import javafx.scene.control.{Button, TitledPane, ScrollPane}
-import com.ajjpj.adiagram.ui.{ADiagramController, CurrentSelectionPane, SelectionTracker}
+import com.ajjpj.adiagram.ui.{CurrentSelectionPane, SelectionTracker}
 import scala.collection.JavaConversions
+import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
 
 
 /**
@@ -34,6 +35,8 @@ object Init {
 
     stage.setTitle("..... ") //TODO bind to the diagram name
     stage.setScene(scene)
+
+    digest.execute{} // trigger the digest loop
   }
 
   private def createAccordion(selections: SelectionTracker)(implicit digest: Digest) = {

@@ -23,7 +23,7 @@ object ADiagramMenuBar {
 
 //  val menuBar = {
 //    val openAction = new SimpleAction(text="Open", accelerator = Some("Ctrl+O"), body= {
-//      counter.inc()
+//      changeCounter.inc()
 //      println(showOkCancelDialog(stage, "My Dialog", new Text(25, 25, "Hi There!")))
 //    })
 //    val saveAction = new SimpleAction(text="Save", body={})

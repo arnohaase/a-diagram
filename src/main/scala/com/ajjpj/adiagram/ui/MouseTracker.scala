@@ -5,6 +5,7 @@ import javafx.scene.input.MouseEvent
 import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.fw._
 import scala.Some
+import com.ajjpj.adiagram.ui.presentation.DiagramRootContainer
 
 
 /**

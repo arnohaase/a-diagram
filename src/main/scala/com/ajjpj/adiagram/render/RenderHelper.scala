@@ -17,7 +17,8 @@ object RenderHelper {
     result
   }
 
-  def snapshot(canvas: Canvas)(implicit digest: Digest) = JavaFxHelper.inUiThreadAndWait(canvas.snapshot(TransparentSnapshotParameters, null)).get // it is ok for None to trigger an exception - it was caused by one
+  //TODO replace 'new Digest' with something else that does the correct exception handling but not the event loop
+  def snapshot(canvas: Canvas) = JavaFxHelper.inUiThreadAndWait(canvas.snapshot(TransparentSnapshotParameters, null))(new Digest()).get // it is ok for None to trigger an exception - it was caused by one
 
   def actualHeightInPixels(f: Font) = {
     val fontMetrics = Toolkit.getToolkit().getFontLoader().getFontMetrics(f);

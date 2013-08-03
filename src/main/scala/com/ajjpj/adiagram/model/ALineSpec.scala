@@ -12,7 +12,7 @@ import javafx.beans.value.{ObservableValue, ChangeListener}
  * @author arno
  */
 class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineStyle: LineStyle, textStyle: TextStyle)(implicit digest: Digest) extends AShapeSpec {
-  protected override def shape = new ALineShape(p0, p1, lineStyle, textStyle, new RoundedCornerLineEnd(.5), new RoundPointedArrowLineEnd(), text) //TODO configurable line ends
+  override def shape = new ALineShape(p0, p1, lineStyle, textStyle, new RoundedCornerLineEnd(.5), new RoundPointedArrowLineEnd(), text) //TODO configurable line ends
 
   val p0Binding = new BindableLineEnd(this, p0)
   val p1Binding = new BindableLineEnd(this, p1)
@@ -34,7 +34,7 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
   def unbindEndPoint() = p1Binding.unbind()
 
   override def boundsForResizing = ARect(p0, p1)
-  protected def pos = boundsForResizing.topLeft
+  override def pos = boundsForResizing.topLeft
 
   def resizeBy(delta: ADim) {
     if(p0.x > p1.x) {
@@ -56,6 +56,10 @@ class ALineSpec(var p0: APoint, var p1: APoint, var text: Option[String], lineSt
     p0 += delta
     p1 += delta
   }
+
+  override def snapshot = ALineSpecSnapshot(p0, p1, text, lineStyle, textStyle)
+
+  case class ALineSpecSnapshot(p0: APoint, p1: APoint, text: Option[String], lineStyle: LineStyle, textStyle: TextStyle) extends ShapeSpecReRenderSnapshot
 }
 
 case class PointAndClipRect (point: APoint, clipBounds: ARect)
