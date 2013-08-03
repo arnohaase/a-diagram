@@ -6,6 +6,7 @@ import javafx.scene.canvas.Canvas
 import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
 import com.ajjpj.adiagram.render.base.{PartialImage, PartialImageWithShadow}
 import com.ajjpj.adiagram.ui.presentation.{ZOrdered, DiagramRootContainer}
+import com.ajjpj.adiagram.ui.Zoom
 
 
 /**
@@ -14,7 +15,7 @@ import com.ajjpj.adiagram.ui.presentation.{ZOrdered, DiagramRootContainer}
 trait AShapeSpec extends ZOrdered {
   private var _changeCounter = 0
   def changeCounter = _changeCounter
-  var z = 0 //TODO changes only in an 'atomicUpdate' call
+  var z = 0
 
   //TODO Node.pickOnBounds (ignore transparent pixels for purposes of mouse event routing) --> does not appear to work?!
 

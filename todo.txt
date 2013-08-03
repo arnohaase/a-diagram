@@ -3,8 +3,11 @@ todo
 * next
   * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
   * zoom
+  * initially, the connecting arrow has offset - mouse movement corrects
 
 * features
+  * wrapper around GraphicsContext (with implicit conversion) --> coordinates as 'AScreenPos' instead of 'Double'
+  * extract 'AbstractPoint' and 'AbstractRect' traits
   * Style Repository
     * additional accordion entry
     * offer in text / line / box details form ('live' binding)

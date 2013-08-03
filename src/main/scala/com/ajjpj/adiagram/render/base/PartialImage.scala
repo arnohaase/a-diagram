@@ -6,6 +6,7 @@ import javafx.scene.canvas.{Canvas, GraphicsContext}
 import com.ajjpj.adiagram.geometry.transform.Translation
 import com.ajjpj.adiagram.render.RenderHelper
 import com.ajjpj.adiagram.ui.fw.Digest
+import com.ajjpj.adiagram.ui.{AScreenPos, Zoom}
 
 
 /**
@@ -24,21 +25,21 @@ object PartialImage {
   type PartialImageRenderCallback = (GraphicsContext, Translation) => Unit
 
   /**
-   * @param bounds of the actual image (without shadow, if any)
+   * @param bounds of the actual image (toModel shadow, if any)
    * @param shadowStyle null if there is no shadow
    */
-  def fromGc(pos: APoint, bounds: ARect, shadowStyle: Option[ShadowStyle], callback: PartialImageRenderCallback)(implicit digest: Digest): PartialImageWithShadow = {
+  def fromGc(pos: APoint, bounds: ARect, zoom: Zoom, shadowStyle: Option[ShadowStyle], callback: PartialImageRenderCallback): PartialImageWithShadow = {
     // one pixel on each side for sub-pixel bleeding
-    val offset = bounds.topLeft + ((-1.0, -1.0))
+    val offset = bounds.topLeft + ((-1/zoom.factor, -1/zoom.factor))
 
-    val canvas = new Canvas(bounds.width+2, bounds.height+2)
+    val canvas = new Canvas(bounds.width*zoom.factor+2, bounds.height*zoom.factor+2)
     val t = Translation(offset.inverse)
     callback(canvas.getGraphicsContext2D, t)
 
     val img = RenderHelper.snapshot(canvas)
 
     shadowStyle match {
-      case Some(s) => new PartialImageWithShadow(new PartialImage(offset - pos, img), Some(new PartialImage(s.withShadowOffset(offset) - pos, s.shadow(img))))
+      case Some(s) => new PartialImageWithShadow(new PartialImage(offset - pos, img), Some(new PartialImage(s.withShadowOffset(offset) - pos, s.shadow(img, zoom))))
       case None    => new PartialImageWithShadow(new PartialImage(offset - pos, img), None)
     }
   }

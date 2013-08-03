@@ -2,7 +2,7 @@ package com.ajjpj.adiagram.ui.presentation
 
 import com.ajjpj.adiagram.model.{ShapeSpecReRenderSnapshot, AShapeSpec, ADiagram}
 import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
-import com.ajjpj.adiagram.ui.{MouseTracker, SelectionTracker}
+import com.ajjpj.adiagram.ui.{AScreenPos, Zoom, MouseTracker, SelectionTracker}
 import javafx.scene.canvas.Canvas
 import com.ajjpj.adiagram.render.base.{PartialImage, PartialImageWithShadow}
 import com.ajjpj.adiagram.geometry.APoint
@@ -12,8 +12,10 @@ import com.ajjpj.adiagram.geometry.APoint
  * @author arno
  */
 class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implicit digest: Digest) {
-  val selections = new SelectionTracker(diagram, root)
-  val mouseTracker = new MouseTracker(root, diagram, selections)
+  var zoom = Zoom(5) //Zoom.Identity
+
+  val selections = new SelectionTracker(diagram, root, this)
+  val mouseTracker = new MouseTracker(root, diagram, this, selections)
 
   var detailsByElement = Map[AShapeSpec, RenderDetails]()
 
@@ -33,7 +35,7 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
 
 
     def render(spec: AShapeSpec) = {
-      def render: PartialImageWithShadow = spec.shape.render
+      def render: PartialImageWithShadow = spec.shape.render(zoom)
 
       def drawOnCanvas(i: PartialImage, c: Canvas) {
         c.setWidth (i.img.getWidth)
@@ -72,10 +74,14 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
 
     def refreshPos(spec: AShapeSpec) = {
       val details = detailsByElement(spec)
-      details.shapeCanvas.setLayoutX (spec.pos.x + details.shapeOffset.x)
-      details.shapeCanvas.setLayoutY (spec.pos.y + details.shapeOffset.y)
-      details.shadowCanvas.setLayoutX (spec.pos.x + details.shadowOffset.x)
-      details.shadowCanvas.setLayoutY (spec.pos.y + details.shadowOffset.y)
+
+      val shapePos  = AScreenPos.fromModel(spec.pos + details.shapeOffset, zoom)
+      val shadowPos = AScreenPos.fromModel(spec.pos + details.shadowOffset, zoom)
+
+      details.shapeCanvas.setLayoutX (shapePos.x)
+      details.shapeCanvas.setLayoutY (shapePos.y)
+      details.shadowCanvas.setLayoutX (shadowPos.x)
+      details.shadowCanvas.setLayoutY (shadowPos.y)
     }
 
     // deal with added and removed elements

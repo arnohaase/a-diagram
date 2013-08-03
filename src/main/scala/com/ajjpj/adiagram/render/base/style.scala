@@ -8,7 +8,7 @@ import javafx.scene.image.Image
 import com.ajjpj.adiagram.render.RenderHelper
 import com.ajjpj.adiagram.geometry.APoint
 import javafx.scene.text.TextAlignment
-import com.ajjpj.adiagram.ui.fw.Digest
+import com.ajjpj.adiagram.ui.Zoom
 
 
 case class FillStyle (paint: Paint) {
@@ -17,7 +17,8 @@ case class FillStyle (paint: Paint) {
   }
 }
 
-case class LineStyle(paint: Paint, width: Double) {
+case class LineStyle(paint: Paint, widthNoZoom: Double) {
+  def width(zoom: Zoom) = widthNoZoom * zoom.factor
   def applyTo(gc: GraphicsContext) {
     gc.setStroke(paint)
   }
@@ -33,19 +34,19 @@ case class ShadowStyle(offsetX: Double, offsetY: Double, radius: Double, blurTyp
     new Insets (top, right, bottom, left)
   }
 
-  def shadow(img: Image)(implicit digest: Digest): Image = {
+  def shadow(img: Image, zoom: Zoom): Image = {
     // this assumes that the underlying Image has sufficient unused space around the edge to allow
     //  for sub-pixel bleed - so we do not add one pixel around the edges here
-    val width = img.getWidth() + insets.getLeft() + insets.getRight()
-    val height = img.getHeight() + insets.getTop() + insets.getBottom()
+    val width = img.getWidth + zoom.factor*(insets.getLeft + insets.getRight)
+    val height = img.getHeight + zoom.factor*(insets.getTop + insets.getBottom)
 
     val canvas = new Canvas(width, height)
-    val gc = canvas.getGraphicsContext2D()
+    val gc = canvas.getGraphicsContext2D
 
-    gc.drawImage(img, insets.getLeft() + offsetX, insets.getTop() + offsetY)
+    gc.drawImage(img, zoom.factor*(insets.getLeft + offsetX), zoom.factor*(insets.getTop + offsetY))
 
     val shadow = new Shadow()
-    shadow.setRadius(radius)
+    shadow.setRadius(radius * zoom.factor)
     shadow.setColor(color)
     shadow.setBlurType(blurType)
     gc.applyEffect(shadow)
@@ -53,14 +54,16 @@ case class ShadowStyle(offsetX: Double, offsetY: Double, radius: Double, blurTyp
     RenderHelper.snapshot(canvas)
   }
 
-  def withShadowOffset(p: APoint) = APoint(p.x - insets.getLeft(), p.y - insets.getTop())
+  def withShadowOffset(p: APoint) = APoint(p.x - insets.getLeft, p.y - insets.getTop)
 }
 
-case class TextStyle(fontSizeInPixels: Double, textAlignment: TextAlignment, vpos: VPos) {
+case class TextStyle(fontSizeInPixelsNoZoom: Double, textAlignment: TextAlignment, vpos: VPos) {
   //TODO font face
-  val font = RenderHelper.font(fontSizeInPixels)
 
-  def applyTo(gc: GraphicsContext) {
+  def height(zoom: Zoom) = fontSizeInPixelsNoZoom * zoom.factor
+
+  def applyTo(gc: GraphicsContext, zoom: Zoom) {
+    val font = RenderHelper.font(height(zoom))
     gc.setFill(Color.BLACK) //TODO move this to TextStyle? UseFillStyle? Have a FillStyle in TextStyle?
     gc.setFont(font)
   }

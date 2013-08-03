@@ -6,12 +6,12 @@ import javafx.scene.paint.Color
 import com.ajjpj.adiagram.geometry.{Angle, APoint, ARect}
 import com.ajjpj.adiagram.ui.fw.{SystemConfiguration, Digest}
 import scala.reflect.ClassTag
-import com.ajjpj.adiagram.ui.presentation.{ZOrdered, DiagramRootContainer}
+import com.ajjpj.adiagram.ui.presentation.{ADiagramController, ZOrdered, DiagramRootContainer}
 
 /**
  * @author arno
  */
-class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit digest: Digest) {
+class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer, ctrl: ADiagramController)(implicit digest: Digest) {
   val HANDLE_SIZE = 10
 
   type ChangeListener = (Traversable[AShapeSpec], Traversable[AShapeSpec]) => Unit
@@ -55,13 +55,13 @@ class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit 
 
   def clearSelection() = withChangeEvent { _selectedShapes = Set() }
 
-  def resizeDirFor (p: APoint): Option[ResizeDirection] =
+  def resizeDirFor (p: AScreenPos): Option[ResizeDirection] =
     if(topLeftHandle.isVisible)
       boxHandles.find(h => h.contains(p.x, p.y)).map(_.dir)
     else
       None
 
-  def lineEndFor (p: APoint): Option[Boolean] = p match {
+  def lineEndFor (p: AScreenPos): Option[Boolean] = p match {
     case _ if !lineStartHandle.isVisible => None
     case _ if lineStartHandle contains (p.x, p.y) => Some(true)
     case _ if lineEndHandle   contains (p.x, p.y) => Some(false)
@@ -76,10 +76,10 @@ class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit 
   digest.bindDouble(lineEndHandle.  xProperty(), lineEndPointForSelectionHandle.x   - HANDLE_SIZE/2)
   digest.bindDouble(lineEndHandle.  yProperty(), lineEndPointForSelectionHandle.y   - HANDLE_SIZE/2)
 
-  private def lineStartPointForSelectionHandle = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p0Source.pos, singleSelectedLine.p1Source.pos) else APoint(0, 0)
-  private def lineEndPointForSelectionHandle   = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p1Source.pos, singleSelectedLine.p0Source.pos) else APoint(0, 0)
+  private def lineStartPointForSelectionHandle = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p0Source.pos, singleSelectedLine.p1Source.pos) else AScreenPos(0, 0)
+  private def lineEndPointForSelectionHandle   = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p1Source.pos, singleSelectedLine.p0Source.pos) else AScreenPos(0, 0)
 
-  private def endPointWithDistance(p0: APoint, p1: APoint) = p0 + (Angle.fromLine(p0, p1), -SystemConfiguration.distanceOfHandlesFromShapes)
+  private def endPointWithDistance(p0: APoint, p1: APoint): AScreenPos = AScreenPos.fromModel(p0 + (Angle.fromLine(p0, p1), -SystemConfiguration.distanceOfHandlesFromShapes / ctrl.zoom.factor), ctrl.zoom)
 
   private def selectionIsSingleLine =
     if(selectedShapes.size != 1)
@@ -107,14 +107,14 @@ class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit 
   digest.bindBoolean(bottomLeftHandle. visibleProperty(), ! selectedShapes.isEmpty && !selectionIsSingleLine)
   digest.bindBoolean(bottomRightHandle.visibleProperty(), ! selectedShapes.isEmpty && !selectionIsSingleLine)
 
-  digest.bindDouble(topLeftHandle.    xProperty, selectionRect.topLeft.x     - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
-  digest.bindDouble(topLeftHandle.    yProperty, selectionRect.topLeft.y     - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
-  digest.bindDouble(topRightHandle.   xProperty, selectionRect.topRight.x    - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
-  digest.bindDouble(topRightHandle.   yProperty, selectionRect.topRight.y    - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
-  digest.bindDouble(bottomLeftHandle. xProperty, selectionRect.bottomLeft.x  - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
-  digest.bindDouble(bottomLeftHandle. yProperty, selectionRect.bottomLeft.y  - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
-  digest.bindDouble(bottomRightHandle.xProperty, selectionRect.bottomRight.x - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
-  digest.bindDouble(bottomRightHandle.yProperty, selectionRect.bottomRight.y - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(topLeftHandle.    xProperty, AScreenPos.fromModel(selectionRect.topLeft, ctrl.zoom).x     - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(topLeftHandle.    yProperty, AScreenPos.fromModel(selectionRect.topLeft, ctrl.zoom).y     - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(topRightHandle.   xProperty, AScreenPos.fromModel(selectionRect.topRight, ctrl.zoom).x    - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(topRightHandle.   yProperty, AScreenPos.fromModel(selectionRect.topRight, ctrl.zoom).y    - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(bottomLeftHandle. xProperty, AScreenPos.fromModel(selectionRect.bottomLeft, ctrl.zoom).x  - HANDLE_SIZE/2 - SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(bottomLeftHandle. yProperty, AScreenPos.fromModel(selectionRect.bottomLeft, ctrl.zoom).y  - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(bottomRightHandle.xProperty, AScreenPos.fromModel(selectionRect.bottomRight, ctrl.zoom).x - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
+  digest.bindDouble(bottomRightHandle.yProperty, AScreenPos.fromModel(selectionRect.bottomRight, ctrl.zoom).y - HANDLE_SIZE/2 + SystemConfiguration.distanceOfHandlesFromShapesXY)
 
   class LineSelectionHandle extends Rectangle with ZOrdered {
     setFill(Color.BLACK)

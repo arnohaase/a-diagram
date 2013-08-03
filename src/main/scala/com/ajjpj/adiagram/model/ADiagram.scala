@@ -1,7 +1,5 @@
 package com.ajjpj.adiagram.model
 
-import com.ajjpj.adiagram.ui.fw.{Digest}
-import com.ajjpj.adiagram.ui.presentation.DiagramRootContainer
 
 /**
  * @author arno
@@ -9,19 +7,8 @@ import com.ajjpj.adiagram.ui.presentation.DiagramRootContainer
 class ADiagram {
   private var _elements = Set[AShapeSpec]()
 
-  private var root: Option[DiagramRootContainer] = None
-
-  def initRootContainer (newRoot: DiagramRootContainer)(implicit digest: Digest) = {
-//    _elements.foreach(unregister)
-    this.root = Some(newRoot)
-//    _elements.foreach(register)
-  }
-
-//  private def register  (el: AShapeSpec)(implicit digest: Digest) = root match {case Some(r) => el.register(r);   case None =>}
-//  private def unregister(el: AShapeSpec)(implicit digest: Digest) = root match {case Some(r) => el.unregister(r); case None =>}
-
   def elements = _elements
 
-  def +=(el: AShapeSpec)(implicit digest: Digest) = { _elements += el }
-  def -=(el: AShapeSpec)(implicit digest: Digest) = { _elements -= el }
+  def +=(el: AShapeSpec) = _elements += el
+  def -=(el: AShapeSpec) = _elements -= el
 }

@@ -4,7 +4,6 @@ import javafx.scene.layout.Pane
 import com.ajjpj.adiagram.model.{AShapeSpec, ABoxSpec, ADiagram}
 import javafx.scene.shape.Circle
 import javafx.scene.paint.Color
-import com.ajjpj.adiagram.geometry.APoint
 
 
 /**
@@ -27,11 +26,11 @@ class DragTargetOverlay(diagram: ADiagram) extends Pane {
   val passiveColor = Color.color(.5, 0, 0, .4)
   val activeColor = Color.color(.5, 0, 0, 1)
 
-  def onMouseMoved(p: APoint) {
+  def onMouseMoved(p: AScreenPos) {
     _activeItem = None
 
     markers.foreach(n => {
-      if(n.contains(p.x, p.y)) {
+      if(p.containedByNode(n)) {
         _activeItem = Some(n.spec)
         n.setFill(activeColor)
       }

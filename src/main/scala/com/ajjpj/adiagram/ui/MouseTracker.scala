@@ -5,14 +5,16 @@ import javafx.scene.input.MouseEvent
 import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.fw._
 import scala.Some
-import com.ajjpj.adiagram.ui.presentation.DiagramRootContainer
+import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
 
 
 /**
  * @author arno
  */
-class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: SelectionTracker)(implicit digest: Digest) {
+class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, ctrl: ADiagramController, selections: SelectionTracker)(implicit digest: Digest) {
   import digest.createEventHandler
+
+  implicit def zoom = ctrl.zoom
 
   private var initialSelectOnly: Boolean = _
 
@@ -27,7 +29,7 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
 
   //TODO numClicks, left button
   private def handle(evt: MouseEvent) {
-    val p = APoint(evt.getX, evt.getY)
+    val p = AScreenPos.fromMouseEvent(evt)
     evt.getEventType match {
       case MouseEvent.MOUSE_PRESSED  => onPressed(p)
       case MouseEvent.MOUSE_DRAGGED  => onDragged(p)
@@ -37,7 +39,7 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
   }
 
 
-  private def onPressed(p: APoint) = targetFor(p) match {
+  private def onPressed(p: AScreenPos) = targetFor(p) match {
       case BoxResizeHandleTarget(dir) =>
         resizeState = Some(ResizeState(dir, p, p))
       case LineHandleTarget(start) =>
@@ -58,7 +60,7 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
         selections.clearSelection()
     }
 
-  private def onDragged(p: APoint) {
+  private def onDragged(p: AScreenPos) {
     lineDragOverlay match {
       case Some(o) => o.onMouseMoved(p)
       case None =>
@@ -99,11 +101,11 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
     }
   }
 
-  private def onReleased(p: APoint) {
+  private def onReleased(p: AScreenPos) {
     onDragged(p)
 
     resizeState match {
-      case Some(s) => digest.undoRedo.push(new ResizeCommand(selections.selectedShapes, s.dir, p - s.initialPos))
+      case Some(s) => digest.undoRedo.push(new ResizeCommand(selections.selectedShapes, s.dir, (p - s.initialPos).toModel))
       case None =>
     }
 
@@ -119,7 +121,7 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
               line.atomicUpdate { line.bindStartPoint(o.activeItem.get.asInstanceOf[ABoxSpec]) }
             else
               line atomicUpdate { line.bindEndPoint(o.activeItem.get.asInstanceOf[ABoxSpec]) }
-            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, (p - s.initialPos).toModel))
             digest.undoRedo.push(new BindLineEndsCommand (line, oldStartBinding, line.p0Source, oldEndBinding, line.p1Source))
           case Some(o) =>
             val line = selections.singleSelectedLine
@@ -130,10 +132,10 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
               line.atomicUpdate { line.unbindStartPoint() }
             else
               line.atomicUpdate { line.unbindEndPoint() }
-            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, (p - s.initialPos).toModel))
             digest.undoRedo.push(new BindLineEndsCommand (line, oldStartBinding, line.p0Source, oldEndBinding, line.p1Source))
           case None =>
-            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
+            digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, (p - s.initialPos).toModel))
         }
       case None =>
     }
@@ -148,7 +150,7 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
               line.unbindEndPoint()
             case _ =>
           }
-          digest.undoRedo.push(new MoveCommand(selections.selectedShapes, p - s.initialPos))
+          digest.undoRedo.push(new MoveCommand(selections.selectedShapes, (p - s.initialPos).toModel))
         }
       case None =>
     }
@@ -162,14 +164,14 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
     initialSelectOnly = false
   }
 
-  private def onDraggedBoxHandle(s: ResizeState, p: APoint) {
+  private def onDraggedBoxHandle(s: ResizeState, p: AScreenPos) {
     val delta = p - s.prevPos
-    selections.selectedShapes.foreach(doDrag(_, s.dir, delta))
+    selections.selectedShapes.foreach(doDrag(_, s.dir, delta.toModel))
     resizeState = Some(s.copy(prevPos = p))
   }
 
-  private def onDraggedLineEndHandle(s: LineEndDragState, p: APoint) {
-    val delta = p - s.prevPos
+  private def onDraggedLineEndHandle(s: LineEndDragState, p: AScreenPos) {
+    val delta = (p - s.prevPos).toModel
     val lineSpec = selections.singleSelectedLine
 
     lineSpec.atomicUpdate {
@@ -181,8 +183,8 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
     lineEndDragState = Some(s.copy(prevPos = p))
   }
 
-  private def onDraggedShape(s: DragState, p: APoint) {
-    val delta = p - s.prevPos
+  private def onDraggedShape(s: DragState, p: AScreenPos) {
+    val delta = (p - s.prevPos).toModel
     selections.selectedShapes.foreach(shape => {shape.moveBy(delta)})
     dragState = Some(s.copy(prevPos = p))
   }
@@ -233,9 +235,9 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
     def redo() {selSnapshot.foreach(sh => sh.moveBy(deltaSnapshot))}
   }
 
-  case class ResizeState(dir: ResizeDirection, initialPos: APoint, prevPos: APoint)
-  case class DragState(initialPos: APoint, prevPos: APoint)
-  case class LineEndDragState(isStartEnd: Boolean, initialPos: APoint, prevPos: APoint)
+  case class ResizeState(dir: ResizeDirection, initialPos: AScreenPos, prevPos: AScreenPos)
+  case class DragState(initialPos: AScreenPos, prevPos: AScreenPos)
+  case class LineEndDragState(isStartEnd: Boolean, initialPos: AScreenPos, prevPos: AScreenPos)
 
 
   sealed trait MouseTarget
@@ -244,10 +246,10 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
   case class ShapeTarget(shape: AShapeSpec) extends MouseTarget
   case object NoMouseTarget extends MouseTarget
 
-  private def targetFor(p: APoint): MouseTarget = {
+  private def targetFor(p: AScreenPos): MouseTarget = {
     selections.resizeDirFor(p).map(BoxResizeHandleTarget).getOrElse (
     selections.lineEndFor(p).map(LineHandleTarget).getOrElse (
-    shapeFor(p).map(ShapeTarget).getOrElse (
+    shapeFor(p.toModel).map(ShapeTarget).getOrElse (
     NoMouseTarget
     )))
   }

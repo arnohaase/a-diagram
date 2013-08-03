@@ -19,8 +19,6 @@ object Init {
 
     //TODO loosen the references using listeners?
     val root = new DiagramRootContainer()
-    diagram.initRootContainer(root)
-
     val controller = new ADiagramController(root, diagram)
 
     val appPane = new BorderPane
@@ -46,9 +44,9 @@ object Init {
 
     accordion.getPanes.add(new TitledPane("Selection", new CurrentSelectionPane(selections)))
 
-    accordion.getPanes().add(new TitledPane("asdf", new Button("asdf")))
-    accordion.getPanes().add(new TitledPane("jklö", new Button("jklö")))
-    accordion.getPanes().add(new TitledPane("123", new Button("123")))
+    accordion.getPanes.add(new TitledPane("asdf", new Button("asdf")))
+    accordion.getPanes.add(new TitledPane("jklö", new Button("jklö")))
+    accordion.getPanes.add(new TitledPane("123", new Button("123")))
 
     val width = SystemConfiguration.leftAccordionWidth //TODO better approach? Must not change when content changes, though...
     accordion.getPanes.foreach (p => {

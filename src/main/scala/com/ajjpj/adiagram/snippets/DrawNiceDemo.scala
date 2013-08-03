@@ -17,6 +17,7 @@ import com.ajjpj.adiagram.render.base.ShadowStyle
 import scala.Some
 import com.ajjpj.adiagram.render.shapes.lineend.{RoundPointedArrowLineEnd, SemiCircleLineEnd, RoundArrowLineEnd, PointedArrowLineEnd}
 import com.ajjpj.adiagram.ui.fw.Digest
+import com.ajjpj.adiagram.ui.Zoom
 
 
 /**
@@ -69,7 +70,7 @@ class DrawNiceDemo extends javafx.application.Application {
   }
 
   private def renderShape(gc: GraphicsContext, shape: AShape) {
-    val pi: PartialImageWithShadow = shape.render
+    val pi: PartialImageWithShadow = shape.render(Zoom.Identity)
 
     pi.shadow match {
       case Some(sh) => gc.drawImage(sh.img, shape.bounds.topLeft.x + sh.renderOffset.x, shape.bounds.topLeft.y + sh.renderOffset.y)

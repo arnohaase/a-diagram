@@ -2,20 +2,21 @@ package com.ajjpj.adiagram.model
 
 import com.ajjpj.adiagram.geometry.{ARect, ADim, APoint}
 import com.ajjpj.adiagram.render.shapes.ALineShape
-import com.ajjpj.adiagram.render.base.{TextStyle, LineStyle}
-import com.ajjpj.adiagram.render.shapes.lineend.{RoundPointedArrowLineEnd, RoundedCornerLineEnd}
-import com.ajjpj.adiagram.ui.fw.Digest
+import com.ajjpj.adiagram.render.shapes.lineend._
+import com.ajjpj.adiagram.render.base.LineStyle
+import com.ajjpj.adiagram.render.base.TextStyle
 
 /**
  * @author arno
  */
-class ALineSpec(var text: Option[String], lineStyle: LineStyle, textStyle: TextStyle)(implicit digest: Digest) extends AShapeSpec {
-  def this(initialP0: APoint, initialP1: APoint, text: Option[String], lineStyle: LineStyle, textStyle: TextStyle)(implicit digest: Digest) = {
+class ALineSpec(var text: Option[String], lineStyle: LineStyle, textStyle: TextStyle) extends AShapeSpec {
+  def this(initialP0: APoint, initialP1: APoint, text: Option[String], lineStyle: LineStyle, textStyle: TextStyle) = {
     this(text, lineStyle, textStyle)
     p0Source = new LiteralPosSource(initialP0)
     p1Source = new LiteralPosSource(initialP1)
   }
-  override def shape = new ALineShape(p0Source.pos, p1Source.pos, lineStyle, textStyle, new RoundedCornerLineEnd(.5), new RoundPointedArrowLineEnd(), text) //TODO configurable line ends
+  override def shape = new ALineShape(p0Source.pos, p1Source.pos, lineStyle, textStyle, new RoundedCornerLineEnd(.5), new PointedArrowLineEnd(), text) //TODO configurable line ends
+//  override def shape = new ALineShape(p0Source.pos, p1Source.pos, lineStyle, textStyle, new RoundedCornerLineEnd(.5), new RoundPointedArrowLineEnd(), text) //TODO configurable line ends
 
   var p0Source: PosSource = new LiteralPosSource(APoint.ZERO)
   var p1Source: PosSource = new LiteralPosSource(APoint.ZERO)

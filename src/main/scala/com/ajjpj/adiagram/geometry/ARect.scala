@@ -14,6 +14,8 @@ case class ARect(topLeft: APoint, dim: ADim) extends GeometricShape {
 
   def center = topLeft halfWayTo bottomRight
 
+  def withPadding(padding: Double) = ARect(topLeft - ((padding, padding)), ADim(dim.width + 2*padding, dim.height + 2*padding))
+
   override def contains(p: APoint) =
     topLeft.x <= p.x && topLeft.x+dim.width  >= p.x &&
     topLeft.y <= p.y && topLeft.y+dim.height >= p.y

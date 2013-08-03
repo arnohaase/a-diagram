@@ -8,23 +8,29 @@ import com.ajjpj.adiagram.render.base.ShadowStyle
 import scala.Some
 import com.ajjpj.adiagram.render.base.FillStyle
 import com.ajjpj.adiagram.ui.fw.Digest
+import com.ajjpj.adiagram.ui.{AScreenRect, Zoom}
 
 /**
  * @author arno
  */
 class ABoxShape(val bounds: ARect, text: Option[String], fillStyle: FillStyle, shadowStyle: ShadowStyle, textStyle: TextStyle) extends AShape {
-  def render(implicit digest: Digest): PartialImageWithShadow = PartialImage.fromGc(bounds.topLeft, bounds, Some(shadowStyle), (gc, t) => {
+  override def render(zoom: Zoom) = PartialImage.fromGc(bounds.topLeft, bounds, zoom, Some(shadowStyle), (gc, t) => {
     fillStyle.applyTo(gc)
 
-    val topLeft = t(bounds.topLeft)
-    gc.fillRoundRect(topLeft.x, topLeft.y, bounds.width, bounds.height, 25, 25) //TODO corner radius configurabor
+    val lineStyle = LineStyle(Color.BLACK, 2) //TODO make configurable
 
-    gc.setStroke(Color.BLACK) // line style
-    gc.setLineWidth(2)
-    gc.strokeRoundRect(topLeft.x, topLeft.y, bounds.width, bounds.height, 25, 25)
+    // reduce by half a line width --> 'strokeRoundRect' only supports StrokeType.CENTER (implicitly)
+    val paintBounds = AScreenRect(t(bounds) withPadding -lineStyle.widthNoZoom/2, zoom)
+
+    val topLeft = paintBounds.topLeft
+    gc.fillRoundRect(topLeft.x, topLeft.y, paintBounds.width, paintBounds.height, 25*zoom.factor, 25*zoom.factor) //TODO corner radius configurable
+
+    lineStyle.applyTo(gc)
+    gc.setLineWidth(lineStyle.width(zoom))
+    gc.strokeRoundRect(topLeft.x, topLeft.y, paintBounds.width, paintBounds.height, 25*zoom.factor, 25*zoom.factor)
 
     text match {
-      case Some(txt) =>  new ATextShape(bounds, txt, textStyle).render(gc, t)
+      case Some(txt) =>  new ATextShape(bounds, txt, textStyle).render(gc, t, zoom)
       case None =>
     }
   })
