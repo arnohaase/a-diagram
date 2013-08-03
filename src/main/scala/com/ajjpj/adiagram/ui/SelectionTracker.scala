@@ -76,8 +76,8 @@ class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer)(implicit 
   digest.bindDouble(lineEndHandle.  xProperty(), lineEndPointForSelectionHandle.x   - HANDLE_SIZE/2)
   digest.bindDouble(lineEndHandle.  yProperty(), lineEndPointForSelectionHandle.y   - HANDLE_SIZE/2)
 
-  private def lineStartPointForSelectionHandle = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p0, singleSelectedLine.p1) else APoint(0, 0)
-  private def lineEndPointForSelectionHandle   = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p1, singleSelectedLine.p0) else APoint(0, 0)
+  private def lineStartPointForSelectionHandle = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p0Source.pos, singleSelectedLine.p1Source.pos) else APoint(0, 0)
+  private def lineEndPointForSelectionHandle   = if (selectionIsSingleLine) endPointWithDistance(singleSelectedLine.p1Source.pos, singleSelectedLine.p0Source.pos) else APoint(0, 0)
 
   private def endPointWithDistance(p0: APoint, p1: APoint) = p0 + (Angle.fromLine(p0, p1), -SystemConfiguration.distanceOfHandlesFromShapes)
 

@@ -51,7 +51,7 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
           var newShadowOffset: APoint = APoint.ZERO
 
           detailsByElement.get(spec) match {
-            case Some(details) if details.changeCounter < counterSnapshot =>
+            case Some(details) if details.changeCounter <= counterSnapshot => //TODO change '<=' to '<' : Problem is repaint of bound lines
               drawOnCanvas(pi.shape, details.shapeCanvas)
               pi.shadow match {
                 case Some(sh) =>

@@ -112,26 +112,26 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
         lineDragOverlay match {
           case Some(o) if o.activeItem.isDefined =>
             val line = selections.singleSelectedLine
-            val oldStartBinding = line.p0Binding.bindingSource
-            val oldEndBinding   = line.p1Binding.bindingSource
+            val oldStartBinding = line.p0Source
+            val oldEndBinding   = line.p1Source
 
             if(s.isStartEnd)
               line.atomicUpdate { line.bindStartPoint(o.activeItem.get.asInstanceOf[ABoxSpec]) }
             else
               line atomicUpdate { line.bindEndPoint(o.activeItem.get.asInstanceOf[ABoxSpec]) }
             digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
-            digest.undoRedo.push(new BindLineEndsCommand (line.p0Binding, line.p1Binding, oldStartBinding, line.p0Binding.bindingSource, oldEndBinding, line.p1Binding.bindingSource))
+            digest.undoRedo.push(new BindLineEndsCommand (line, oldStartBinding, line.p0Source, oldEndBinding, line.p1Source))
           case Some(o) =>
             val line = selections.singleSelectedLine
-            val oldStartBinding = line.p0Binding.bindingSource
-            val oldEndBinding   = line.p1Binding.bindingSource
+            val oldStartBinding = line.p0Source
+            val oldEndBinding   = line.p1Source
 
             if(s.isStartEnd)
               line.atomicUpdate { line.unbindStartPoint() }
             else
               line.atomicUpdate { line.unbindEndPoint() }
             digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
-            digest.undoRedo.push(new BindLineEndsCommand (line.p0Binding, line.p1Binding, oldStartBinding, line.p0Binding.bindingSource, oldEndBinding, line.p1Binding.bindingSource))
+            digest.undoRedo.push(new BindLineEndsCommand (line, oldStartBinding, line.p0Source, oldEndBinding, line.p1Source))
           case None =>
             digest.undoRedo.push(new LineEndMoveCommand(selections.singleSelectedLine, s.isStartEnd, p - s.initialPos))
         }
@@ -143,7 +143,7 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
         if(! initialSelectOnly) {
           selections.singleSelection[ALineSpec] match { //TODO mixed multi selection - unbind or bind?!
             case Some(line) =>
-              digest.undoRedo.push(new BindLineEndsCommand (line.p0Binding, line.p1Binding, line.p0Binding.bindingSource, None, line.p1Binding.bindingSource, None))
+              digest.undoRedo.push(new BindLineEndsCommand (line, line.p0Source, new LiteralPosSource(line.p0Source.pos), line.p1Source, new LiteralPosSource(line.p1Source.pos)))
               line.unbindStartPoint()
               line.unbindEndPoint()
             case _ =>
@@ -174,9 +174,9 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
 
     lineSpec.atomicUpdate {
       if(s.isStartEnd)
-        lineSpec.p0 += delta
+        lineSpec.p0Source += delta
       else
-        lineSpec.p1 += delta
+        lineSpec.p1Source += delta
     }
     lineEndDragState = Some(s.copy(prevPos = p))
   }
@@ -188,27 +188,20 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
   }
 
 
-  case class BindLineEndsCommand(bindableStart: BindableLineEnd, bindableEnd: BindableLineEnd,
-                                 oldStartBinding: Option[LineEndBindingSource], newStartBinding: Option[LineEndBindingSource],
-                                 oldEndBinding:   Option[LineEndBindingSource], newEndBinding:   Option[LineEndBindingSource]) extends Command {
+  case class BindLineEndsCommand(line: ALineSpec,
+                                 oldStartBinding: PosSource, newStartBinding: PosSource,
+                                 oldEndBinding:   PosSource, newEndBinding:   PosSource) extends Command {
     def name = "Attach Line Ends"
     def isNop = oldStartBinding == newStartBinding && oldEndBinding == newEndBinding
 
-    private def applyBinding(bindable: BindableLineEnd, bindingSource: Option[LineEndBindingSource]) {
-      bindingSource match {
-        case Some(b) => bindable.bind(b.point(), b.clipRect())
-        case None    => bindable.unbind()
-      }
-    }
-
     def undo() {
-      applyBinding(bindableStart, oldStartBinding)
-      applyBinding(bindableEnd, oldEndBinding)
+      line.p0Source = oldStartBinding
+      line.p1Source = oldEndBinding
     }
 
     def redo() {
-      applyBinding(bindableStart, newStartBinding)
-      applyBinding(bindableEnd, newEndBinding)
+      line.p0Source = newStartBinding
+      line.p1Source = newEndBinding
     }
   }
 
@@ -222,8 +215,8 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, selections: S
   class LineEndMoveCommand(lineSpec: ALineSpec, isStartEnd: Boolean, deltaSnapshot: APoint) extends Command {
     def name = "Move Line End"
     def isNop = deltaSnapshot == APoint.ZERO
-    def undo() = lineSpec.atomicUpdate {if(isStartEnd) lineSpec.p0 -= deltaSnapshot else lineSpec.p1 -= deltaSnapshot}
-    def redo() = lineSpec.atomicUpdate {if(isStartEnd) lineSpec.p0 += deltaSnapshot else lineSpec.p1 += deltaSnapshot}
+    def undo() = lineSpec.atomicUpdate {if(isStartEnd) lineSpec.p0Source -= deltaSnapshot else lineSpec.p1Source -= deltaSnapshot}
+    def redo() = lineSpec.atomicUpdate {if(isStartEnd) lineSpec.p0Source += deltaSnapshot else lineSpec.p1Source += deltaSnapshot}
   }
 
   class ResizeCommand(selSnapshot: Iterable[AShapeSpec], dirSnapshot: ResizeDirection, deltaSnapshot: APoint) extends Command {

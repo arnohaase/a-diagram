@@ -1,6 +1,7 @@
 todo
 ----
 * next
+  * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
   * zoom
 
 * features

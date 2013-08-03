@@ -86,7 +86,7 @@ object JavaFxHelper {
         result.set(Some(code))
       }
       catch {
-        case _: Throwable => result.set(None)
+        case _: Throwable => result.set(None) //TODO logging
       }
       finally {
         latch.countDown()
