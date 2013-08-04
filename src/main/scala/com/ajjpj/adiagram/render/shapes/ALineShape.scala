@@ -63,7 +63,7 @@ class ALineShape(p0: APoint, p1: APoint, style: LineStyle, textStyle: TextStyle,
     val ccw = angle.angle <= Math.PI
 
     val angleUp = if(ccw) angle.ccw90 else angle.cw90
-    val textBasePoint = AScreenPos.fromModel (mid + (angleUp, style.width(zoom)), zoom)
+    val textBasePoint = AScreenPos.fromModel (mid + (angleUp, style.widthNoZoom), zoom)
 
     val rotateAngle = if(ccw) -angle.screenDegrees else 180 - angle.screenDegrees
     val rotate: Rotate = Transform.rotate(rotateAngle, textBasePoint.x, textBasePoint.y)
