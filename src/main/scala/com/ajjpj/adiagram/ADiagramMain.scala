@@ -1,6 +1,5 @@
 package com.ajjpj.adiagram
 
-import com.ajjpj.adiagram.ui.fw.Digest
 import javafx.stage.Stage
 import javafx.scene.paint._
 import com.ajjpj.adiagram.model.{ATextSpec, ALineSpec, ADiagram, ABoxSpec}
@@ -20,7 +19,6 @@ object ADiagramMain extends App {
 }
 
 class ADiagramMain extends javafx.application.Application {
-  implicit val digest = new Digest()
 
   val fillStyle = new FillStyle(new LinearGradient(0.3, 0, .7, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.LIGHTBLUE), new Stop(1, Color.AZURE)))
   val shadowStyle = new ShadowStyle(6, 6, 16, BlurType.GAUSSIAN, Color.color(.5, .5, .5))
@@ -49,7 +47,7 @@ class ADiagramMain extends javafx.application.Application {
   }
 
   override def start(stage: Stage) {
-    Init.initStage(stage, diagram)(digest)
+    Init.initStage(stage, diagram)
     stage.show()
   }
 

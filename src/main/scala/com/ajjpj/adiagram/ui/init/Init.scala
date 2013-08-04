@@ -15,14 +15,15 @@ import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContai
  * @author arno
  */
 object Init {
-  def initStage(stage: Stage, diagram: ADiagram)(implicit digest: Digest) {
+  def initStage(stage: Stage, diagram: ADiagram) {
+    implicit val digest = new Digest()
 
     //TODO loosen the references using listeners?
     val root = new DiagramRootContainer()
     val controller = new ADiagramController(root, diagram)
 
     val appPane = new BorderPane
-    appPane.setTop(ADiagramMenuBar.create())
+    appPane.setTop(ADiagramMenuBar.create(controller))
     appPane.setLeft(createAccordion(controller.selections))
 
     val scrollPane = new ScrollPane()

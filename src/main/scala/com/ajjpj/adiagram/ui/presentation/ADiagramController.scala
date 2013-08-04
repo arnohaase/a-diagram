@@ -17,7 +17,7 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
   val selections = new SelectionTracker(diagram, root, this)
   val mouseTracker = new MouseTracker(root, diagram, this, selections)
 
-  var detailsByElement = Map[AShapeSpec, RenderDetails]()
+  private var detailsByElement = Map[AShapeSpec, RenderDetails]()
 
   digest.registerPostprocessor(updatePresentation)
 
@@ -35,7 +35,9 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
 
 
     def render(spec: AShapeSpec) = {
-      def render: PartialImageWithShadow = spec.shape.render(zoom)
+      val zoomSnapshot = zoom
+
+      def render: PartialImageWithShadow = spec.shape.render(zoomSnapshot)
 
       def drawOnCanvas(i: PartialImage, c: Canvas) {
         c.setWidth (i.img.getWidth)
@@ -44,7 +46,7 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
         c.getGraphicsContext2D.drawImage(i.img, 0, 0)
       }
 
-      val snapshotCurrentlyRendered = spec.snapshot
+      val snapshotCurrentlyRendered = SnapshotWithZoom(zoomSnapshot, spec.snapshot)
       if(detailsByElement(spec).snapshot != snapshotCurrentlyRendered) {
         val counterSnapshot = spec.changeCounter
 
@@ -94,5 +96,7 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
     diagram.elements.foreach (refreshPos)
   }
 
-  case class RenderDetails(changeCounter: Int, shapeCanvas: Canvas, shadowCanvas: Canvas, shapeOffset: APoint, shadowOffset: APoint, snapshot: ShapeSpecReRenderSnapshot)
+  private case class SnapshotWithZoom (zoom: Zoom, snapshot: ShapeSpecReRenderSnapshot)
+
+  private case class RenderDetails(changeCounter: Int, shapeCanvas: Canvas, shadowCanvas: Canvas, shapeOffset: APoint, shadowOffset: APoint, snapshot: SnapshotWithZoom)
 }
