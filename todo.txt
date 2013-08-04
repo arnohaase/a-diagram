@@ -1,13 +1,14 @@
 todo
 ----
 * next
-  * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
   * zoom
     * position of 'line end binding handles'
     * interactive zooming
   * initially, the connecting arrow has offset - mouse movement corrects
 
 * features
+  * 'undo' of lost line end binding does not work
+  * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
   * wrapper around GraphicsContext (with implicit conversion) --> coordinates as 'AScreenPos' instead of 'Double'
   * extract 'AbstractPoint' and 'AbstractRect' traits
   * Style Repository

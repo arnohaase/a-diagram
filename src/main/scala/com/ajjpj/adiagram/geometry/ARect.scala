@@ -63,12 +63,13 @@ case class ARect(topLeft: APoint, dim: ADim) extends GeometricShape {
   }
 
   def intersection(inside: APoint, outside: APoint) = {
-    val result =
+    val result: APoint =
     segmentIntersectionHorizontal (inside, outside, topLeft.x,         topLeft.x + width, topLeft.y).getOrElse (
     segmentIntersectionHorizontal (inside, outside, topLeft.x,         topLeft.x + width, topLeft.y + height).getOrElse (
     segmentIntersectionVertical   (inside, outside, topLeft.x,         topLeft.y        , topLeft.y + height).getOrElse (
-    segmentIntersectionVertical   (inside, outside, topLeft.x + width, topLeft.y        , topLeft.y + height).get
-    )))
+    segmentIntersectionVertical   (inside, outside, topLeft.x + width, topLeft.y        , topLeft.y + height).getOrElse (
+    inside // fallback
+    ))))
 
     result
   }

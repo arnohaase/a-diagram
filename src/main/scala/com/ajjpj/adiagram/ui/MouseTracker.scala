@@ -44,7 +44,7 @@ class MouseTracker (root: DiagramRootContainer, diagram: ADiagram, ctrl: ADiagra
         resizeState = Some(ResizeState(dir, p, p))
       case LineHandleTarget(start) =>
         lineEndDragState = Some(LineEndDragState(start, p, p))
-        lineDragOverlay = Some(new DragTargetOverlay(diagram))
+        lineDragOverlay = Some(new DragTargetOverlay(diagram, zoom))
         root.showOverlay(lineDragOverlay.get)
       case ShapeTarget(sh) =>
         initialSelectOnly = true

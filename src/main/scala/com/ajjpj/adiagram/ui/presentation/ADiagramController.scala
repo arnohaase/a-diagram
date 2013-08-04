@@ -12,7 +12,7 @@ import com.ajjpj.adiagram.geometry.APoint
  * @author arno
  */
 class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implicit digest: Digest) {
-  var zoom = Zoom(5) //Zoom.Identity
+  var zoom = Zoom(2) //Zoom.Identity
 
   val selections = new SelectionTracker(diagram, root, this)
   val mouseTracker = new MouseTracker(root, diagram, this, selections)

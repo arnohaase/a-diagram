@@ -9,7 +9,7 @@ import javafx.scene.paint.Color
 /**
  * @author arno
  */
-class DragTargetOverlay(diagram: ADiagram) extends Pane {
+class DragTargetOverlay(diagram: ADiagram, zoom: Zoom) extends Pane {
   private var _activeItem: Option[AShapeSpec] = None
 
   def activeItem = _activeItem
@@ -43,8 +43,8 @@ class DragTargetOverlay(diagram: ADiagram) extends Pane {
   private def marker(box: ABoxSpec) = new Marker(box)
 
   private class Marker(val spec: AShapeSpec) extends Circle {
-    setCenterX(spec.boundsForResizing.center.x) //TODO make this into bindings? Currently not necessary but worth remembering?
-    setCenterY(spec.boundsForResizing.center.y)
+    setCenterX(AScreenPos.fromModel(spec.boundsForResizing.center, zoom).x) //TODO make this into bindings? Currently not necessary but worth remembering?
+    setCenterY(AScreenPos.fromModel(spec.boundsForResizing.center, zoom).y)
 
     setRadius(10) //TODO make configurable
     setFill(passiveColor)
