@@ -1,8 +1,10 @@
 todo
 ----
 * next
+  * initially, rendering is off - corrected after 'mouse move'
 
 * features
+  * drag display by clicking on background
   * hotkey 'Ctrl +' does not work (for zooming in)
   * 'undo' of lost line end binding does not work
   * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
@@ -56,7 +58,6 @@ todo
   * tool bar, status bar
   * accordion on the left
   * tree view with the logical structure
-  * arrow between two boxes / shapes
   * different scaling for screen and export
   * manual / explicit *relative* correction for visual start / end point of lines (x / y / *axial* / *distance from box*)
   * text on line: correction (forward / backward and distance to line)

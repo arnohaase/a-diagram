@@ -21,7 +21,7 @@ object ADiagramMenuBar {
   }
 
   private def viewMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
-    val zoomInAction  = new SimpleAction("Zoom In",  accelerator = Some(new KeyCodeCombination (KeyCode.PLUS,  KeyCombination.CONTROL_DOWN)), body={ctrl.zoom *= 1.5})
+    val zoomInAction  = new SimpleAction("Zoom In",  accelerator = Some(new KeyCodeCombination (KeyCode.PERIOD /*PLUS*/,  KeyCombination.CONTROL_DOWN)), body={ctrl.zoom *= 1.5})
     val zoomOutAction = new SimpleAction("Zoom Out", accelerator = Some(new KeyCodeCombination (KeyCode.MINUS, KeyCombination.CONTROL_DOWN)), body={ctrl.zoom *= 1/1.5})
 
     new SimpleActionGroup(text="View", items=List(zoomInAction, zoomOutAction))
