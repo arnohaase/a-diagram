@@ -2,10 +2,11 @@ package com.ajjpj.adiagram.ui.presentation
 
 import com.ajjpj.adiagram.model.{ShapeSpecReRenderSnapshot, AShapeSpec, ADiagram}
 import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
-import com.ajjpj.adiagram.ui.{AScreenPos, Zoom, MouseTracker, SelectionTracker}
+import com.ajjpj.adiagram.ui.{AScreenPos, Zoom, SelectionTracker}
 import javafx.scene.canvas.Canvas
 import com.ajjpj.adiagram.render.base.{PartialImage, PartialImageWithShadow}
 import com.ajjpj.adiagram.geometry.APoint
+import com.ajjpj.adiagram.ui.mouse.MouseTracker
 
 
 /**
@@ -69,6 +70,8 @@ class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implici
               detailsByElement += (spec -> details.copy(snapshot = snapshotCurrentlyRendered, changeCounter = counterSnapshot, shapeOffset = newShapeOffset, shadowOffset = newShadowOffset))
             case _ => // do nothing - the element was removed from the diagram, or a later change was rendered by now
           }
+
+          refreshPos(spec)
           //TODO replace 'new Digest()' with something more appropriate
         })(new Digest()) // no changes are performed in this UI callback --> no need for events to be triggered
       }

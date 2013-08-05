@@ -1,12 +1,13 @@
 todo
 ----
 * next
-  * initially, rendering is off - corrected after 'mouse move'
+  * 'undo' of lost line end binding does not work
+  * delete diagram element
+  * new diagram element
 
 * features
+  * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
   * drag display by clicking on background
-  * hotkey 'Ctrl +' does not work (for zooming in)
-  * 'undo' of lost line end binding does not work
   * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
   * wrapper around GraphicsContext (with implicit conversion) --> coordinates as 'AScreenPos' instead of 'Double'
   * extract 'AbstractPoint' and 'AbstractRect' traits
@@ -32,7 +33,6 @@ todo
   * restore window position when leaving full screen mode
   * remove 'press ESC to leave full screen mode' message
   * add tic marks to 'view' menu items
-  * Boxes: strokeType.INSIDE (instead of CENTER)
   * view menu: show / hide accordion
   * multi select
     * drag a rectangle around shapes
@@ -42,8 +42,6 @@ todo
   * loading / saving diagrams
   * new diagram (another window)
   * dirty state of a diagram --> 'are you sure' dialog
-  * delete diagram element
-  * new diagram element
   * grid (optional) in the background
   * Ctrl-Resize, Shift-Resize
   * Ctrl-Move, Shift-Move
@@ -71,11 +69,12 @@ todo
   * OVERLAP for bounding line around boxes (?)
   * sub-pixel anti-aliasing on rotated fonts
 
-* problems (--> JavaFX 8)
+* problems (--> JavaFX 8?)
   * disable context menu for TextField (interferes with 'undo' / Ctrl+Z)
   * Stage with owner can still go to the background
   * Accordion allows unexpanding of all elements
   * repaint of changed menu item
+  * hotkey 'Ctrl +' does not work (for zooming in)
 
 * visual test suite (render to windows and files --> potentially different rendering engine?)
   * line endings at different angles and different line widths --> 'overlap' vs 'gap'

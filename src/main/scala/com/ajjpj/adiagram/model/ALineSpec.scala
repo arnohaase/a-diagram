@@ -44,16 +44,21 @@ trait PosSource {
   def pos: APoint
   def unclippedPos = pos
 
+  def isDerived: Boolean
+
   def + (delta: APoint) = LiteralPosSource (pos + delta)
   def - (delta: APoint) = LiteralPosSource (pos - delta)
 }
-case class LiteralPosSource(pos: APoint) extends PosSource
+case class LiteralPosSource(pos: APoint) extends PosSource {
+  override def isDerived = false
+}
 case class BoxPosSource(box: ABoxSpec) extends PosSource {
   def this(box: ABoxSpec, opposite: => PosSource) = {this(box); this.opposite = () => opposite}
   var opposite: () => PosSource = _
   def rect = ARect(box.pos, box.dim)
   override def unclippedPos = rect.center
   override def pos = rect.intersection(unclippedPos, opposite().unclippedPos)
+  override def isDerived = true
 }
 
 case class ALineSpecSnapshot(p0: APoint, p1: APoint, text: Option[String], lineStyle: LineStyle, textStyle: TextStyle) extends ShapeSpecReRenderSnapshot
