@@ -1,7 +1,6 @@
 todo
 ----
 * next
-  * 'undo' of lost line end binding does not work
   * delete diagram element
   * new diagram element
 

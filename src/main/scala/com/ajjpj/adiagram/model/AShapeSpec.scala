@@ -28,6 +28,7 @@ trait AShapeSpec extends ZOrdered {
   def contains(p: APoint): Boolean = shape.bounds contains p //TODO shapeCanvas.contains(p.x - shapeCanvas.getLayoutX, p.y - shapeCanvas.getLayoutY) //TODO special JavaFX API to ignore transparent parts?
 
   def pos: APoint
+  def pos_= (p: APoint)
   def shape: AShape
 
   /**

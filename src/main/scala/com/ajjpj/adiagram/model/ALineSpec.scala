@@ -29,6 +29,7 @@ class ALineSpec(var text: Option[String], lineStyle: LineStyle, textStyle: TextS
 
   override def boundsForResizing = ARect(p0Source.pos, p1Source.pos)
   override def pos = boundsForResizing.topLeft
+  override def pos_= (p: APoint) = throw new UnsupportedOperationException()
 
   def resizeBy(delta: ADim) = throw new UnsupportedOperationException
 
