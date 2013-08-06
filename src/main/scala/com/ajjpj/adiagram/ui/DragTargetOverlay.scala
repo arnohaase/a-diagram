@@ -1,9 +1,9 @@
 package com.ajjpj.adiagram.ui
 
 import javafx.scene.layout.Pane
-import com.ajjpj.adiagram.model.{AShapeSpec, ABoxSpec, ADiagram}
 import javafx.scene.shape.Circle
 import javafx.scene.paint.Color
+import com.ajjpj.adiagram.model.diagram.{AShapeSpec, ADiagram, ABoxSpec}
 
 
 /**

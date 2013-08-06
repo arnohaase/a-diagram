@@ -2,13 +2,13 @@ package com.ajjpj.adiagram.ui.init
 
 import javafx.stage.Stage
 import com.ajjpj.adiagram.ui.fw._
-import com.ajjpj.adiagram.model.ADiagram
 import javafx.scene.Scene
 import javafx.scene.layout.BorderPane
 import javafx.scene.control.{Button, TitledPane, ScrollPane}
 import com.ajjpj.adiagram.ui.{CurrentSelectionPane, SelectionTracker}
 import scala.collection.JavaConversions
 import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
+import com.ajjpj.adiagram.model.diagram.ADiagram
 
 
 /**

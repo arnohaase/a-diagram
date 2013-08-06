@@ -5,13 +5,24 @@ import com.ajjpj.adiagram.ui.fw.JavaFxHelper._
 import scala.Some
 import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
+import com.ajjpj.adiagram.model.DiagramManipulation
 
 
 /**
  * @author arno
  */
 object ADiagramMenuBar {
-  def create(ctrl: ADiagramController)(implicit digest: Digest) = Action.createMenuBar(editMenu, viewMenu(ctrl))
+  def create(ctrl: ADiagramController)(implicit digest: Digest) = Action.createMenuBar(diagramMenu(ctrl), editMenu, viewMenu(ctrl))
+
+  private def diagramMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
+    val addBox  = new SimpleAction(text="Add Box",  accelerator = Some("Ctrl+B"), body={val box  = DiagramManipulation.addNewBox (ctrl.diagram, ctrl.selectedStyles.fillStyle, ctrl.selectedStyles.shadowStyle, ctrl.selectedStyles.textStyle); ctrl.selections.setSelection(box)})
+    val addLine = new SimpleAction(text="Add Line", accelerator = Some("Ctrl+L"), body={val line = DiagramManipulation.addNewLine(ctrl.diagram, ctrl.selectedStyles.lineStyle, ctrl.selectedStyles.lineTextStyle);                              ctrl.selections.setSelection(line)})
+    val addText = new SimpleAction(text="Add Text", accelerator = Some("Ctrl+T"), body={val text = DiagramManipulation.addNewText(ctrl.diagram, ctrl.selectedStyles.textStyle);                                                                 ctrl.selections.setSelection(text)})
+
+    val delete = new SimpleAction(text="Delete", accelerator = Some(new KeyCodeCombination (KeyCode.DELETE)), enabled= ! (ctrl.selections.selectedShapes.isEmpty), body={DiagramManipulation.deleteSelection(ctrl)})
+
+    new SimpleActionGroup(text="Diagram", items=List(addBox, addLine, addText, Action.SEPARATOR, delete))
+  }
 
   private def editMenu(implicit digest: Digest) = {
     val undoAction = new SimpleAction(text="Undo " + digest.undoRedo.nextUndo.map(_.name).getOrElse(""), enabled=digest.undoRedo.hasUndo, accelerator = Some("Ctrl+Z"),       body={digest.undoRedo.undo()})
@@ -26,26 +37,5 @@ object ADiagramMenuBar {
 
     new SimpleActionGroup(text="View", items=List(zoomInAction, zoomOutAction))
   }
-
-
-
-//  val menuBar = {
-//    val openAction = new SimpleAction(text="Open", accelerator = Some("Ctrl+O"), body= {
-//      changeCounter.inc()
-//      println(showOkCancelDialog(stage, "My Dialog", new Text(25, 25, "Hi There!")))
-//    })
-//    val saveAction = new SimpleAction(text="Save", body={})
-//    val showAccordionAction = new SimpleAction("Show Accordion", accelerator = Some("Ctrl+L"), body={accordion.setVisible(! accordion.isVisible)})
-//    val fullScreenAction = new SimpleAction("Full Screen", accelerator = Some("F11"), body={stage.setFullScreen(! stage.isFullScreen)})
-//
-//    val dummyAction = new SimpleAction(text="dummy", visible=c%5 != 4, enabled = c%2 != 0, body={})
-//    val dummyAction2 = new SimpleAction(text="dummy2", body={c+=1})
-//
-//    val fileMenu = new SimpleActionGroup(text="File", items=List(openAction, saveAction))
-//    val viewMenu = new SimpleActionGroup(text="View", items=List(showAccordionAction, fullScreenAction))
-//    val dummyMenu = new SimpleActionGroup(text="Dummy", items=List(dummyAction, dummyAction2))
-//
-//    Action.createMenuBar(fileMenu, viewMenu, dummyMenu)
-//  }
-
 }
+

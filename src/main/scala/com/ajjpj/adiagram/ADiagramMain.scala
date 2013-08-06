@@ -2,13 +2,13 @@ package com.ajjpj.adiagram
 
 import javafx.stage.Stage
 import javafx.scene.paint._
-import com.ajjpj.adiagram.model.{ATextSpec, ALineSpec, ADiagram, ABoxSpec}
 import com.ajjpj.adiagram.render.base.{LineStyle, TextStyle, ShadowStyle, FillStyle}
 import javafx.scene.effect.BlurType
 import javafx.scene.text.TextAlignment
 import javafx.geometry.VPos
 import com.ajjpj.adiagram.ui.init.Init
 import com.ajjpj.adiagram.geometry.{ADim, APoint}
+import com.ajjpj.adiagram.model.diagram.{ATextSpec, ALineSpec, ADiagram, ABoxSpec}
 
 
 /**
@@ -40,11 +40,7 @@ class ADiagramMain extends javafx.application.Application {
 
   diagram += connectingLine
 
-  private def createBoxSpec(pos: APoint, dim: ADim, text: Option[String]) = {
-    val result = new ABoxSpec(dim, text, fillStyle, shadowStyle, textStyle)
-    result.pos = pos
-    result
-  }
+  private def createBoxSpec(pos: APoint, dim: ADim, text: Option[String]) = new ABoxSpec(pos, dim, text, fillStyle, shadowStyle, textStyle)
 
   override def start(stage: Stage) {
     Init.initStage(stage, diagram)

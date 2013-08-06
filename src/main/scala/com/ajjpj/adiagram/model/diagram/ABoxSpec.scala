@@ -1,4 +1,4 @@
-package com.ajjpj.adiagram.model
+package com.ajjpj.adiagram.model.diagram
 
 import com.ajjpj.adiagram.geometry.{APoint, ARect, ADim}
 import com.ajjpj.adiagram.render.shapes.{ABoxShape, AShape}
@@ -8,8 +8,7 @@ import com.ajjpj.adiagram.render.base.{ShadowStyle, TextStyle, FillStyle}
 /**
  * @author arno
  */
-class ABoxSpec(var dim: ADim, var text: Option[String], var fillStyle: FillStyle, var shadowStyle: ShadowStyle, var textStyle: TextStyle) extends AShapeSpec {
-  var pos = APoint(0, 0)
+class ABoxSpec(var pos: APoint, var dim: ADim, var text: Option[String], var fillStyle: FillStyle, var shadowStyle: ShadowStyle, var textStyle: TextStyle) extends AShapeSpec {
   override def resizeBy(delta: ADim) = dim += delta
 
   override def shape: AShape = new ABoxShape(ARect(pos, dim), text, fillStyle, shadowStyle, textStyle)

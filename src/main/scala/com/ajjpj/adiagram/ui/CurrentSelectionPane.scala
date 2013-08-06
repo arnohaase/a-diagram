@@ -1,9 +1,9 @@
 package com.ajjpj.adiagram.ui
 
 import javafx.scene.layout.Pane
-import com.ajjpj.adiagram.model.{ALineSpec, ATextSpec, ABoxSpec, AShapeSpec}
 import com.ajjpj.adiagram.ui.fw.{Digest, JavaFxHelper}
 import com.ajjpj.adiagram.ui.forms.{LineDetailsForm, TextDetailsForm, AbstractForm, BoxDetailsForm}
+import com.ajjpj.adiagram.model.diagram.{ATextSpec, AShapeSpec, ALineSpec, ABoxSpec}
 
 
 /**

@@ -1,4 +1,4 @@
-package com.ajjpj.adiagram.model
+package com.ajjpj.adiagram.model.diagram
 
 import com.ajjpj.adiagram.geometry.{ARect, ADim, APoint}
 import com.ajjpj.adiagram.render.shapes.ATextShape

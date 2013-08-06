@@ -2,7 +2,7 @@ package com.ajjpj.adiagram.ui.forms
 
 import javafx.scene.control.{TextField, Label}
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
-import com.ajjpj.adiagram.model.ABoxSpec
+import com.ajjpj.adiagram.model.diagram.ABoxSpec
 
 /**
  * @author arno

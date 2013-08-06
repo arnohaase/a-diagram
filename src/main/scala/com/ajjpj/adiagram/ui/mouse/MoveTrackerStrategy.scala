@@ -2,8 +2,8 @@ package com.ajjpj.adiagram.ui.mouse
 
 import com.ajjpj.adiagram.ui.{Zoom, AScreenPos}
 import com.ajjpj.adiagram.ui.fw.{Command, Digest, SystemConfiguration}
-import com.ajjpj.adiagram.model.{PosSource, ALineSpec, AShapeSpec}
 import com.ajjpj.adiagram.geometry.APoint
+import com.ajjpj.adiagram.model.diagram.{AShapeSpec, PosSource, ALineSpec}
 
 /**
  * @author arno

@@ -1,10 +1,11 @@
 todo
 ----
 * next
-  * delete diagram element
-  * new diagram element
+  * load / save diagram
 
 * features
+  * export
+  * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
   * drag display by clicking on background
   * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
@@ -19,7 +20,6 @@ todo
   * undo redo stack should support 'snapshot' for rollbacks --> 'cancel' / 'reset' in a dialog
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
   * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
-  * test with Windows --> performance with accelerator engine?
   * automatically delete empty text shapes
   * add four missing resize handles
   * limit re-rendering of shapes during interactive 'resize' etc.
@@ -53,7 +53,6 @@ todo
   * different line style for lines 'behind' a box (e.g. dashed)
   * 'background boxes', i.e. borders used for visually grouping stuff
   * tool bar, status bar
-  * accordion on the left
   * tree view with the logical structure
   * different scaling for screen and export
   * manual / explicit *relative* correction for visual start / end point of lines (x / y / *axial* / *distance from box*)

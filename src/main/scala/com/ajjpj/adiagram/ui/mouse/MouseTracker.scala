@@ -6,6 +6,7 @@ import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.fw._
 import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
 import com.ajjpj.adiagram.ui.{ResizeDirection, AScreenPos, SelectionTracker}
+import com.ajjpj.adiagram.model.diagram.{AShapeSpec, ADiagram}
 
 
 /**

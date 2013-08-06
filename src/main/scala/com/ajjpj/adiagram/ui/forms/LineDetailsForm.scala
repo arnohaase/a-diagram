@@ -1,8 +1,8 @@
 package com.ajjpj.adiagram.ui.forms
 
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
-import com.ajjpj.adiagram.model.{ABoxSpec, ALineSpec}
 import javafx.scene.control.{Label, TextField}
+import com.ajjpj.adiagram.model.diagram.ALineSpec
 
 /**
  * @author arno

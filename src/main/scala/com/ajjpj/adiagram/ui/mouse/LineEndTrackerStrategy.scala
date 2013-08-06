@@ -1,9 +1,9 @@
 package com.ajjpj.adiagram.ui.mouse
 
 import com.ajjpj.adiagram.ui.{Zoom, DragTargetOverlay, AScreenPos}
-import com.ajjpj.adiagram.model.{PosSource, ABoxSpec, ALineSpec, ADiagram}
 import com.ajjpj.adiagram.ui.presentation.DiagramRootContainer
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
+import com.ajjpj.adiagram.model.diagram.{PosSource, ALineSpec, ADiagram, ABoxSpec}
 
 /**
  * @author arno

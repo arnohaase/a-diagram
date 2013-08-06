@@ -1,12 +1,12 @@
 package com.ajjpj.adiagram.ui
 
-import com.ajjpj.adiagram.model.{ALineSpec, AShapeSpec, ADiagram}
 import javafx.scene.shape.Rectangle
 import javafx.scene.paint.Color
 import com.ajjpj.adiagram.geometry.{Angle, APoint, ARect}
 import com.ajjpj.adiagram.ui.fw.{SystemConfiguration, Digest}
 import scala.reflect.ClassTag
 import com.ajjpj.adiagram.ui.presentation.{ADiagramController, ZOrdered, DiagramRootContainer}
+import com.ajjpj.adiagram.model.diagram.{AShapeSpec, ALineSpec, ADiagram}
 
 /**
  * @author arno

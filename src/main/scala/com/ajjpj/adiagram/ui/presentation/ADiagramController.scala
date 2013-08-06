@@ -1,19 +1,22 @@
 package com.ajjpj.adiagram.ui.presentation
 
-import com.ajjpj.adiagram.model.{ShapeSpecReRenderSnapshot, AShapeSpec, ADiagram}
 import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
 import com.ajjpj.adiagram.ui.{AScreenPos, Zoom, SelectionTracker}
 import javafx.scene.canvas.Canvas
 import com.ajjpj.adiagram.render.base.{PartialImage, PartialImageWithShadow}
 import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.mouse.MouseTracker
+import com.ajjpj.adiagram.model.diagram.{ShapeSpecReRenderSnapshot, AShapeSpec, ADiagram}
+import com.ajjpj.adiagram.model.SelectedStyles
 
 
 /**
  * @author arno
  */
-class ADiagramController (root: DiagramRootContainer, diagram: ADiagram)(implicit digest: Digest) {
+class ADiagramController (root: DiagramRootContainer, val diagram: ADiagram)(implicit digest: Digest) {
   var zoom = Zoom.Identity
+
+  val selectedStyles = new SelectedStyles()
 
   val selections = new SelectionTracker(diagram, root, this)
   val mouseTracker = new MouseTracker(root, diagram, this, selections)
