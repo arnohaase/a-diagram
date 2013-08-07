@@ -1,4 +1,6 @@
+import AssemblyKeys._ // put this at the top of the file
 
+assemblySettings
 
 javaHome := {
   var s = System.getenv("JAVA_HOME")
@@ -37,4 +39,10 @@ unmanagedJars in Compile <+= javaHome map { jh /*: Option[File]*/ =>
     throw new RuntimeException( "JavaFX not detected (needs Java runtime 7u06 or later): "+ jfxJar.getPath )  // '.getPath' = full filename
   }
   Attributed.blank(jfxJar)
-} 
+}
+
+//excludedJars in assembly <<= (fullClasspath in assembly) map { cp =>
+//  cp filter {_.data.getName == "jfxrt.jar"}
+//}
+
+mainClass := Some("com.ajjpj.adiagram.ADiagramMain")
