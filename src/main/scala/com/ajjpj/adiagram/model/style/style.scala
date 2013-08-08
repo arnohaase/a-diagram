@@ -1,4 +1,4 @@
-package com.ajjpj.adiagram.model
+package com.ajjpj.adiagram.model.style
 
 import javafx.scene.paint._
 import com.ajjpj.adiagram.render.base.{TextStyle, LineStyle, ShadowStyle, FillStyle}
@@ -30,6 +30,8 @@ class SolidFillSpec extends FillStyleSpec {
 }
 
 class SimpleLinearGradientSpec extends FillStyleSpec {
+  def this(color0: ColorSpec, color1: ColorSpec) = { this(); colorSpec0 = color0; colorSpec1 = color1 }
+
   var colorSpec0: ColorSpec = _
   var colorSpec1: ColorSpec = _
 
@@ -43,7 +45,7 @@ trait ShadowStyleSpec {
   def style: ShadowStyle
 }
 
-class SimpleShadowSpec extends ShadowStyleSpec {
+object SimpleShadowSpec extends ShadowStyleSpec {
   override def name = "Simple Shadow"
   override def style = ShadowStyle(6, 6, 16, BlurType.GAUSSIAN, Color.color(.5, .5, .5))
 }
@@ -64,12 +66,13 @@ trait TextStyleSpec {
   def style: TextStyle
 }
 
-class SimpleBoxTextSpec extends TextStyleSpec {
-  override def name = "Simple Box Text"
-  override def style = TextStyle(72, TextAlignment.CENTER, VPos.CENTER)
-}
+class SimpleTextStyleSpec extends TextStyleSpec {
+  def this(name: String, fontSize: Int) = {this(); this.name = name; this.fontSizePixels = fontSize}
 
-class SimpleLineTextSpec extends TextStyleSpec {
-  override def name = "Simple Line Text"
-  override def style = TextStyle(30, TextAlignment.CENTER, VPos.CENTER)
+  override var name = _
+  var fontSizePixels = 72
+  var textAlignment = TextAlignment.CENTER
+  var vPos = VPos.CENTER
+
+  def style = TextStyle(fontSizePixels, textAlignment, vPos)
 }
