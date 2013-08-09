@@ -10,7 +10,7 @@ import com.ajjpj.adiagram.model.style.{LineStyleSpec, TextStyleSpec}
 /**
  * @author arno
  */
-class ALineSpec(var text: Option[String], lineStyle: LineStyleSpec, textStyle: TextStyleSpec) extends AShapeSpec {
+class ALineSpec(var text: Option[String], var lineStyle: LineStyleSpec, var textStyle: TextStyleSpec) extends AShapeSpec {
   def this(initialP0: APoint, initialP1: APoint, text: Option[String], lineStyle: LineStyleSpec, textStyle: TextStyleSpec) = {
     this(text, lineStyle, textStyle)
     p0Source = new LiteralPosSource(initialP0)

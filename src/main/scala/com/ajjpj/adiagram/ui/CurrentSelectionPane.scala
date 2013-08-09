@@ -27,8 +27,8 @@ class CurrentSelectionPane(ctrl: ADiagramController, selections: SelectionTracke
 
     curForm = selections.selectedShapes.toList match {
       case List(box:  ABoxSpec)  => Some(new BoxDetailsForm(ctrl.styleRepository, box))
-      case List(text: ATextSpec) => Some(new TextDetailsForm(text))
-      case List(line: ALineSpec) => Some(new LineDetailsForm(line))
+      case List(text: ATextSpec) => Some(new TextDetailsForm(ctrl.styleRepository, text))
+      case List(line: ALineSpec) => Some(new LineDetailsForm(ctrl.styleRepository, line))
       case _ => None
     }
 

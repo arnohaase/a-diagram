@@ -54,6 +54,13 @@ object SimpleShadowSpec extends ShadowStyleSpec {
   override def style = ShadowStyle(6, 6, 16, BlurType.GAUSSIAN, Color.color(.5, .5, .5))
 }
 
+object NoShadowSpec extends ShadowStyleSpec {
+  override def uuid = UUID.fromString("c8845d04-d210-4f7e-889d-e5c0eb7defc7")
+
+  override def name = "No Shadow"
+  override def style = ShadowStyle(0, 0, 0, BlurType.ONE_PASS_BOX, Color.TRANSPARENT)
+}
+
 
 class LineStyleSpec extends WithUuid {
   def this(colorSpec: ColorSpec, width: Double) = {this(); this.colorSpec = colorSpec; this.width = width}
