@@ -4,6 +4,7 @@ todo
   * load / save diagram
 
 * features
+  * 'no shadow' spec
   * export
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well

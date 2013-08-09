@@ -26,7 +26,7 @@ object Init {
 
     val appPane = new BorderPane
     appPane.setTop(ADiagramMenuBar.create(controller))
-    appPane.setLeft(createAccordion(controller.selections))
+    appPane.setLeft(createAccordion(controller, controller.selections))
 
     val scrollPane = new ScrollPane()
     scrollPane.setContent(root)
@@ -40,12 +40,12 @@ object Init {
     digest.execute{} // trigger the digest loop
   }
 
-  private def createAccordion(selections: SelectionTracker)(implicit digest: Digest) = {
+  private def createAccordion(ctrl: ADiagramController, selections: SelectionTracker)(implicit digest: Digest) = {
     import JavaConversions._
 
     val accordion = JavaFxHelper.createUncollapsableAccordion()
 
-    accordion.getPanes.add(new TitledPane("Selection", new CurrentSelectionPane(selections)))
+    accordion.getPanes.add(new TitledPane("Selection", new CurrentSelectionPane(ctrl, selections)))
 
     accordion.getPanes.add(new TitledPane("asdf", new Button("asdf")))
     accordion.getPanes.add(new TitledPane("jklö", new Button("jklö")))

@@ -4,12 +4,13 @@ import javafx.scene.layout.Pane
 import com.ajjpj.adiagram.ui.fw.{Digest, JavaFxHelper}
 import com.ajjpj.adiagram.ui.forms.{LineDetailsForm, TextDetailsForm, AbstractForm, BoxDetailsForm}
 import com.ajjpj.adiagram.model.diagram.{ATextSpec, AShapeSpec, ALineSpec, ABoxSpec}
+import com.ajjpj.adiagram.ui.presentation.ADiagramController
 
 
 /**
  * @author arno
  */
-class CurrentSelectionPane(selections: SelectionTracker)(implicit digest: Digest) extends Pane {
+class CurrentSelectionPane(ctrl: ADiagramController, selections: SelectionTracker)(implicit digest: Digest) extends Pane {
   private var curForm: Option[AbstractForm] = None
 
   selections.selectionChangeListeners += onSelectionChanged
@@ -25,7 +26,7 @@ class CurrentSelectionPane(selections: SelectionTracker)(implicit digest: Digest
     getChildren.clear()
 
     curForm = selections.selectedShapes.toList match {
-      case List(box:  ABoxSpec)  => Some(new BoxDetailsForm(box))
+      case List(box:  ABoxSpec)  => Some(new BoxDetailsForm(ctrl.styleRepository, box))
       case List(text: ATextSpec) => Some(new TextDetailsForm(text))
       case List(line: ALineSpec) => Some(new LineDetailsForm(line))
       case _ => None
