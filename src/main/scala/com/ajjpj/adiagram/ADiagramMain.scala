@@ -4,6 +4,7 @@ import javafx.stage.Stage
 import com.ajjpj.adiagram.ui.init.Init
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import com.ajjpj.adiagram.model.style.AStyleRepository
+import com.ajjpj.adiagram.model.SelectedStyles
 
 
 /**
@@ -40,7 +41,8 @@ class ADiagramMain extends javafx.application.Application {
 //  private def createBoxSpec(pos: APoint, dim: ADim, text: Option[String]) = new ABoxSpec(pos, dim, text, fillStyle, shadowStyle, textStyle)
 
   override def start(stage: Stage) {
-    Init.initStage(stage, new ADiagram, AStyleRepository.default)
+    val repo = AStyleRepository.default
+    Init.initStage(stage, new ADiagram, repo, SelectedStyles.createFromDefaultRepo(repo))
     stage.show()
   }
 

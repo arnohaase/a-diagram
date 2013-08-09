@@ -10,18 +10,19 @@ import scala.collection.JavaConversions
 import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import com.ajjpj.adiagram.model.style.AStyleRepository
+import com.ajjpj.adiagram.model.SelectedStyles
 
 
 /**
  * @author arno
  */
 object Init {
-  def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository) {
+  def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles) {
     implicit val digest = new Digest()
 
     //TODO loosen the references using listeners?
     val root = new DiagramRootContainer()
-    val controller = new ADiagramController(root, diagram, styleRepository)
+    val controller = new ADiagramController(root, diagram, styleRepository, selectedStyles)
 
     val appPane = new BorderPane
     appPane.setTop(ADiagramMenuBar.create(controller))
