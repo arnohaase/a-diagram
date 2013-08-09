@@ -16,6 +16,9 @@ class SelectedStyles {
   var textStyle: TextStyleSpec = null //new TextStyle(72, TextAlignment.CENTER, VPos.CENTER)
   var lineStyle: LineStyleSpec = null //new LineStyle(Color.BLACK, 5)
   var lineTextStyle: TextStyleSpec = null //new TextStyle(30, TextAlignment.CENTER, VPos.CENTER)
+
+  var startLineEnd: LineEndSpec = RoundedCornerLineEndSpec
+  var endLineEnd: LineEndSpec = RoundPointedArrowLineEndSpec
 }
 
 object SelectedStyles {

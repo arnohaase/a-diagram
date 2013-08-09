@@ -1,6 +1,6 @@
 package com.ajjpj.adiagram.ui.forms
 
-import com.ajjpj.adiagram.model.style.{ShadowStyleSpec, LineStyleSpec, TextStyleSpec, FillStyleSpec}
+import com.ajjpj.adiagram.model.style._
 import javafx.scene.control.{Label, ListCell}
 import javafx.scene.shape.Rectangle
 import javafx.scene.layout.FlowPane
@@ -54,6 +54,19 @@ class LineStyleListCell extends ListCell[LineStyleSpec] {
     }
     else {
       setText(item.name)
+    }
+  }
+}
+
+class LineEndListCell extends ListCell[LineEndSpec] {
+  override def updateItem(item: LineEndSpec, empty: Boolean) {
+    super.updateItem(item, empty)
+
+    if(item == null) {
+      setText(null)
+    }
+    else {
+      setText(item.name) //TODO visualize the line end
     }
   }
 }

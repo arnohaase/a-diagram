@@ -6,13 +6,8 @@ import scala.Some
 import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
 import com.ajjpj.adiagram.model.DiagramManipulation
-import com.ajjpj.adiagram.render.base.{LineStyle, TextStyle, ShadowStyle, FillStyle}
-import javafx.scene.paint.{Color, Stop, CycleMethod, LinearGradient}
-import javafx.scene.effect.BlurType
-import javafx.scene.text.TextAlignment
-import javafx.geometry.VPos
-import com.ajjpj.adiagram.model.diagram.{ABoxSpec, ATextSpec, ALineSpec, ADiagram}
-import com.ajjpj.adiagram.geometry.{ADim, APoint}
+import com.ajjpj.adiagram.model.diagram.{ABoxSpec, ATextSpec, ALineSpec}
+import com.ajjpj.adiagram.model.style.{RoundPointedArrowLineEndSpec, RoundedCornerLineEndSpec}
 
 
 /**
@@ -22,11 +17,13 @@ object ADiagramMenuBar {
   def create(ctrl: ADiagramController)(implicit digest: Digest) = Action.createMenuBar(diagramMenu(ctrl), editMenu, viewMenu(ctrl))
 
   private def diagramMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
-    val addBox  = new SimpleAction(text="Add Box",  accelerator = Some("Ctrl+B"), body={val box  = DiagramManipulation.addNewBox (ctrl.diagram, ctrl.selectedStyles.fillStyle, ctrl.selectedStyles.shadowStyle, ctrl.selectedStyles.textStyle); ctrl.selections.setSelection(box)})
-    val addLine = new SimpleAction(text="Add Line", accelerator = Some("Ctrl+L"), body={val line = DiagramManipulation.addNewLine(ctrl.diagram, ctrl.selectedStyles.lineStyle, ctrl.selectedStyles.lineTextStyle);                              ctrl.selections.setSelection(line)})
-    val addText = new SimpleAction(text="Add Text", accelerator = Some("Ctrl+T"), body={val text = DiagramManipulation.addNewText(ctrl.diagram, ctrl.selectedStyles.textStyle);                                                                 ctrl.selections.setSelection(text)})
+    val styles = ctrl.selectedStyles
 
-    val delete = new SimpleAction(text="Delete", accelerator = Some(new KeyCodeCombination (KeyCode.DELETE)), enabled= ! (ctrl.selections.selectedShapes.isEmpty), body={DiagramManipulation.deleteSelection(ctrl)})
+    val addBox  = new SimpleAction(text="Add Box",  accelerator = Some("Ctrl+B"), body={val box  = DiagramManipulation.addNewBox (ctrl.diagram, styles.fillStyle, styles.shadowStyle, styles.textStyle);                         ctrl.selections.setSelection(box)})
+    val addLine = new SimpleAction(text="Add Line", accelerator = Some("Ctrl+L"), body={val line = DiagramManipulation.addNewLine(ctrl.diagram, styles.lineStyle, styles.lineTextStyle, styles.startLineEnd, styles.endLineEnd); ctrl.selections.setSelection(line)})
+    val addText = new SimpleAction(text="Add Text", accelerator = Some("Ctrl+T"), body={val text = DiagramManipulation.addNewText(ctrl.diagram, styles.textStyle);                                                               ctrl.selections.setSelection(text)})
+
+    val delete = new SimpleAction(text="Delete", accelerator = Some(new KeyCodeCombination (KeyCode.DELETE)), enabled= ! ctrl.selections.selectedShapes.isEmpty, body={DiagramManipulation.deleteSelection(ctrl)})
 
     val createDummy = new SimpleAction(text="Create Dummy", accelerator = Some("Ctrl+Alt+D"), body = createDummyDiagram(ctrl))
 
@@ -34,8 +31,8 @@ object ADiagramMenuBar {
   }
 
   private def createDummyDiagram(ctrl: ADiagramController)(implicit digest: Digest) {
-    val fillStyle     = ctrl.styleRepository.fillStyles.iterator.next() //    new FillStyle(new LinearGradient(0.3, 0, .7, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.LIGHTBLUE), new Stop(1, Color.AZURE)))
-    val shadowStyle   = ctrl.styleRepository.shadowStyles.iterator.next // = new ShadowStyle(6, 6, 16, BlurType.GAUSSIAN, Color.color(.5, .5, .5))
+    val fillStyle     = ctrl.styleRepository.fillStyles.iterator.next()   //    new FillStyle(new LinearGradient(0.3, 0, .7, 1, true, CycleMethod.NO_CYCLE, new Stop(0, Color.LIGHTBLUE), new Stop(1, Color.AZURE)))
+    val shadowStyle   = ctrl.styleRepository.shadowStyles.iterator.next() // = new ShadowStyle(6, 6, 16, BlurType.GAUSSIAN, Color.color(.5, .5, .5))
     val textStyle     = ctrl.styleRepository.textStyles.find(_.name == "Box").get
     val lineTextStyle = ctrl.styleRepository.textStyles.find(_.name == "Line").get
     val lineStyle     = ctrl.styleRepository.lineStyles.find(_.width > 3.5).get
@@ -44,10 +41,10 @@ object ADiagramMenuBar {
     val box2 = new ABoxSpec((400.0, 400.0), (250.0, 80.0), Some("Yeah!"),  fillStyle, shadowStyle, textStyle)
     ctrl.diagram += box1
     ctrl.diagram += box2
-    ctrl.diagram += new ALineSpec((1400.0, 100.0), (900.0, 500.0), Some("Arrow Text"), lineStyle, lineTextStyle)
+    ctrl.diagram += new ALineSpec((1400.0, 100.0), (900.0, 500.0), Some("Arrow Text"), lineStyle, lineTextStyle, RoundedCornerLineEndSpec, RoundPointedArrowLineEndSpec)
     ctrl.diagram += new ATextSpec((100.0, 600.0), (300.0, 80.0), "Hey Dude", textStyle)
 
-    val connectingLine = new ALineSpec((0.0, 0.0), (0.0, 0.0), Some("Connecting"), lineStyle, lineTextStyle)
+    val connectingLine = new ALineSpec((0.0, 0.0), (0.0, 0.0), Some("Connecting"), lineStyle, lineTextStyle, RoundedCornerLineEndSpec, RoundPointedArrowLineEndSpec)
     connectingLine.bindStartPoint(box1)
     connectingLine.bindEndPoint  (box2)
 

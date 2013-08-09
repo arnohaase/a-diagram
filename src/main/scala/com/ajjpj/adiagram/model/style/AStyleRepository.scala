@@ -11,6 +11,8 @@ class AStyleRepository {
   var shadowStyles = Set[ShadowStyleSpec]()
   var lineStyles = Set[LineStyleSpec]()
   var textStyles = Set[TextStyleSpec]()
+
+  val lineEnds = List(CutOffLineEndSpec, RoundedCornerLineEndSpec, SemiCircleLineEndSpec, PointedArrowLineEndSpec, RoundPointedArrowLineEndSpec, RoundArrowLineEndSpec)
 }
 
 object AStyleRepository {

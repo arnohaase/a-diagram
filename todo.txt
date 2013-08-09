@@ -4,7 +4,6 @@ todo
   * load / save diagram
 
 * features
-  * 'no shadow' spec
   * export
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
@@ -14,7 +13,6 @@ todo
   * extract 'AbstractPoint' and 'AbstractRect' traits
   * Style Repository
     * additional accordion entry
-    * offer in text / line / box details form ('live' binding)
   * TextDetailsForm
     * 'fit to text' checkbox
   * undo redo stack should merge commands (i.e. ask them to merge if they can
@@ -55,7 +53,6 @@ todo
   * 'background boxes', i.e. borders used for visually grouping stuff
   * tool bar, status bar
   * tree view with the logical structure
-  * different scaling for screen and export
   * manual / explicit *relative* correction for visual start / end point of lines (x / y / *axial* / *distance from box*)
   * text on line: correction (forward / backward and distance to line)
 * JavaFX APIs

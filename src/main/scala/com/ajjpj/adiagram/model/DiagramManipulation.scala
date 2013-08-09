@@ -3,7 +3,8 @@ package com.ajjpj.adiagram.model
 import com.ajjpj.adiagram.model.diagram._
 import com.ajjpj.adiagram.ui.fw.{Digest, Command}
 import com.ajjpj.adiagram.ui.presentation.ADiagramController
-import com.ajjpj.adiagram.model.style.{LineStyleSpec, FillStyleSpec, ShadowStyleSpec, TextStyleSpec}
+import com.ajjpj.adiagram.model.style._
+import com.ajjpj.adiagram.model.diagram.LiteralPosSource
 
 
 /**
@@ -20,8 +21,8 @@ object DiagramManipulation {
     box
   }
 
-  def addNewLine(diagram: ADiagram, lineStyle: LineStyleSpec, textStyle: TextStyleSpec)(implicit digest: Digest) = {
-    val line = new ALineSpec(None, lineStyle, textStyle)
+  def addNewLine(diagram: ADiagram, lineStyle: LineStyleSpec, textStyle: TextStyleSpec, startLineEnd: LineEndSpec, endLineEnd: LineEndSpec)(implicit digest: Digest) = {
+    val line = new ALineSpec(None, lineStyle, textStyle, startLineEnd, endLineEnd)
     line.p0Source = LiteralPosSource((100.0, 100.0)) //TODO move to middle of screen
     line.p1Source = LiteralPosSource((200.0, 200.0))
     diagram += line
