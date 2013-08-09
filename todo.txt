@@ -13,6 +13,7 @@ todo
   * extract 'AbstractPoint' and 'AbstractRect' traits
   * Style Repository
     * additional accordion entry
+  * visualize 'current' styles (and make them selectable)
   * TextDetailsForm
     * 'fit to text' checkbox
   * undo redo stack should merge commands (i.e. ask them to merge if they can
