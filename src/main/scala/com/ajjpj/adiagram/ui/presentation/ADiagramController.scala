@@ -8,12 +8,13 @@ import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.mouse.MouseTracker
 import com.ajjpj.adiagram.model.diagram.{ShapeSpecReRenderSnapshot, AShapeSpec, ADiagram}
 import com.ajjpj.adiagram.model.SelectedStyles
+import com.ajjpj.adiagram.model.style.AStyleRepository
 
 
 /**
  * @author arno
  */
-class ADiagramController (root: DiagramRootContainer, val diagram: ADiagram)(implicit digest: Digest) {
+class ADiagramController (root: DiagramRootContainer, val diagram: ADiagram, val styleRepository: AStyleRepository)(implicit digest: Digest) {
   var zoom = Zoom.Identity
 
   val selectedStyles = new SelectedStyles()

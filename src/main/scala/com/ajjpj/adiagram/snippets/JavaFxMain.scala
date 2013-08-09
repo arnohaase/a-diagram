@@ -12,6 +12,7 @@ import scala.beans.BeanProperty
 import scala.Some
 import javafx.application.Platform
 import javafx.beans.value.{ChangeListener, ObservableValue}
+import java.util.UUID
 
 /**
  * @author arno

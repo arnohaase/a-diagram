@@ -24,7 +24,7 @@ object AStyleRepository {
     repo.colors = Set(new ColorSpec("red", Color.RED), new ColorSpec("green", Color.GREEN), black, lightBlue, azure)
     repo.fillStyles = Set(new SimpleLinearGradientSpec(lightBlue, azure))
     repo.shadowStyles = Set(SimpleShadowSpec)
-    repo.lineStyles = Set(new LineStyleSpec(black, 1), new LineStyleSpec(black, 2))
+    repo.lineStyles = Set(new LineStyleSpec(black, 1), new LineStyleSpec(black, 2), new LineStyleSpec(black, 4))
     repo.textStyles = Set(new SimpleTextStyleSpec("Box", 72), new SimpleTextStyleSpec("Line", 30))
 
     repo
