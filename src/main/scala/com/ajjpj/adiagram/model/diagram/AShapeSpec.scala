@@ -7,6 +7,7 @@ import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
 import com.ajjpj.adiagram.render.base.{PartialImage, PartialImageWithShadow}
 import com.ajjpj.adiagram.ui.presentation.{ZOrdered, DiagramRootContainer}
 import com.ajjpj.adiagram.ui.Zoom
+import java.util.UUID
 
 
 /**
@@ -16,6 +17,7 @@ trait AShapeSpec extends ZOrdered {
   private var _changeCounter = 0
   def changeCounter = _changeCounter
   var z = 0
+  var uuid = UUID.randomUUID
 
   //TODO Node.pickOnBounds (ignore transparent pixels for purposes of mouse event routing) --> does not appear to work?!
 

@@ -14,7 +14,7 @@ import com.ajjpj.adiagram.model.style.AStyleRepository
 /**
  * @author arno
  */
-class ADiagramController (root: DiagramRootContainer, val diagram: ADiagram, val styleRepository: AStyleRepository, val selectedStyles: SelectedStyles)(implicit digest: Digest) {
+class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram, val styleRepository: AStyleRepository, val selectedStyles: SelectedStyles)(implicit digest: Digest) {
   var zoom = Zoom.Identity
 
   val selections = new SelectionTracker(diagram, root, this)

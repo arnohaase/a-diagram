@@ -8,6 +8,7 @@ class ADiagram {
 
   def elements = _elements
 
+  def ++=(els: Traversable[AShapeSpec]) = _elements ++= els
   def +=(el: AShapeSpec) = _elements += el
   def -=(el: AShapeSpec) = _elements -= el
 }

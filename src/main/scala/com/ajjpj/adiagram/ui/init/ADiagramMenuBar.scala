@@ -1,20 +1,31 @@
 package com.ajjpj.adiagram.ui.init
 
-import com.ajjpj.adiagram.ui.fw.{Action, SimpleActionGroup, SimpleAction, Digest}
+import com.ajjpj.adiagram.ui.fw._
 import com.ajjpj.adiagram.ui.fw.JavaFxHelper._
 import scala.Some
 import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
-import com.ajjpj.adiagram.model.DiagramManipulation
+import com.ajjpj.adiagram.model.{DiagramIO, DiagramManipulation}
 import com.ajjpj.adiagram.model.diagram.{ABoxSpec, ATextSpec, ALineSpec}
 import com.ajjpj.adiagram.model.style.{RoundPointedArrowLineEndSpec, RoundedCornerLineEndSpec}
+import javafx.stage.FileChooser
+import scala.Some
 
 
 /**
  * @author arno
  */
 object ADiagramMenuBar {
-  def create(ctrl: ADiagramController)(implicit digest: Digest) = Action.createMenuBar(diagramMenu(ctrl), editMenu, viewMenu(ctrl))
+  def create(ctrl: ADiagramController)(implicit digest: Digest) = Action.createMenuBar(fileMenu(ctrl), diagramMenu(ctrl), editMenu, viewMenu(ctrl))
+
+  private def fileMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
+//    val newDiagram = ...
+    val open =   new SimpleAction(text="Open",    accelerator = Some("Ctrl+O"),       body={DiagramIO.open(ctrl)})
+    val save =   new SimpleAction(text="Save",    accelerator = Some("Ctrl+S"),       body={DiagramIO.save(ctrl)}) //TODO enabled only if dirty
+    val saveAs = new SimpleAction(text="Save As", accelerator = Some("Ctrl+Shift+S"), body={DiagramIO.saveAs(ctrl)})
+
+    new SimpleActionGroup(text="File", items=List(open, save, saveAs))
+  }
 
   private def diagramMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
     val styles = ctrl.selectedStyles
@@ -59,7 +70,7 @@ object ADiagramMenuBar {
   }
 
   private def viewMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
-    val zoomInAction  = new SimpleAction("Zoom In",  accelerator = Some(new KeyCodeCombination (KeyCode.PERIOD /*PLUS*/,  KeyCombination.CONTROL_DOWN)), body={ctrl.zoom *= 1.5})
+    val zoomInAction  = new SimpleAction("Zoom In",  accelerator = Some(new KeyCodeCombination (KeyCode.PERIOD /*PLUS*/,  KeyCombination.CONTROL_DOWN)), body={ctrl.zoom *= 1.5})   //TODO move this to Business Logic
     val zoomOutAction = new SimpleAction("Zoom Out", accelerator = Some(new KeyCodeCombination (KeyCode.MINUS, KeyCombination.CONTROL_DOWN)), body={ctrl.zoom *= 1/1.5})
 
     new SimpleActionGroup(text="View", items=List(zoomInAction, zoomOutAction))

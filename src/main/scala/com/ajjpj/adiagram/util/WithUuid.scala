@@ -6,6 +6,5 @@ import java.util.UUID
  * @author arno
  */
 trait WithUuid {
-  protected var _uuid = UUID.randomUUID()
-  def uuid = _uuid
+  var uuid = UUID.randomUUID()
 }
