@@ -1,6 +1,6 @@
 package com.ajjpj.adiagram.ui.fw
 
-import javafx.stage.{Modality, StageStyle, Stage}
+import javafx.stage.{Window, Modality, StageStyle, Stage}
 import javafx.scene.{Scene, Node}
 import java.util.concurrent.atomic.{AtomicReference, AtomicBoolean}
 import javafx.scene.layout.{HBox, BorderPane}
@@ -116,7 +116,7 @@ object JavaFxHelper {
     }.start()
   }
 
-  def showOkCancelDialog(owner: Stage, title: String, content: Node) {
+  def showOkCancelDialog(owner: Window, title: String, content: Node) = {
     val result = new AtomicBoolean(false)
 
     val dialog = new Stage()
@@ -131,7 +131,7 @@ object JavaFxHelper {
     val buttonPane = new HBox()
     val okButton = new Button("OK")
     val cancelButton = new Button("Cancel")
-    buttonPane.getChildren().addAll(okButton, cancelButton)
+    buttonPane.getChildren.addAll(okButton, cancelButton)
     buttonPane.setAlignment(Pos.CENTER_RIGHT)
     pane.setBottom(buttonPane)
 

@@ -1,9 +1,11 @@
 todo
 ----
 * next
+  * export
 
 * features
-  * export
+  * new diagram
+  * close diagram
   * close dirty diagram: confirm dialog
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
@@ -11,7 +13,8 @@ todo
   * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
   * wrapper around GraphicsContext (with implicit conversion) --> coordinates as 'AScreenPos' instead of 'Double'
   * extract 'AbstractPoint' and 'AbstractRect' traits
-  * stable UUIDs for 'standard' styles: 'load' empty diagram
+  * stable UUIDs for 'standard' styles: 'load' empty diagram (?)
+  * beautify 'confirm' dialog
   * Style Repository
     * additional accordion entry
   * visualize 'current' styles (and make them selectable)
@@ -73,6 +76,7 @@ todo
   * Accordion allows unexpanding of all elements
   * repaint of changed menu item
   * hotkey 'Ctrl +' does not work (for zooming in)
+  * File Chooser: no way to pre-fill file name field; filter *only* by file extension
 
 * visual test suite (render to windows and files --> potentially different rendering engine?)
   * line endings at different angles and different line widths --> 'overlap' vs 'gap'

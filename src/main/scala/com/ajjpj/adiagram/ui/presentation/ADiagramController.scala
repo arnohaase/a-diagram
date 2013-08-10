@@ -10,6 +10,7 @@ import com.ajjpj.adiagram.model.diagram.{ShapeSpecReRenderSnapshot, AShapeSpec, 
 import com.ajjpj.adiagram.model.SelectedStyles
 import com.ajjpj.adiagram.model.style.AStyleRepository
 import java.io.File
+import javafx.stage.Stage
 
 
 /**
@@ -25,6 +26,8 @@ class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram,
     case Some(f) => f.getName
     case None => "<New Diagram>"
   }) + (if (isDirty) "*" else "")
+
+  def window = root.getScene.getWindow.asInstanceOf[Stage]
 
   val selections = new SelectionTracker(diagram, root, this)
   val mouseTracker = new MouseTracker(root, diagram, this, selections)

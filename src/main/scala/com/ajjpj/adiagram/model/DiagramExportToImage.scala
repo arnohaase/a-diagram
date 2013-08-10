@@ -1,10 +1,9 @@
-package com.ajjpj.adiagram.snippets
+package com.ajjpj.adiagram.model
 
-import javafx.stage.Stage
-import javafx.scene.SnapshotParameters
 import javafx.scene.canvas.Canvas
 import javafx.scene.paint.Color
 import javafx.scene.effect.DropShadow
+import javafx.scene.SnapshotParameters
 import javax.imageio.ImageIO
 import javafx.embed.swing.SwingFXUtils
 import java.io.File
@@ -13,16 +12,7 @@ import java.io.File
 /**
  * @author arno
  */
-object SaveCanvasToDisk {
-  def main(args: Array[String]) {
-    javafx.application.Application.launch(classOf[SaveCanvasToDisk])
-  }
-}
-
-class SaveCanvasToDisk extends javafx.application.Application {
-  def start(primaryStage: Stage) {
-    saveCanvas()
-  }
+object DiagramExportToImage {
 
   private def saveCanvas() {
     val c = new Canvas(500, 500)
@@ -36,4 +26,5 @@ class SaveCanvasToDisk extends javafx.application.Application {
     ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", new File("/home/arno/dummyrect.png"))
     System.exit(0)
   }
+
 }
