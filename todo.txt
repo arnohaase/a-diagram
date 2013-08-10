@@ -1,11 +1,10 @@
 todo
 ----
 * next
-  * load / save diagram
 
 * features
   * export
-  * handling of all currently open windows, special handling for 'last open' window --> 'close' vs. 'exit'
+  * close dirty diagram: confirm dialog
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
   * drag display by clicking on background

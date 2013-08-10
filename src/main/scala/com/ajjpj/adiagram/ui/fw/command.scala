@@ -14,6 +14,11 @@ class UndoRedoStack {
   private var undoStack: List[Command] = Nil
   private var redoStack: List[Command] = Nil
 
+  def clear() {
+    undoStack = Nil
+    redoStack = Nil
+  }
+
   def nextUndo = undoStack match {
     case head :: tail => Some(head)
     case _ => None

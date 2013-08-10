@@ -11,18 +11,29 @@ import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContai
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import com.ajjpj.adiagram.model.style.AStyleRepository
 import com.ajjpj.adiagram.model.SelectedStyles
+import java.io.File
 
 
 /**
  * @author arno
  */
 object Init {
-  def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles) {
+  def initEmptyStage(stage: Stage) {
+    val repo = AStyleRepository.default
+    initStage(stage, new ADiagram, repo, SelectedStyles.createFromDefaultRepo(repo), None)
+
+  }
+
+  def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles, file: File) {
+    initStage(stage, diagram, styleRepository, selectedStyles, Some(file))
+  }
+
+  private def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles, file: Option[File]) {
     implicit val digest = new Digest()
 
     //TODO loosen the references using listeners?
     val root = new DiagramRootContainer()
-    val controller = new ADiagramController(root, diagram, styleRepository, selectedStyles)
+    val controller = new ADiagramController(root, diagram, styleRepository, selectedStyles, file)
 
     val appPane = new BorderPane
     appPane.setTop(ADiagramMenuBar.create(controller))
@@ -32,9 +43,9 @@ object Init {
     scrollPane.setContent(root)
     appPane.setCenter(scrollPane)
 
-    val scene = new Scene(appPane, 1500, 1000)
+    val scene = new Scene(appPane, 1500, 1000) //TODO initial window size and pos
 
-    stage.setTitle("..... ") //TODO bind to the diagram name
+    digest.bind(stage.titleProperty, controller.windowTitle)
     stage.setScene(scene)
 
     digest.execute{} // trigger the digest loop

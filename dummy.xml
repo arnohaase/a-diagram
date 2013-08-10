@@ -1,43 +1,13 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <diagram-root>
-    <style-repo>
-        <color id="9984ac12-42c0-469a-a3ba-94ec52f1b899" name="light blue" red="0.6784313917160034"
-               green="0.8470588326454163" blue="0.9019607901573181" alpha="1.0"/>
-        <color id="0746defb-9a52-473a-b893-df76a38c1154" name="black" red="0.0" green="0.0" blue="0.0" alpha="1.0"/>
-        <color id="729ab457-d6f2-4453-a785-85d055e184f4" name="azure" red="0.9411764740943909" green="1.0" blue="1.0"
-               alpha="1.0"/>
-        <color id="37cb1a9a-023b-40a0-b471-e6a819b3c8d7" name="green" red="0.0" green="0.501960813999176" blue="0.0"
-               alpha="1.0"/>
-        <color id="91046092-e3ee-435a-abaa-4352f8df739d" name="red" red="1.0" green="0.0" blue="0.0" alpha="1.0"/>
-        <fill-linear id="8587622d-577a-44f0-9e28-31ffb28d6b03" name="Linear light blue to azure"
-                     color0="9984ac12-42c0-469a-a3ba-94ec52f1b899" color1="729ab457-d6f2-4453-a785-85d055e184f4"/>
-        <fill-linear id="6f478562-aa2c-4fef-b447-f1a041a679ac" name="Linear red to green"
-                     color0="91046092-e3ee-435a-abaa-4352f8df739d" color1="37cb1a9a-023b-40a0-b471-e6a819b3c8d7"/>
-        <line-style id="407d51bf-0b28-4b1b-b6f1-6b93c6c1df26" width="1.0" color="0746defb-9a52-473a-b893-df76a38c1154"/>
-        <line-style id="a48e15f8-25bb-4d15-b734-792548e23cae" width="2.0" color="0746defb-9a52-473a-b893-df76a38c1154"/>
-        <line-style id="116c3df9-a4bf-4163-b12c-3b1b23878a1d" width="4.0" color="0746defb-9a52-473a-b893-df76a38c1154"/>
-        <simple-text-style id="96757e55-ac4c-4520-8fc0-e3b750930680" name="Box" font-size="72"/>
-        <simple-text-style id="b693ab5c-4f87-49b6-af22-e6a9a2290b8f" name="Line" font-size="30"/>
+      <style-repo>
+      <color id="9984ac12-42c0-469a-a3ba-94ec52f1b899" name="light blue" red="0.6784313917160034" green="0.8470588326454163" blue="0.9019607901573181" alpha="1.0"/><color id="0746defb-9a52-473a-b893-df76a38c1154" name="black" red="0.0" green="0.0" blue="0.0" alpha="1.0"/><color id="729ab457-d6f2-4453-a785-85d055e184f4" name="azure" red="0.9411764740943909" green="1.0" blue="1.0" alpha="1.0"/><color id="37cb1a9a-023b-40a0-b471-e6a819b3c8d7" name="green" red="0.0" green="0.501960813999176" blue="0.0" alpha="1.0"/><color id="91046092-e3ee-435a-abaa-4352f8df739d" name="red" red="1.0" green="0.0" blue="0.0" alpha="1.0"/>
+      <fill-linear id="8587622d-577a-44f0-9e28-31ffb28d6b03" name="Linear light blue to azure" color0="9984ac12-42c0-469a-a3ba-94ec52f1b899" color1="729ab457-d6f2-4453-a785-85d055e184f4"/><fill-linear id="6f478562-aa2c-4fef-b447-f1a041a679ac" name="Linear red to green" color0="91046092-e3ee-435a-abaa-4352f8df739d" color1="37cb1a9a-023b-40a0-b471-e6a819b3c8d7"/>
+      <line-style id="407d51bf-0b28-4b1b-b6f1-6b93c6c1df26" width="1.0" color="0746defb-9a52-473a-b893-df76a38c1154"/><line-style id="a48e15f8-25bb-4d15-b734-792548e23cae" width="2.0" color="0746defb-9a52-473a-b893-df76a38c1154"/><line-style id="116c3df9-a4bf-4163-b12c-3b1b23878a1d" width="4.0" color="0746defb-9a52-473a-b893-df76a38c1154"/>
+      <simple-text-style id="96757e55-ac4c-4520-8fc0-e3b750930680" name="Box" font-size="72.0"/><simple-text-style id="b693ab5c-4f87-49b6-af22-e6a9a2290b8f" name="Line" font-size="30.0"/>
     </style-repo>
-    <selected-styles fill="8587622d-577a-44f0-9e28-31ffb28d6b03" shadow="c8845d04-d210-4f7e-889d-e5c0eb7defc6"
-                     text="96757e55-ac4c-4520-8fc0-e3b750930680" line="116c3df9-a4bf-4163-b12c-3b1b23878a1d"
-                     lineText="b693ab5c-4f87-49b6-af22-e6a9a2290b8f" startEnd="953e2b87-8316-4f9d-a772-55e6ea7dd487"
-                     endEnd="60bbeefe-7673-4538-bcbf-aa131b23358d"/>
-    <diagram>
-        <line id="eea1baeb-e094-418c-b58d-951ae10b4157" x0="1400.0" y0="100.0" x1="900.0" y1="500.0" text="Arrow Text"
-              style="116c3df9-a4bf-4163-b12c-3b1b23878a1d" textStyle="b693ab5c-4f87-49b6-af22-e6a9a2290b8f"
-              start="953e2b87-8316-4f9d-a772-55e6ea7dd487" end="60bbeefe-7673-4538-bcbf-aa131b23358d"/>
-        <box id="506688c3-776a-4c2b-93b3-11edc75eadfa" x="400.0" y="400.0" width="250.0" height="80.0" text="Yeah!"
-             fill="8587622d-577a-44f0-9e28-31ffb28d6b03" shadow="c8845d04-d210-4f7e-889d-e5c0eb7defc6"
-             textStyle="96757e55-ac4c-4520-8fc0-e3b750930680"/>
-        <text id="87982f3a-f6ce-4bf8-ab04-3dc425f465c5" x="100.0" y="600.0" width="300.0" height="80.0" text="Hey Dude"
-              style="96757e55-ac4c-4520-8fc0-e3b750930680"/>
-        <line id="90ee0a1a-6c57-484f-a0b0-4be22f659dc3" box0="ea2cbb9c-eb95-46f0-923e-2933778e15ec"
-              box1="506688c3-776a-4c2b-93b3-11edc75eadfa" text="Connecting" style="116c3df9-a4bf-4163-b12c-3b1b23878a1d"
-              textStyle="b693ab5c-4f87-49b6-af22-e6a9a2290b8f" start="953e2b87-8316-4f9d-a772-55e6ea7dd487"
-              end="60bbeefe-7673-4538-bcbf-aa131b23358d"/>
-        <box id="ea2cbb9c-eb95-46f0-923e-2933778e15ec" x="100.0" y="200.0" width="250.0" height="80.0" text="Hi Ho!"
-             fill="8587622d-577a-44f0-9e28-31ffb28d6b03" shadow="c8845d04-d210-4f7e-889d-e5c0eb7defc6"
-             textStyle="96757e55-ac4c-4520-8fc0-e3b750930680"/>
+      <selected-styles fill="8587622d-577a-44f0-9e28-31ffb28d6b03" shadow="c8845d04-d210-4f7e-889d-e5c0eb7defc6" text="96757e55-ac4c-4520-8fc0-e3b750930680" line="116c3df9-a4bf-4163-b12c-3b1b23878a1d" lineText="b693ab5c-4f87-49b6-af22-e6a9a2290b8f" startEnd="953e2b87-8316-4f9d-a772-55e6ea7dd487" endEnd="60bbeefe-7673-4538-bcbf-aa131b23358d"/>
+      <diagram>
+      <line id="eea1baeb-e094-418c-b58d-951ae10b4157" x0="1400.0" y0="100.0" x1="900.0" y1="500.0" text="Arrow Text" style="116c3df9-a4bf-4163-b12c-3b1b23878a1d" textStyle="b693ab5c-4f87-49b6-af22-e6a9a2290b8f" start="953e2b87-8316-4f9d-a772-55e6ea7dd487" end="60bbeefe-7673-4538-bcbf-aa131b23358d"/><box id="506688c3-776a-4c2b-93b3-11edc75eadfa" x="400.0" y="400.0" width="250.0" height="80.0" text="Yeah!" fill="8587622d-577a-44f0-9e28-31ffb28d6b03" shadow="c8845d04-d210-4f7e-889d-e5c0eb7defc6" textStyle="96757e55-ac4c-4520-8fc0-e3b750930680"/><text id="87982f3a-f6ce-4bf8-ab04-3dc425f465c5" x="100.0" y="600.0" width="300.0" height="80.0" text="Hey Dude" style="96757e55-ac4c-4520-8fc0-e3b750930680"/><line id="90ee0a1a-6c57-484f-a0b0-4be22f659dc3" box0="ea2cbb9c-eb95-46f0-923e-2933778e15ec" box1="506688c3-776a-4c2b-93b3-11edc75eadfa" text="Connecting" style="116c3df9-a4bf-4163-b12c-3b1b23878a1d" textStyle="b693ab5c-4f87-49b6-af22-e6a9a2290b8f" start="953e2b87-8316-4f9d-a772-55e6ea7dd487" end="60bbeefe-7673-4538-bcbf-aa131b23358d"/><box id="ea2cbb9c-eb95-46f0-923e-2933778e15ec" x="100.0" y="200.0" width="250.0" height="80.0" text="Hi Ho!" fill="8587622d-577a-44f0-9e28-31ffb28d6b03" shadow="c8845d04-d210-4f7e-889d-e5c0eb7defc6" textStyle="96757e55-ac4c-4520-8fc0-e3b750930680"/>
     </diagram>
-</diagram-root>
+    </diagram-root>

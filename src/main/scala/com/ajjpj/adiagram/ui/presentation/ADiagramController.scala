@@ -9,13 +9,22 @@ import com.ajjpj.adiagram.ui.mouse.MouseTracker
 import com.ajjpj.adiagram.model.diagram.{ShapeSpecReRenderSnapshot, AShapeSpec, ADiagram}
 import com.ajjpj.adiagram.model.SelectedStyles
 import com.ajjpj.adiagram.model.style.AStyleRepository
+import java.io.File
 
 
 /**
  * @author arno
  */
-class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram, val styleRepository: AStyleRepository, val selectedStyles: SelectedStyles)(implicit digest: Digest) {
+class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram, val styleRepository: AStyleRepository, val selectedStyles: SelectedStyles, var file: Option[File])(implicit digest: Digest) {
   var zoom = Zoom.Identity
+
+  def isDirty = digest.undoRedo.hasUndo
+  def isPristine = file.isEmpty && ! isDirty
+
+  def windowTitle = "A-Diagram - " + (file match {
+    case Some(f) => f.getName
+    case None => "<New Diagram>"
+  }) + (if (isDirty) "*" else "")
 
   val selections = new SelectionTracker(diagram, root, this)
   val mouseTracker = new MouseTracker(root, diagram, this, selections)
