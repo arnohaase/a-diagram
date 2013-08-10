@@ -64,7 +64,7 @@ object DiagramIO {
       println("file exists - skipping")
     }
     else {
-      XML.save(file.getPath,new DiagramSerializer(ctrl).toXml, xmlDecl=true)
+      XML.save(file.getPath,new DiagramSerializer(ctrl).toXml, xmlDecl=true, enc="UTF-8")
     }
   }
 }
