@@ -1,9 +1,9 @@
 package com.ajjpj.adiagram.ui.presentation
 
 import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
-import com.ajjpj.adiagram.ui.{AScreenPos, Zoom, SelectionTracker}
+import com.ajjpj.adiagram.ui.{Zoom, SelectionTracker}
 import javafx.scene.canvas.Canvas
-import com.ajjpj.adiagram.render.base.{PartialImage, PartialImageWithShadow}
+import com.ajjpj.adiagram.render.base.PartialImageWithShadow
 import com.ajjpj.adiagram.geometry.APoint
 import com.ajjpj.adiagram.ui.mouse.MouseTracker
 import com.ajjpj.adiagram.model.diagram.{ShapeSpecReRenderSnapshot, AShapeSpec, ADiagram}
@@ -54,38 +54,23 @@ class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram,
 
       def render: PartialImageWithShadow = spec.shape.render(zoomSnapshot)
 
-      def drawOnCanvas(i: PartialImage, c: Canvas) {
-        c.setWidth (i.img.getWidth)
-        c.setHeight (i.img.getHeight)
-        c.getGraphicsContext2D.clearRect(0, 0, c.getWidth, c.getHeight) //TODO is there a better way for this?
-        c.getGraphicsContext2D.drawImage(i.img, 0, 0)
-      }
-
       val snapshotCurrentlyRendered = SnapshotWithZoom(zoomSnapshot, spec.snapshot)
       if(detailsByElement(spec).snapshot != snapshotCurrentlyRendered) {
         val counterSnapshot = spec.changeCounter
 
         JavaFxHelper.inBackground(render, (pi: PartialImageWithShadow) => {
-          val newShapeOffset = pi.shape.renderOffset
-          var newShadowOffset: APoint = APoint.ZERO
-
           detailsByElement.get(spec) match {
-            case Some(details) if details.changeCounter <= counterSnapshot => //TODO change '<=' to '<' : Problem is repaint of bound lines
-              drawOnCanvas(pi.shape, details.shapeCanvas)
-              pi.shadow match {
-                case Some(sh) =>
-                  newShadowOffset = sh.renderOffset
-                  drawOnCanvas(sh, details.shadowCanvas)
-                case None =>
-                  details.shadowCanvas.setWidth(0)
-                  details.shadowCanvas.setHeight(0)
-              }
-
-              detailsByElement += (spec -> details.copy(snapshot = snapshotCurrentlyRendered, changeCounter = counterSnapshot, shapeOffset = newShapeOffset, shadowOffset = newShadowOffset))
-            case _ => // do nothing - the element was removed from the diagram, or a later change was rendered by now
+            //TODO change '<=' to '<' : Problem is repaint of bound lines
+            case Some(details) if details.changeCounter <= counterSnapshot =>
+              ShapePresentationHelper.drawShapeOnCanvas(pi, spec.pos, details.shapeCanvas, details.shadowCanvas, zoom)
+              detailsByElement += (spec -> details.copy(
+                snapshot = snapshotCurrentlyRendered,
+                changeCounter = counterSnapshot,
+                shapeOffset = pi.shape.renderOffset,
+                shadowOffset = pi.shadow.map(_.renderOffset).getOrElse(APoint.ZERO)
+              ))
+            case None =>
           }
-
-          refreshPos(spec)
           //TODO replace 'new Digest()' with something more appropriate
         })(new Digest()) // no changes are performed in this UI callback --> no need for events to be triggered
       }
@@ -93,14 +78,7 @@ class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram,
 
     def refreshPos(spec: AShapeSpec) = {
       val details = detailsByElement(spec)
-
-      val shapePos  = AScreenPos.fromModel(spec.pos + details.shapeOffset, zoom)
-      val shadowPos = AScreenPos.fromModel(spec.pos + details.shadowOffset, zoom)
-
-      details.shapeCanvas.setLayoutX (shapePos.x)
-      details.shapeCanvas.setLayoutY (shapePos.y)
-      details.shadowCanvas.setLayoutX (shadowPos.x)
-      details.shadowCanvas.setLayoutY (shadowPos.y)
+      ShapePresentationHelper.refreshPos(details.shapeCanvas, details.shadowCanvas, spec.pos, details.shapeOffset, details.shadowOffset, zoom)
     }
 
     // deal with added and removed elements
