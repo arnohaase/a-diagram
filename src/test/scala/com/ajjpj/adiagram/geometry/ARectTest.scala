@@ -9,6 +9,14 @@ import org.scalatest.FunSuite
 class ARectTest extends FunSuite with ShouldMatchers {
   val eps = .000000001
 
+  test("ARect: containing rect") {
+    val r = ARect.containingRect(List(ARect((1.0, 5.0), 3, 4), ARect((5.0, 1.0), 3, 4)))
+    r.topLeft.x should be (1.0 plusOrMinus eps)
+    r.topLeft.y should be (1.0 plusOrMinus eps)
+    r.bottomRight.x should be (8.0 plusOrMinus eps)
+    r.bottomRight.y should be (9.0 plusOrMinus eps)
+  }
+
   test("ARect contains") {
     val r = ARect (APoint(10, 20), 30, 40)
 

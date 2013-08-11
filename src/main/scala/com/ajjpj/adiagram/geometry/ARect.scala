@@ -1,5 +1,7 @@
 package com.ajjpj.adiagram.geometry
 
+import javafx.geometry.Insets
+
 
 /**
  * @author arno
@@ -14,7 +16,10 @@ case class ARect(topLeft: APoint, dim: ADim) extends GeometricShape {
 
   def center = topLeft halfWayTo bottomRight
 
-  def withPadding(padding: Double) = ARect(topLeft - ((padding, padding)), ADim(dim.width + 2*padding, dim.height + 2*padding))
+  def withPadding(padding: Double): ARect = withPadding(padding, padding)
+  def withPadding(hPadding: Double, vPadding: Double): ARect = withPadding(hPadding, vPadding, hPadding, vPadding)
+  def withPadding(leftPadding: Double, topPadding: Double, rightPadding: Double, bottomPadding: Double): ARect = ARect(topLeft - ((leftPadding, topPadding)), ADim(dim.width + leftPadding + rightPadding, dim.height + topPadding + bottomPadding))
+  def withPadding(insets: Insets): ARect = withPadding (insets.getLeft, insets.getTop, insets.getRight, insets.getBottom)
 
   override def contains(p: APoint) =
     topLeft.x <= p.x && topLeft.x+dim.width  >= p.x &&
@@ -104,7 +109,7 @@ object ARect {
       minX = Math.min(minX, r.topLeft.x)
       maxX = Math.max(maxX, r.bottomRight.x)
       minY = Math.min(minY, r.topLeft.y)
-      maxY = Math.max(minY, r.bottomRight.y)
+      maxY = Math.max(maxY, r.bottomRight.y)
     })
 
     fromCoordinates(minX, minY, maxX, maxY)

@@ -11,6 +11,8 @@ case class AScreenRect (topLeft: AScreenPos, bottomRight: AScreenPos) {
 
   def width = bottomRight.x - topLeft.x
   def height = bottomRight.y - topLeft.y
+
+  def withPadding (padding: Double) = AScreenRect(AScreenPos(topLeft.x - padding, topLeft.y - padding), AScreenPos(bottomRight.x + padding, bottomRight.y + padding))
 }
 
 object AScreenRect {

@@ -14,7 +14,9 @@ import com.ajjpj.adiagram.ui.{AScreenPos, AScreenRect, Zoom}
 class ATextShape(val bounds: ARect, text: String, textStyle: TextStyle) extends AShape {
   //TODO generalize - different parts of the propText may be formatted differently, propText may be multi-line, ...
 
-  def render(zoom: Zoom) = PartialImage.fromGc(bounds.topLeft, bounds, zoom, None, (gc, t) => {
+  override def renderBounds = bounds
+
+  override def render(zoom: Zoom) = PartialImage.fromGc(bounds.topLeft, bounds, zoom, None, (gc, t) => {
     render(gc, t, zoom)
   })
 

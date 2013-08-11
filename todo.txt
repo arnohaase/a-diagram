@@ -4,6 +4,7 @@ todo
   * export
 
 * features
+  * Oval boundary for box (?)
   * new diagram
   * close diagram
   * close dirty diagram: confirm dialog

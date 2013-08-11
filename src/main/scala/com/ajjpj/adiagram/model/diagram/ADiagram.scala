@@ -1,5 +1,6 @@
 package com.ajjpj.adiagram.model.diagram
 
+
 /**
  * @author arno
  */

@@ -14,6 +14,8 @@ import com.ajjpj.adiagram.ui.{AScreenRect, Zoom}
  * @author arno
  */
 class ABoxShape(val bounds: ARect, text: Option[String], fillStyle: FillStyle, shadowStyle: ShadowStyle, textStyle: TextStyle) extends AShape {
+  override def renderBounds = bounds withPadding shadowStyle.insets
+
   override def render(zoom: Zoom) = PartialImage.fromGc(bounds.topLeft, bounds, zoom, Some(shadowStyle), (gc, t) => {
     fillStyle.applyTo(gc)
 

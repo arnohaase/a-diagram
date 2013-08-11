@@ -17,6 +17,8 @@ import com.ajjpj.adiagram.ui.{AScreenPos, Zoom}
 class ALineShape(p0: APoint, p1: APoint, style: LineStyle, textStyle: TextStyle, startDecoration: ALineEnd, endDecoration: ALineEnd, text: Option[String]) extends AShape {
   override val pos = ARect(p0, p1).topLeft
 
+  override def renderBounds = bounds
+
   override val bounds = {
     var decorationWidth = Math.max(startDecoration.width(style, Zoom.Identity), endDecoration.width(style, Zoom.Identity))
     text match {
