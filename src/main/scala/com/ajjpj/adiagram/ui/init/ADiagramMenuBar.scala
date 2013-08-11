@@ -5,7 +5,7 @@ import com.ajjpj.adiagram.ui.fw.JavaFxHelper._
 import scala.Some
 import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
-import com.ajjpj.adiagram.model.{DiagramIO, DiagramManipulation}
+import com.ajjpj.adiagram.model.{DiagramExportToImage, DiagramIO, DiagramManipulation}
 import com.ajjpj.adiagram.model.diagram.{ABoxSpec, ATextSpec, ALineSpec}
 import com.ajjpj.adiagram.model.style.{RoundPointedArrowLineEndSpec, RoundedCornerLineEndSpec}
 import javafx.stage.FileChooser
@@ -24,7 +24,9 @@ object ADiagramMenuBar {
     val save =   new SimpleAction(text="Save",    accelerator = Some("Ctrl+S"),       body={DiagramIO.save(ctrl)}) //TODO enabled only if dirty
     val saveAs = new SimpleAction(text="Save As", accelerator = Some("Ctrl+Shift+S"), body={DiagramIO.saveAs(ctrl)})
 
-    new SimpleActionGroup(text="File", items=List(open, save, saveAs))
+    val toImage = new SimpleAction(text="Export to Image", accelerator = Some("Ctrl+E"), body={DiagramExportToImage.exportToImageFile(ctrl)})
+
+    new SimpleActionGroup(text="File", items=List(open, save, saveAs, Action.SEPARATOR, toImage))
   }
 
   private def diagramMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
