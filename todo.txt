@@ -4,6 +4,7 @@ todo
   * export
 
 * features
+  * dialogs: bind 'ESC' to 'Cancel'
   * Oval boundary for box (?)
   * new diagram
   * close diagram

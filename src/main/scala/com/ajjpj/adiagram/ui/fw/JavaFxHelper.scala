@@ -3,9 +3,9 @@ package com.ajjpj.adiagram.ui.fw
 import javafx.stage.{Window, Modality, StageStyle, Stage}
 import javafx.scene.{Scene, Node}
 import java.util.concurrent.atomic.{AtomicReference, AtomicBoolean}
-import javafx.scene.layout.{HBox, BorderPane}
+import javafx.scene.layout.{Pane, HBox, BorderPane}
 import javafx.scene.control.{TitledPane, Accordion, Button}
-import javafx.geometry.Pos
+import javafx.geometry.{Insets, Pos}
 import javafx.event.{EventHandler, ActionEvent}
 import javafx.scene.input.KeyCombination
 import javafx.application.Platform
@@ -116,39 +116,106 @@ object JavaFxHelper {
     }.start()
   }
 
-  def showOkCancelDialog(owner: Window, title: String, content: Node) = {
+  class ButtonSpec(_text: => String, val clickId: String, _enabled: => Boolean) {
+    def text = _text
+    def enabled = _enabled
+  }
+  object ButtonSpec {
+    def apply(text: => String, clickId: String, enabled: => Boolean = true) = new ButtonSpec(text, clickId, enabled)
+
+    val idOk = "ok"
+    val idCancel = "cancel"
+    val idYes = "yes"
+    val idNo = "no"
+
+    def ok    (enabled: => Boolean = true) = ButtonSpec(text="OK",     clickId=idOk,     enabled=enabled)
+    def cancel(enabled: => Boolean = true) = ButtonSpec(text="Cancel", clickId=idCancel, enabled=enabled)
+    def yes   (enabled: => Boolean = true) = ButtonSpec(text="Yes",    clickId=idYes,    enabled=enabled)
+    def no    (enabled: => Boolean = true) = ButtonSpec(text="No",     clickId=idNo,     enabled=enabled)
+
+    val okCancel = List(ok(), cancel())
+  }
+
+  class ButtonPane(buttons: List[ButtonSpec], onClicked: String => Unit = (s: String) => {})(implicit digest: Digest) extends HBox with Unbindable {
+    setAlignment(Pos.CENTER_RIGHT)
+    setSpacing(8)
+
+    buttons.foreach((b: ButtonSpec) => {
+      val btn = new Button
+      digest.bind(btn.textProperty, b.text)
+      digest.bindBoolean(btn.disableProperty, ! b.enabled)
+      getChildren.add(btn)
+
+      btn.setOnAction(new EventHandler[ActionEvent]{
+        def handle(p1: ActionEvent) {
+          onClicked(b.clickId)
+        }
+      })
+    })
+
+    override def unbind()(implicit digest: Digest) {
+      import scala.collection.JavaConversions._
+
+      getChildren.foreach(_ match {
+        case btn: Button =>
+          digest.unbind(btn.textProperty)
+          digest.unbind(btn.disableProperty)
+      })
+    }
+  }
+
+  abstract class Dialog(owner: Window, title: => String)(implicit digest: Digest) extends Stage with Unbindable {
+    initStyle(StageStyle.UTILITY)
+    initModality(Modality.WINDOW_MODAL)
+    initOwner(owner)
+
+    digest.bind(titleProperty, title)
+
+    private val theButtonPane = buttonPane
+    private val theContent = content
+
+    override def unbind()(implicit digest: Digest) {
+      digest.unbind(titleProperty)
+      theButtonPane.unbind()
+      theContent match {
+        case ub: Unbindable => ub.unbind()
+        case _ =>
+      }
+    }
+
+    private val pane = new BorderPane
+
+    BorderPane.setMargin(theContent, new Insets(15, 15, 0, 15))
+    BorderPane.setMargin(theButtonPane, new Insets(15))
+
+    pane.setCenter(theContent)
+    pane.setBottom(theButtonPane)
+    setScene(new Scene(pane))
+
+    override def hide {
+      super.hide()
+      unbind()
+    }
+
+    /**
+     * override this to provide the 'body' of the dialog - default is empty
+     */
+    def content: Node = new Pane
+
+    def buttonPane: ButtonPane
+  }
+
+  def showOkCancelDialog(owner: Window, title: String, contentNode: Node)(implicit digest: Digest) = {
     val result = new AtomicBoolean(false)
 
-    val dialog = new Stage()
-    dialog.initStyle(StageStyle.UTILITY)
-    dialog.initModality(Modality.APPLICATION_MODAL)
-    dialog.initOwner(owner)
-    dialog.setTitle(title)
+    val dialog = new Dialog(owner, title) {
+      override def content = contentNode
+      override def buttonPane = new ButtonPane(ButtonSpec.okCancel, onClicked = _ match {
+        case ButtonSpec.idOk     => result.set(true); hide()
+        case ButtonSpec.idCancel => result.set(false); hide()
+      })
+    }
 
-    val pane = new BorderPane()
-    pane.setCenter(content)
-
-    val buttonPane = new HBox()
-    val okButton = new Button("OK")
-    val cancelButton = new Button("Cancel")
-    buttonPane.getChildren.addAll(okButton, cancelButton)
-    buttonPane.setAlignment(Pos.CENTER_RIGHT)
-    pane.setBottom(buttonPane)
-
-    okButton.setOnAction(new EventHandler[ActionEvent] () {
-      override def handle(p1: ActionEvent) {
-        result.set(true)
-        dialog.hide()
-      }
-    })
-    cancelButton.setOnAction(new EventHandler[ActionEvent] () {
-      override def handle(p1: ActionEvent) {
-        result.set(false)
-        dialog.hide()
-      }
-    })
-
-    dialog.setScene(new Scene(pane))
     dialog.showAndWait()
     result.get()
   }

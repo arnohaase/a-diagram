@@ -16,8 +16,14 @@ object RenderHelper {
     result
   }
 
+  private def snapshotParams(bgColor: Color) = {
+    val result = new SnapshotParameters
+    result.setFill(bgColor)
+    result
+  }
+
   //TODO replace 'new Digest' with something else that does the correct exception handling but not the event loop
-  def snapshot(node: Node) = JavaFxHelper.inUiThreadAndWait(node.snapshot(TransparentSnapshotParameters, null))(new Digest()).get // it is ok for None to trigger an exception - it was caused by one
+  def snapshot(node: Node, bgColor: Color = Color.TRANSPARENT) = JavaFxHelper.inUiThreadAndWait(node.snapshot(snapshotParams(bgColor), null))(new Digest()).get // it is ok for None to trigger an exception - it was caused by one
 
   def actualHeightInPixels(f: Font) = {
     val fontMetrics = Toolkit.getToolkit().getFontLoader().getFontMetrics(f);
