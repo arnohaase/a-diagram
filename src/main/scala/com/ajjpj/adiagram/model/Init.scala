@@ -1,4 +1,4 @@
-package com.ajjpj.adiagram.ui.init
+package com.ajjpj.adiagram.model
 
 import javafx.stage.Stage
 import com.ajjpj.adiagram.ui.fw._
@@ -10,25 +10,24 @@ import scala.collection.JavaConversions
 import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import com.ajjpj.adiagram.model.style.AStyleRepository
-import com.ajjpj.adiagram.model.SelectedStyles
 import java.io.File
+import com.ajjpj.adiagram.ui.init.ADiagramMenuBar
 
 
 /**
  * @author arno
  */
-object Init {
-  def initEmptyStage(stage: Stage) {
+private[model] object Init {
+  def initEmptyStage(stage: Stage): ADiagramController = {
     val repo = AStyleRepository.default
     initStage(stage, new ADiagram, repo, SelectedStyles.createFromDefaultRepo(repo), None)
-
   }
 
-  def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles, file: File) {
+  def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles, file: File) : ADiagramController = {
     initStage(stage, diagram, styleRepository, selectedStyles, Some(file))
   }
 
-  private def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles, file: Option[File]) {
+  private def initStage(stage: Stage, diagram: ADiagram, styleRepository: AStyleRepository, selectedStyles: SelectedStyles, file: Option[File]) : ADiagramController = {
     implicit val digest = new Digest()
 
     //TODO loosen the references using listeners?
@@ -49,6 +48,8 @@ object Init {
     stage.setScene(scene)
 
     digest.execute{} // trigger the digest loop
+
+    controller
   }
 
   private def createAccordion(ctrl: ADiagramController, selections: SelectionTracker)(implicit digest: Digest) = {

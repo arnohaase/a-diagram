@@ -1,14 +1,10 @@
 todo
 ----
 * next
-  * export
 
 * features
   * dialogs: bind 'ESC' to 'Cancel'
   * Oval boundary for box (?)
-  * new diagram
-  * close diagram
-  * close dirty diagram: confirm dialog
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
   * drag display by clicking on background

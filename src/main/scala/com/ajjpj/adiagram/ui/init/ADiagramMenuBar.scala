@@ -2,13 +2,11 @@ package com.ajjpj.adiagram.ui.init
 
 import com.ajjpj.adiagram.ui.fw._
 import com.ajjpj.adiagram.ui.fw.JavaFxHelper._
-import scala.Some
 import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
 import com.ajjpj.adiagram.model.{DiagramExportToImage, DiagramIO, DiagramManipulation}
 import com.ajjpj.adiagram.model.diagram.{ABoxSpec, ATextSpec, ALineSpec}
 import com.ajjpj.adiagram.model.style.{RoundPointedArrowLineEndSpec, RoundedCornerLineEndSpec}
-import javafx.stage.FileChooser
 import scala.Some
 
 
@@ -19,14 +17,18 @@ object ADiagramMenuBar {
   def create(ctrl: ADiagramController)(implicit digest: Digest) = Action.createMenuBar(fileMenu(ctrl), diagramMenu(ctrl), editMenu, viewMenu(ctrl))
 
   private def fileMenu(ctrl: ADiagramController)(implicit digest: Digest) = {
-//    val newDiagram = ...
-    val open =   new SimpleAction(text="Open",    accelerator = Some("Ctrl+O"),       body={DiagramIO.open(ctrl)})
-    val save =   new SimpleAction(text="Save",    accelerator = Some("Ctrl+S"),       body={DiagramIO.save(ctrl)}) //TODO enabled only if dirty
-    val saveAs = new SimpleAction(text="Save As", accelerator = Some("Ctrl+Shift+S"), body={DiagramIO.saveAs(ctrl)})
+    val newDiagram = new SimpleAction(text="New",       accelerator = Some("Ctrl+N"),       body={DiagramIO.newDiagram()})
+    val open =       new SimpleAction(text="Open",      accelerator = Some("Ctrl+O"),       body={DiagramIO.open(ctrl)})
+    val save =       new SimpleAction(text="Save",      accelerator = Some("Ctrl+S"),       body={DiagramIO.save(ctrl)}) //TODO enabled only if dirty
+    val saveAs =     new SimpleAction(text="Save As",   accelerator = Some("Ctrl+Shift+S"), body={DiagramIO.saveAs(ctrl)})
+    val close =      new SimpleAction(text="Close",     accelerator = Some("Ctrl+F4"),      body={DiagramIO.close(ctrl)})
+    val closeAll =   new SimpleAction(text="Close All",                                     body={DiagramIO.closeAll()})
 
     val toImage = new SimpleAction(text="Export to Image", accelerator = Some("Ctrl+E"), body={DiagramExportToImage.exportToImageFile(ctrl)})
 
-    new SimpleActionGroup(text="File", items=List(open, save, saveAs, Action.SEPARATOR, toImage))
+    val exit = new SimpleAction(text="Exit", accelerator = Some("Ctrl+Q"), body={DiagramIO.exit()})
+
+    new SimpleActionGroup(text="File", items=List(newDiagram, open, save, saveAs, close, closeAll, Action.SEPARATOR, toImage, Action.SEPARATOR, exit))
   }
 
   private def diagramMenu(ctrl: ADiagramController)(implicit digest: Digest) = {

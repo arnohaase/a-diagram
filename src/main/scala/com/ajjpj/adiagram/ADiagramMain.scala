@@ -1,7 +1,7 @@
 package com.ajjpj.adiagram
 
 import javafx.stage.Stage
-import com.ajjpj.adiagram.ui.init.Init
+import com.ajjpj.adiagram.model.DiagramIO
 
 
 /**
@@ -13,8 +13,7 @@ object ADiagramMain extends App {
 
 class ADiagramMain extends javafx.application.Application {
   override def start(stage: Stage) {
-    Init.initEmptyStage(stage)
-    stage.show()
+    DiagramIO.init(stage)
   }
 }
 

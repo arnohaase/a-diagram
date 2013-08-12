@@ -208,6 +208,16 @@ object JavaFxHelper {
     def buttonPane: ButtonPane
   }
 
+  def showSingleClickDialog(owner: Window, title: String, body: Node, buttons: ButtonSpec*)(implicit digest: Digest): String = {
+    var clickedId: String = buttons.find(_.cancel).map(_.clickId).get
+    new Dialog(owner, title) {
+      override def content = body
+      override def buttonPane = new ButtonPane(buttons.toList, onClicked = s => {clickedId=s; close()})
+    }.showAndWait()
+
+    clickedId
+  }
+
   def confirmOverwrite(file: File, owner: Window)(implicit digest: Digest): Boolean = {
     if(file.exists) {
       showOkCancelDialog(owner, "Overwrite?", "File " + file.getName + " exists. Overwrite it?")
@@ -225,8 +235,8 @@ object JavaFxHelper {
     val dialog = new Dialog(owner, title) {
       override def content = contentNode
       override def buttonPane = new ButtonPane(ButtonSpec.okCancel, onClicked = _ match {
-        case ButtonSpec.idOk     => result.set(true); hide()
-        case ButtonSpec.idCancel => result.set(false); hide()
+        case ButtonSpec.idOk     => result.set(true); close()
+        case ButtonSpec.idCancel => result.set(false); close()
       })
     }
 

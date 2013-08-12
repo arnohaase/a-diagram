@@ -16,7 +16,7 @@ import javafx.stage.Stage
 /**
  * @author arno
  */
-class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram, val styleRepository: AStyleRepository, val selectedStyles: SelectedStyles, var file: Option[File])(implicit digest: Digest) {
+class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram, val styleRepository: AStyleRepository, val selectedStyles: SelectedStyles, var file: Option[File])(implicit val digest: Digest) {
   var zoom = Zoom.Identity
 
   def isDirty = digest.undoRedo.hasUndo

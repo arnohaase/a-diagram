@@ -4,15 +4,82 @@ import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import java.io.File
 import javafx.stage.{Stage, FileChooser}
 import scala.xml.XML
-import com.ajjpj.adiagram.ui.init.Init
 import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.scene.control.Label
+
 
 /**
  * @author arno
  */
 object DiagramIO {
+  private var stages = Map[Stage, Option[ADiagramController]]()
+
+  def init(stage: Stage) {
+    val ctrl = Init.initEmptyStage(stage)
+    stages += (stage -> Some(ctrl))
+    stage.show()
+  }
+
+  def newDiagram() {
+    val stage = new Stage
+    val ctrl = Init.initEmptyStage(stage)
+    stages += (stage -> Some(ctrl))
+    stage.show()
+  }
+
+  def closeAll(): Boolean = {
+    stages.values.foreach(_ match {
+      case Some(ctrl) => ctrl.window.toFront(); if(! close(ctrl)(ctrl.digest)) return false
+      case None =>
+    })
+    true
+  }
+
+  def exit() {
+    if(closeAll()) {
+      System.exit(0)
+    }
+  }
+
+
+  /**
+   * @return true iff the diagram was actually closed
+   */
+  def close(ctrl: ADiagramController)(implicit digest: Digest): Boolean = {
+    import JavaFxHelper._
+
+    def doClose(): Boolean = {
+      val stage = ctrl.window
+      if(stages.size == 1) {
+        stage.setScene(null)
+        val newCtrl = Init.initEmptyStage(stage)
+        stages += (stage -> Some(newCtrl))
+      }
+      else {
+        stage.close()
+        stages -= stage
+      }
+
+      true
+    }
+
+    if(ctrl.isDirty) {
+      val btnSave    = ButtonSpec(text="Save",    clickId="save", default=true)
+      val btnDiscard = ButtonSpec(text="Discard", clickId="discard")
+      val btnCancel  = ButtonSpec(text="Cancel",  clickId="cancel", cancel=true)
+
+      showSingleClickDialog(ctrl.window, "Unsaved Diagram", new Label("Unsaved diagram. How do you want to proceed?"), btnSave, btnDiscard, btnCancel) match {
+        case "save"    => save(ctrl); doClose() //TODO handle 'cancel' during save operation
+        case "discard" => doClose()
+        case "cancel"  => false
+      }
+    }
+    else {
+      doClose()
+    }
+  }
+
   def open(ctrl: ADiagramController) {
     val fileChooser = new FileChooser
     fileChooser.setTitle("Open Diagram")
@@ -52,11 +119,13 @@ object DiagramIO {
 
     if(ctrl.isPristine) {
       val stage = ctrl.root.getScene.getWindow.asInstanceOf[Stage]
-      Init.initStage(stage, deser.diagram, deser.styleRepository, deser.selectedStyles, file)
+      val newCtrl = Init.initStage(stage, deser.diagram, deser.styleRepository, deser.selectedStyles, file)
+      stages += (stage -> Some(newCtrl))
     }
     else {
       val stage = new Stage()
-      Init.initStage(stage, deser.diagram, deser.styleRepository, deser.selectedStyles, file)
+      val newCtrl = Init.initStage(stage, deser.diagram, deser.styleRepository, deser.selectedStyles, file)
+      stages += (stage -> Some(newCtrl))
       stage.show()
     }
   }
