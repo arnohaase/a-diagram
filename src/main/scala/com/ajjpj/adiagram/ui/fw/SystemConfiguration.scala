@@ -12,4 +12,11 @@ object SystemConfiguration {
 
   val distanceOfHandlesFromShapes   = 10.0
   val distanceOfHandlesFromShapesXY = distanceOfHandlesFromShapes / Math.sqrt(2)
+
+  val exportDefaultZoom = 2.0
+  val exportRenderTransparentBackground = false
+  val exportRenderBorder = false
+
+  val exportMinZoom = .1
+  val exportMaxZoom = 20.0
 }

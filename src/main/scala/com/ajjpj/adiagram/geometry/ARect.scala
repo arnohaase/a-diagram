@@ -97,21 +97,22 @@ object ARect {
 
   def containingRect(rects: Iterable[ARect]) = {
     if(rects.isEmpty) {
-      throw new IllegalArgumentException()
+      ARect(APoint.ZERO, 0, 0)
     }
+    else {
+      var minX = Double.MaxValue
+      var maxX = Double.MinValue
+      var minY = Double.MaxValue
+      var maxY = Double.MinValue
 
-    var minX = Double.MaxValue
-    var maxX = Double.MinValue
-    var minY = Double.MaxValue
-    var maxY = Double.MinValue
+      rects.foreach(r => {
+        minX = Math.min(minX, r.topLeft.x)
+        maxX = Math.max(maxX, r.bottomRight.x)
+        minY = Math.min(minY, r.topLeft.y)
+        maxY = Math.max(maxY, r.bottomRight.y)
+      })
 
-    rects.foreach(r => {
-      minX = Math.min(minX, r.topLeft.x)
-      maxX = Math.max(maxX, r.bottomRight.x)
-      minY = Math.min(minY, r.topLeft.y)
-      maxY = Math.max(maxY, r.bottomRight.y)
-    })
-
-    fromCoordinates(minX, minY, maxX, maxY)
+      fromCoordinates(minX, minY, maxX, maxY)
+    }
   }
 }

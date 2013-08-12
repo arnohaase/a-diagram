@@ -19,6 +19,9 @@ abstract class AbstractForm(implicit digest: Digest) extends GridPane with Unbin
   setVgap(10)
   setPadding(new Insets (10, 10, 10, 10))
 
+  def bindBoolean (prop: Property[java.lang.Boolean], getter: => Boolean, setter: Boolean => Unit) = bind(prop, getter.asInstanceOf[java.lang.Boolean], setter.asInstanceOf[java.lang.Boolean => Unit])
+  def bindDouble[T <: java.lang.Number] (prop: Property[T],  getter: => Double,  setter: Double  => Unit) = bind(prop, getter.asInstanceOf[T],  setter.asInstanceOf[T => Unit])
+
   def bind[T] (prop: Property[T], getter: => T, setter: T => Unit): Unit = {
     digest.registerEventSource(prop)
 

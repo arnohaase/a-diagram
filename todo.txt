@@ -79,6 +79,7 @@ todo
   * repaint of changed menu item
   * hotkey 'Ctrl +' does not work (for zooming in)
   * File Chooser: no way to pre-fill file name field; filter *only* by file extension
+  * slider: only linear scale, not logarithmic
 
 * visual test suite (render to windows and files --> potentially different rendering engine?)
   * line endings at different angles and different line widths --> 'overlap' vs 'gap'

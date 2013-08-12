@@ -43,15 +43,7 @@ object DiagramIO {
     if(fileRaw != null) {
       val file = if(fileRaw.getName endsWith ".adiagram") fileRaw else new File(fileRaw.getParentFile, fileRaw.getName + ".adiagram")
 
-      if(file.exists) {
-        val overwrite = JavaFxHelper.showOkCancelDialog(ctrl.window, "Confirm Overwrite", new Label("This file exists. Do you want to overwrite it?"))
-        if(overwrite) {
-          doSave(file, ctrl)
-        }
-      }
-      else {
-        doSave(file, ctrl)
-      }
+      if(JavaFxHelper.confirmOverwrite(file, ctrl.window)) doSave(file, ctrl)
     }
   }
 

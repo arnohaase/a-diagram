@@ -87,6 +87,7 @@ class Digest() {
   def bindBoolean                      (property: Property[java.lang.Boolean], expression: => Boolean) = bindings.bind(PropertyTarget(property), () => expression.asInstanceOf[java.lang.Boolean])
   def bindDouble[T <: java.lang.Number](property: Property[T],                 expression: => Double)  = bindings.bind(PropertyTarget(property), () => expression.asInstanceOf[T])
   def unbind(property: Property[_]) = bindings.unbind(PropertyTarget(property))
+
   def isBound(property: Property[_]) = bindings.isBound(PropertyTarget(property))
 
   implicit def createEventHandler[T <: Event, R] (handler: T => R) = new EventHandler[T]() {

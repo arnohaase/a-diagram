@@ -4,7 +4,7 @@ import javafx.stage.{Window, Modality, StageStyle, Stage}
 import javafx.scene.{Scene, Node}
 import java.util.concurrent.atomic.{AtomicReference, AtomicBoolean}
 import javafx.scene.layout.{Pane, HBox, BorderPane}
-import javafx.scene.control.{TitledPane, Accordion, Button}
+import javafx.scene.control.{Label, TitledPane, Accordion, Button}
 import javafx.geometry.{Insets, Pos}
 import javafx.event.{EventHandler, ActionEvent}
 import javafx.scene.input.KeyCombination
@@ -12,6 +12,7 @@ import javafx.application.Platform
 import java.util.concurrent.CountDownLatch
 import javafx.beans.value.{ObservableValue, ChangeListener}
 import scala.reflect.ClassTag
+import java.io.File
 
 
 /**
@@ -116,20 +117,20 @@ object JavaFxHelper {
     }.start()
   }
 
-  class ButtonSpec(_text: => String, val clickId: String, _enabled: => Boolean) {
+  class ButtonSpec(_text: => String, val clickId: String, val default: Boolean = false, val cancel: Boolean = false, enabled: => Boolean = true) {
     def text = _text
-    def enabled = _enabled
+    def isEnabled = enabled
   }
   object ButtonSpec {
-    def apply(text: => String, clickId: String, enabled: => Boolean = true) = new ButtonSpec(text, clickId, enabled)
+    def apply(text: => String, clickId: String, default: Boolean = false, cancel: Boolean = false, enabled: => Boolean = true) = new ButtonSpec(text, clickId, default=default, cancel=cancel, enabled=enabled)
 
     val idOk = "ok"
     val idCancel = "cancel"
     val idYes = "yes"
     val idNo = "no"
 
-    def ok    (enabled: => Boolean = true) = ButtonSpec(text="OK",     clickId=idOk,     enabled=enabled)
-    def cancel(enabled: => Boolean = true) = ButtonSpec(text="Cancel", clickId=idCancel, enabled=enabled)
+    def ok    (enabled: => Boolean = true) = ButtonSpec(text="OK",     clickId=idOk,     enabled=enabled, default=true)
+    def cancel(enabled: => Boolean = true) = ButtonSpec(text="Cancel", clickId=idCancel, enabled=enabled, cancel=true)
     def yes   (enabled: => Boolean = true) = ButtonSpec(text="Yes",    clickId=idYes,    enabled=enabled)
     def no    (enabled: => Boolean = true) = ButtonSpec(text="No",     clickId=idNo,     enabled=enabled)
 
@@ -143,8 +144,10 @@ object JavaFxHelper {
     buttons.foreach((b: ButtonSpec) => {
       val btn = new Button
       digest.bind(btn.textProperty, b.text)
-      digest.bindBoolean(btn.disableProperty, ! b.enabled)
+      digest.bindBoolean(btn.disableProperty, ! b.isEnabled)
       getChildren.add(btn)
+      if(b.default) btn.setDefaultButton(true)
+      if(b.cancel) btn.setCancelButton(true)
 
       btn.setOnAction(new EventHandler[ActionEvent]{
         def handle(p1: ActionEvent) {
@@ -205,7 +208,18 @@ object JavaFxHelper {
     def buttonPane: ButtonPane
   }
 
-  def showOkCancelDialog(owner: Window, title: String, contentNode: Node)(implicit digest: Digest) = {
+  def confirmOverwrite(file: File, owner: Window)(implicit digest: Digest): Boolean = {
+    if(file.exists) {
+      showOkCancelDialog(owner, "Overwrite?", "File " + file.getName + " exists. Overwrite it?")
+    }
+    else {
+      true
+    }
+  }
+
+  def showOkCancelDialog(owner: Window, title: String, content: String)(implicit digest: Digest): Boolean = showOkCancelDialog(owner, title, new Label(content))
+
+  def showOkCancelDialog(owner: Window, title: String, contentNode: Node)(implicit digest: Digest): Boolean = {
     val result = new AtomicBoolean(false)
 
     val dialog = new Dialog(owner, title) {
