@@ -13,7 +13,7 @@ class AStyleRepository {
   var lineStyles = Set[LineStyleSpec]()
   var textStyles = Set[TextStyleSpec]()
 
-  val lineEnds = List(CutOffLineEndSpec, RoundedCornerLineEndSpec, SemiCircleLineEndSpec, PointedArrowLineEndSpec, RoundPointedArrowLineEndSpec, RoundArrowLineEndSpec)
+  val lineEnds = List(CutOffLineEndSpec, RoundedCornerLineEndSpec, SemiCircleLineEndSpec, PointedArrowLineEndSpec, RoundPointedArrowLineEndSpec, RoundArrowLineEndSpec, FilledTriangleLineEndSpec)
 }
 
 object AStyleRepository {

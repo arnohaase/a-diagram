@@ -10,7 +10,6 @@ import java.util.UUID
 sealed abstract class LineEndSpec(val name: String, val uuid: UUID) {
   def lineEnd: ALineEnd
 }
-
 object CutOffLineEndSpec extends LineEndSpec("Cut Off", UUID.fromString("08ea16c4-d28b-41b2-8d4a-5227a442ab60")) {
   override val lineEnd = new NullLineEnd
 }
@@ -32,6 +31,10 @@ object RoundPointedArrowLineEndSpec extends LineEndSpec("Round Pointed Arrow", U
 
 object RoundArrowLineEndSpec extends LineEndSpec("Round Arrow", UUID.fromString("c3acac10-35d4-489e-9d2c-457550809dd8")) {
   override val lineEnd = new RoundArrowLineEnd
+}
+
+object FilledTriangleLineEndSpec extends LineEndSpec("Empty Triangle",  UUID.fromString("178b9425-8903-4d71-aaa4-937b27865564")) {
+	override val lineEnd = new FilledTriangleLineEnd
 }
 
 
