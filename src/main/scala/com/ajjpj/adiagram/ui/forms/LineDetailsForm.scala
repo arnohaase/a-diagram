@@ -3,19 +3,22 @@ package com.ajjpj.adiagram.ui.forms
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
 import javafx.scene.control._
 import com.ajjpj.adiagram.model.diagram.ALineSpec
-import com.ajjpj.adiagram.model.style.{LineEndSpec, TextStyleSpec, LineStyleSpec, AStyleRepository}
-import javafx.util.Callback
+import com.ajjpj.adiagram.model.style.{LineEndSpec, TextStyleSpec, LineStyleSpec}
 import scala.Some
+import com.ajjpj.adiagram.ui.presentation.ADiagramController
+import com.ajjpj.adiagram.ui.StdControls
 
 /**
  * @author arno
  */
-class LineDetailsForm (styleRepository: AStyleRepository, lineSpec: ALineSpec)(implicit digest: Digest) extends AbstractForm {
+class LineDetailsForm (ctrl: ADiagramController, lineSpec: ALineSpec)(implicit digest: Digest) extends AbstractForm {
+  val styleRepository = ctrl.styleRepository
+
   private val txtText = new TextField()
-  private val cmbLineStyle = new ComboBox[LineStyleSpec]
-  private val cmbTextStyle = new ComboBox[TextStyleSpec]
-  private val cmbStart = new ComboBox[LineEndSpec]
-  private val cmbEnd = new ComboBox[LineEndSpec]
+  private val cmbLineStyle = StdControls.createLineStyleCombo(ctrl)
+  private val cmbTextStyle = StdControls.createTextStyleCombo(ctrl)
+  private val cmbStart     = StdControls.createLineEndCombo(ctrl)
+  private val cmbEnd       = StdControls.createLineEndCombo(ctrl)
 
   add(new Label("Text:"), 0, 0)
   add(txtText, 1, 0)
@@ -37,37 +40,12 @@ class LineDetailsForm (styleRepository: AStyleRepository, lineSpec: ALineSpec)(i
     }
   })
 
-  styleRepository.lineEnds.foreach(cmbStart.getItems.add)
-  styleRepository.lineEnds.foreach(cmbEnd.  getItems.add)
   bind(cmbStart.valueProperty, lineSpec.startLineEnd, (s: LineEndSpec) => { lineSpec.startLineEnd = s })
   bind(cmbEnd.  valueProperty, lineSpec.endLineEnd,   (s: LineEndSpec) => { lineSpec.endLineEnd   = s })
 
-  cmbStart.setButtonCell(new LineEndListCell)
-  cmbEnd.setButtonCell(new LineEndListCell)
-
-  cmbStart.setCellFactory(new Callback[ListView[LineEndSpec], ListCell[LineEndSpec]] {
-    def call(p1: ListView[LineEndSpec]) = new LineEndListCell
-  })
-  cmbEnd.setCellFactory(new Callback[ListView[LineEndSpec], ListCell[LineEndSpec]] {
-    def call(p1: ListView[LineEndSpec]) = new LineEndListCell
-  })
-
-
-  styleRepository.textStyles.foreach(cmbTextStyle.getItems.add) //TODO bind this
   bind(cmbTextStyle.valueProperty, lineSpec.textStyle, (st: TextStyleSpec) => { lineSpec.textStyle = st})
-
-  cmbTextStyle.setButtonCell(new TextStyleListCell)
-  cmbTextStyle.setCellFactory(new Callback[ListView[TextStyleSpec], ListCell[TextStyleSpec]] {
-    override def call(p: ListView[TextStyleSpec]) = new TextStyleListCell
-  })
-
-  styleRepository.lineStyles.foreach(cmbLineStyle.getItems.add)
   bind(cmbLineStyle.valueProperty, lineSpec.lineStyle, (st: LineStyleSpec) => {lineSpec.lineStyle = st })
 
-  cmbLineStyle.setButtonCell(new LineStyleListCell)
-  cmbLineStyle.setCellFactory(new Callback[ListView[LineStyleSpec], ListCell[LineStyleSpec]] {
-    def call(p1: ListView[LineStyleSpec]) = new LineStyleListCell
-  })
 
 
   private case class ChangeTextCommand(lineSpec: ALineSpec, oldText: Option[String], newText: Option[String]) extends Command {

@@ -5,13 +5,12 @@ import com.ajjpj.adiagram.ui.fw._
 import javafx.scene.Scene
 import javafx.scene.layout.BorderPane
 import javafx.scene.control.{Button, TitledPane, ScrollPane}
-import com.ajjpj.adiagram.ui.{CurrentSelectionPane, SelectionTracker}
+import com.ajjpj.adiagram.ui.{CurrentStylesPane, ADiagramMenuBar, CurrentSelectionPane, SelectionTracker}
 import scala.collection.JavaConversions
 import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import com.ajjpj.adiagram.model.style.AStyleRepository
 import java.io.File
-import com.ajjpj.adiagram.ui.init.ADiagramMenuBar
 
 
 /**
@@ -36,7 +35,7 @@ private[model] object Init {
 
     val appPane = new BorderPane
     appPane.setTop(ADiagramMenuBar.create(controller))
-    appPane.setLeft(createAccordion(controller, controller.selections))
+    appPane.setLeft(createAccordion(controller))
 
     val scrollPane = new ScrollPane()
     scrollPane.setContent(root)
@@ -52,12 +51,13 @@ private[model] object Init {
     controller
   }
 
-  private def createAccordion(ctrl: ADiagramController, selections: SelectionTracker)(implicit digest: Digest) = {
+  private def createAccordion(ctrl: ADiagramController)(implicit digest: Digest) = {
     import JavaConversions._
 
     val accordion = JavaFxHelper.createUncollapsableAccordion()
 
-    accordion.getPanes.add(new TitledPane("Selection", new CurrentSelectionPane(ctrl, selections)))
+    accordion.getPanes.add(new TitledPane("Selection", new CurrentSelectionPane(ctrl)))
+    accordion.getPanes.add(new TitledPane("Current Style", new CurrentStylesPane(ctrl)))
 
     accordion.getPanes.add(new TitledPane("asdf", new Button("asdf")))
     accordion.getPanes.add(new TitledPane("jklö", new Button("jklö")))

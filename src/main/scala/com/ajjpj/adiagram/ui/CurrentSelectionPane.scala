@@ -10,10 +10,10 @@ import com.ajjpj.adiagram.ui.presentation.ADiagramController
 /**
  * @author arno
  */
-class CurrentSelectionPane(ctrl: ADiagramController, selections: SelectionTracker)(implicit digest: Digest) extends Pane {
+class CurrentSelectionPane(ctrl: ADiagramController)(implicit digest: Digest) extends Pane {
   private var curForm: Option[AbstractForm] = None
 
-  selections.selectionChangeListeners += onSelectionChanged
+  ctrl.selections.selectionChangeListeners += onSelectionChanged
 
   initForCurrentSelection()
 
@@ -25,10 +25,10 @@ class CurrentSelectionPane(ctrl: ADiagramController, selections: SelectionTracke
     }
     getChildren.clear()
 
-    curForm = selections.selectedShapes.toList match {
-      case List(box:  ABoxSpec)  => Some(new BoxDetailsForm(ctrl.styleRepository, box))
-      case List(text: ATextSpec) => Some(new TextDetailsForm(ctrl.styleRepository, text))
-      case List(line: ALineSpec) => Some(new LineDetailsForm(ctrl.styleRepository, line))
+    curForm = ctrl.selections.selectedShapes.toList match {
+      case List(box:  ABoxSpec)  => Some(new BoxDetailsForm(ctrl, box))
+      case List(text: ATextSpec) => Some(new TextDetailsForm(ctrl, text))
+      case List(line: ALineSpec) => Some(new LineDetailsForm(ctrl, line))
       case _ => None
     }
 

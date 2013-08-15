@@ -1,4 +1,4 @@
-package com.ajjpj.adiagram.ui.init
+package com.ajjpj.adiagram.ui
 
 import com.ajjpj.adiagram.ui.fw._
 import com.ajjpj.adiagram.ui.fw.JavaFxHelper._

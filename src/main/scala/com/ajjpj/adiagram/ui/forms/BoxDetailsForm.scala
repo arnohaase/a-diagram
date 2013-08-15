@@ -6,15 +6,19 @@ import com.ajjpj.adiagram.model.diagram.ABoxSpec
 import com.ajjpj.adiagram.model.style.{ShadowStyleSpec, TextStyleSpec, AStyleRepository, FillStyleSpec}
 import javafx.util.Callback
 import scala.Some
+import com.ajjpj.adiagram.ui.StdControls
+import com.ajjpj.adiagram.ui.presentation.ADiagramController
 
 /**
  * @author arno
  */
-class BoxDetailsForm (styleRepository: AStyleRepository, boxSpec: ABoxSpec)(implicit digest: Digest) extends AbstractForm {
+class BoxDetailsForm (ctrl: ADiagramController, boxSpec: ABoxSpec)(implicit digest: Digest) extends AbstractForm {
+  val styleRepository = ctrl.styleRepository
+
   private val txtText = new TextField()
-  private val cmbFill = new ComboBox[FillStyleSpec]()
-  private val cmbText = new ComboBox[TextStyleSpec]()
-  private val cmbShadow = new ComboBox[ShadowStyleSpec]()
+  private val cmbFill   = StdControls.createFillStyleCombo(ctrl)
+  private val cmbText   = StdControls.createTextStyleCombo(ctrl)
+  private val cmbShadow = StdControls.createShadowStyleCombo(ctrl)
 
   add(new Label("Text:"), 0, 0)
   add(txtText, 1, 0)
@@ -34,29 +38,9 @@ class BoxDetailsForm (styleRepository: AStyleRepository, boxSpec: ABoxSpec)(impl
     }
   })
 
-  styleRepository.fillStyles.foreach(cmbFill.getItems.add) //TODO bind this --> changes to the repo while the dialog is initialized
   bind(cmbFill.valueProperty, boxSpec.fillStyle, (st: FillStyleSpec) => { boxSpec.fillStyle = st })
-
-  cmbFill.setButtonCell(new FillStyleListCell)
-  cmbFill.setCellFactory(new Callback[ListView[FillStyleSpec], ListCell[FillStyleSpec]] {
-    override def call(p1: ListView[FillStyleSpec]) = new FillStyleListCell
-  })
-
-  styleRepository.textStyles.foreach(cmbText.getItems.add) //TODO bind this
   bind(cmbText.valueProperty, boxSpec.textStyle, (st: TextStyleSpec) => { boxSpec.textStyle = st})
-
-  cmbText.setButtonCell(new TextStyleListCell)
-  cmbText.setCellFactory(new Callback[ListView[TextStyleSpec], ListCell[TextStyleSpec]] {
-    override def call(p: ListView[TextStyleSpec]) = new TextStyleListCell
-  })
-
-  styleRepository.shadowStyles.foreach(cmbShadow.getItems.add) //TODO bind this
   bind(cmbShadow.valueProperty, boxSpec.shadowStyle, (st: ShadowStyleSpec) => { boxSpec.shadowStyle = st})
-
-  cmbShadow.setButtonCell(new ShadowStyleListCell)
-  cmbShadow.setCellFactory(new Callback[ListView[ShadowStyleSpec], ListCell[ShadowStyleSpec]] {
-    override def call(p: ListView[ShadowStyleSpec]) = new ShadowStyleListCell
-  })
 
   private case class ChangeTextCommand(boxSpec: ABoxSpec, oldText: Option[String], newText: Option[String]) extends Command {
     def name = "Change Box Text"

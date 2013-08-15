@@ -3,15 +3,16 @@ package com.ajjpj.adiagram.ui.forms
 import javafx.scene.control._
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
 import com.ajjpj.adiagram.model.diagram.ATextSpec
-import com.ajjpj.adiagram.model.style.{AStyleRepository, TextStyleSpec}
-import javafx.util.Callback
+import com.ajjpj.adiagram.model.style.TextStyleSpec
+import com.ajjpj.adiagram.ui.presentation.ADiagramController
+import com.ajjpj.adiagram.ui.StdControls
 
 /**
  * @author arno
  */
-class TextDetailsForm (styleRepository: AStyleRepository, textSpec: ATextSpec)(implicit digest: Digest) extends AbstractForm {
+class TextDetailsForm (ctrl: ADiagramController, textSpec: ATextSpec)(implicit digest: Digest) extends AbstractForm {
   private val txtText = new TextField()
-  private val cmbText = new ComboBox[TextStyleSpec]
+  private val cmbText = StdControls.createTextStyleCombo(ctrl)
 
   add(new Label("Text:"), 0, 0)
   add(txtText, 1, 0)
@@ -25,13 +26,7 @@ class TextDetailsForm (styleRepository: AStyleRepository, textSpec: ATextSpec)(i
     }
   })
 
-  styleRepository.textStyles.foreach(cmbText.getItems.add) //TODO bind this
   bind(cmbText.valueProperty, textSpec.textStyle, (st: TextStyleSpec) => { textSpec.textStyle = st})
-
-  cmbText.setButtonCell(new TextStyleListCell)
-  cmbText.setCellFactory(new Callback[ListView[TextStyleSpec], ListCell[TextStyleSpec]] {
-    override def call(p: ListView[TextStyleSpec]) = new TextStyleListCell
-  })
 
 
   private case class ChangeTextCommand(textSpec: ATextSpec, oldText: String, newText: String) extends Command {

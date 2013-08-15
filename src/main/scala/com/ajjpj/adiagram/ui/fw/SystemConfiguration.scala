@@ -4,7 +4,7 @@ package com.ajjpj.adiagram.ui.fw
  * @author arno
  */
 object SystemConfiguration {
-  val leftAccordionWidth = 250
+  val leftAccordionWidth = 350
 
   val maxBindingRefreshIterations = 10
 
