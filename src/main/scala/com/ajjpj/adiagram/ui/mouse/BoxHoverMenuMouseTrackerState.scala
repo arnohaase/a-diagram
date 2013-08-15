@@ -5,7 +5,7 @@ import com.ajjpj.adiagram.ui.fw.{Command, JavaFxHelper, Digest}
 import javafx.scene.layout.VBox
 import javafx.scene.image.ImageView
 import com.ajjpj.adiagram.model.diagram._
-import com.ajjpj.adiagram.ui.AScreenPos
+import com.ajjpj.adiagram.ui.{AScreenRect, AScreenPos}
 import com.ajjpj.adiagram.model.diagram.BoxPosSource
 import com.ajjpj.adiagram.model.diagram.LiteralPosSource
 
@@ -21,9 +21,9 @@ private[mouse] class BoxHoverMenuMouseTrackerState(ctrl: ADiagramController, sta
   val arrow = new ImageView(arrowImage)
   menuBox.getChildren.add(arrow)
 
-  //TODO transform to screen coordinates (?)
-  menuBox.setLayoutX(box.pos.x + box.dim.width)
-  menuBox.setLayoutY(box.pos.y)
+  val boxBounds = AScreenRect(box.boundsForResizing, zoom)
+  menuBox.setLayoutX(boxBounds.topRight.x)
+  menuBox.setLayoutY(boxBounds.topRight.y)
   ctrl.root.getChildren.add(menuBox)
 
   override def onPressed(p: AScreenPos) {

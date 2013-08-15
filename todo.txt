@@ -1,7 +1,6 @@
 todo
 ----
 * next
-  * create line by dragging: does not work with zoom
   * edit style repository
     * Color
     * Fill Style
@@ -9,6 +8,7 @@ todo
     * Line Style
 
 * features
+  * zoom change while mouse hovers over box --> hover menu remains visible
   * clean up 'filled triangle' and 'empty triangle'
   * create line by dragging: minimal initial movement sometimes causes neither 'dragged' nor 'released' to be fired --> SM hangs in 'drag' state
   * 'Current Style': dynamically update combo entries to reflect changes in the overall repository
