@@ -6,7 +6,6 @@ todo
 
 * features
   * create line by dragging: minimal initial movement sometimes causes neither 'dragged' nor 'released' to be fired --> SM hangs in 'drag' state
-  * application becomes very slow after a while (and does not recover)
   * Oval boundary for box (?)
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well

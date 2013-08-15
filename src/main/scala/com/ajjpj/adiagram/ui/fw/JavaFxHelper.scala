@@ -14,7 +14,7 @@ import javafx.beans.value.{ObservableValue, ChangeListener}
 import scala.reflect.ClassTag
 import java.io.File
 import javafx.scene.image.Image
-import com.ajjpj.adiagram.ui.{AScreenRect, AScreenPos}
+import scala.concurrent.ExecutionContext
 
 
 /**
@@ -106,7 +106,7 @@ object JavaFxHelper {
    *  error handling for both code blocks.
    */
   def inBackground[T](bgCode: => T, uiCode: T => Unit)(implicit digest: Digest) {
-    new Thread() {
+    ExecutionContext.global.execute(new Runnable {
       override def run() {
         try {
           val result = bgCode
@@ -116,8 +116,14 @@ object JavaFxHelper {
           case exc: Throwable => exc.printStackTrace() //TODO exception handling
         }
       }
-    }.start()
+    })
   }
+
+
+  //TODO ensure that this does the "real deal" exception handling
+  def inUiThreadNoDigest(code: => Unit) = inUiThread(code)(new Digest())
+  def inUiThreadAndWaitNoDigest[T] (code: => T): Option[T] = inUiThreadAndWait(code)(new Digest())
+  def inBackgroundNoDigest[T] (bgCode: => T, uiCode: T => Unit) = inBackground(bgCode, uiCode)(new Digest())
 
   def image(path: String) = new Image(Thread.currentThread.getContextClassLoader.getResourceAsStream(path))
 

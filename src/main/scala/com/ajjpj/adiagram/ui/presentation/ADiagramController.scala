@@ -58,7 +58,7 @@ class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram,
       if(detailsByElement(spec).snapshot != snapshotCurrentlyRendered) {
         val counterSnapshot = spec.changeCounter
 
-        JavaFxHelper.inBackground(render, (pi: PartialImageWithShadow) => {
+        JavaFxHelper.inBackgroundNoDigest(render, (pi: PartialImageWithShadow) => {
           detailsByElement.get(spec) match {
             //TODO change '<=' to '<' : Problem is repaint of bound lines
             case Some(details) if details.changeCounter <= counterSnapshot =>
@@ -71,8 +71,7 @@ class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram,
               ))
             case None =>
           }
-          //TODO replace 'new Digest()' with something more appropriate
-        })(new Digest()) // no changes are performed in this UI callback --> no need for events to be triggered
+        }) // no changes are performed in this UI callback --> no need for events to be triggered
       }
     }
 
