@@ -1,7 +1,12 @@
 todo
 ----
 * next
+  * create line by dragging: does not work with zoom
   * edit style repository
+    * Color
+    * Fill Style
+    * Text Style
+    * Line Style
 
 * features
   * clean up 'filled triangle' and 'empty triangle'

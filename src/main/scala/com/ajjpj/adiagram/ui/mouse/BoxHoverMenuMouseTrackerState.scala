@@ -1,11 +1,13 @@
 package com.ajjpj.adiagram.ui.mouse
 
 import com.ajjpj.adiagram.ui.presentation.ADiagramController
-import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
+import com.ajjpj.adiagram.ui.fw.{Command, JavaFxHelper, Digest}
 import javafx.scene.layout.VBox
 import javafx.scene.image.ImageView
-import com.ajjpj.adiagram.model.diagram.{LiteralPosSource, BoxPosSource, ALineSpec, ABoxSpec}
+import com.ajjpj.adiagram.model.diagram._
 import com.ajjpj.adiagram.ui.AScreenPos
+import com.ajjpj.adiagram.model.diagram.BoxPosSource
+import com.ajjpj.adiagram.model.diagram.LiteralPosSource
 
 /**
  * @author arno
@@ -40,12 +42,28 @@ private[mouse] class BoxHoverMenuMouseTrackerState(ctrl: ADiagramController, sta
     line.p1Source = LiteralPosSource(p.toModel)
     boxSource.opposite = () => line.p1Source
 
-    ctrl.diagram += line
+    ctrl.digest.undoRedo.push(new CreateLineCommand(ctrl.selections.selectedShapes, line))
 
+    ctrl.diagram += line
     ctrl.selections.setSelection(line)
 
     val handles = new LineHandles(ctrl)
     stateMachine.changeState(new DraggingLineEndMouseTrackerState(ctrl, stateMachine, handles, false, p))
+  }
+
+  case class CreateLineCommand(sel: Set[AShapeSpec], line: ALineSpec) extends Command {
+    def name = "Create Line"
+    def isNop = false
+
+    def undo() {
+      ctrl.diagram -= line
+      ctrl.selections.setSelection(sel)
+    }
+
+    def redo() {
+      ctrl.diagram += line
+      ctrl.selections.setSelection(line)
+    }
   }
 
   override def onMoved(p: AScreenPos) {
