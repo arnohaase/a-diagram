@@ -3,21 +3,23 @@ package com.ajjpj.adiagram.ui.presentation
 import javafx.collections.FXCollections
 import javafx.scene.layout.Pane
 import com.ajjpj.adiagram.ui.fw.Digest
+import com.ajjpj.adiagram.ui.AScreenRect
+import javafx.scene.Node
 
 /**
  * @author arno
  */
 class DiagramRootContainer(implicit digest: Digest) extends Pane {
-  digest.registerPostprocessor(sortByZ _)
+  digest.registerPostprocessor(sortByZ)
 
-  private var curOverlay: Option[Pane] = None
+  private var curOverlay: Option[DiagramOverlay] = None
 
-  def showOverlay(overlay: Pane) = {
+  def setOverlay(overlay: DiagramOverlay) = {
     clearOverlay()
 
-    val decorated = new Pane() with ZOrdered {
+    val decorated = new DiagramOverlay() with ZOrdered {
       getChildren.add(overlay)
-      def z = Integer.MAX_VALUE
+      override def z = Integer.MAX_VALUE
     }
 
     getChildren.add(decorated)
@@ -32,5 +34,19 @@ class DiagramRootContainer(implicit digest: Digest) extends Pane {
   private def sortByZ() {
     FXCollections.sort(getChildren, ByZComparator)
   }
+
+  def boundsInRoot(n: Node): AScreenRect = {
+    if(n == this) {
+      AScreenRect((0.0, 0.0), (1.0, 1.0))
+    }
+    else {
+      val local = AScreenRect((n.getLayoutX, n.getLayoutY), n.getLayoutBounds.getWidth, n.getLayoutBounds.getHeight)
+      val parentBounds = boundsInRoot(n.getParent)
+      AScreenRect(local.topLeft + parentBounds.topLeft, local.bottomRight + parentBounds.topLeft)
+    }
+  }
+}
+
+trait DiagramOverlay extends Pane {
 }
 

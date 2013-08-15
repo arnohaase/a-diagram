@@ -1,9 +1,12 @@
 todo
 ----
 * next
+  * Style Repository
+    * additional accordion entry
 
 * features
-  * dialogs: bind 'ESC' to 'Cancel'
+  * create line by dragging: minimal initial movement sometimes causes neither 'dragged' nor 'released' to be fired --> SM hangs in 'drag' state
+  * application becomes very slow after a while (and does not recover)
   * Oval boundary for box (?)
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
@@ -12,9 +15,8 @@ todo
   * wrapper around GraphicsContext (with implicit conversion) --> coordinates as 'AScreenPos' instead of 'Double'
   * extract 'AbstractPoint' and 'AbstractRect' traits
   * stable UUIDs for 'standard' styles: 'load' empty diagram (?)
-  * beautify 'confirm' dialog
-  * Style Repository
-    * additional accordion entry
+  * change selection: change MouseTracker state (--> how best to do this?)
+  * 'lock in' on grid lines when moving boxes
   * visualize 'current' styles (and make them selectable)
   * TextDetailsForm
     * 'fit to text' checkbox
@@ -65,7 +67,6 @@ todo
   * changed menu item text --> re-render problem?!
 * thoughts
   * shadow for lines (?)
-  * OVERLAP for bounding line around boxes (?)
   * sub-pixel anti-aliasing on rotated fonts
 
 * problems (--> JavaFX 8?)

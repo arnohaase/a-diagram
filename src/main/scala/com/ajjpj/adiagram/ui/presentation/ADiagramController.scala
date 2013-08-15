@@ -30,7 +30,7 @@ class ADiagramController (val root: DiagramRootContainer, val diagram: ADiagram,
   def window = root.getScene.getWindow.asInstanceOf[Stage]
 
   val selections = new SelectionTracker(diagram, root, this)
-  val mouseTracker = new MouseTracker(root, diagram, this, selections)
+  val mouseTracker = new MouseTracker(this)
 
   private var detailsByElement = Map[AShapeSpec, RenderDetails]()
 

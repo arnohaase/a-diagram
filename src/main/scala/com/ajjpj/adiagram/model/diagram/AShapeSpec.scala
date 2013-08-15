@@ -2,11 +2,7 @@ package com.ajjpj.adiagram.model.diagram
 
 import com.ajjpj.adiagram.render.shapes.AShape
 import com.ajjpj.adiagram.geometry.{ADim, APoint}
-import javafx.scene.canvas.Canvas
-import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
-import com.ajjpj.adiagram.render.base.{PartialImage, PartialImageWithShadow}
-import com.ajjpj.adiagram.ui.presentation.{ZOrdered, DiagramRootContainer}
-import com.ajjpj.adiagram.ui.Zoom
+import com.ajjpj.adiagram.ui.presentation.ZOrdered
 import java.util.UUID
 
 
@@ -19,7 +15,7 @@ trait AShapeSpec extends ZOrdered {
   var z = 0
   var uuid = UUID.randomUUID
 
-  //TODO Node.pickOnBounds (ignore transparentBackground pixels for purposes of mouse event routing) --> does not appear to work?!
+  //TODO Node.pickOnBounds (ignore transparentBackground pixels for purposes of mouse2 event routing) --> does not appear to work?!
 
   def atomicUpdate(code: => Unit) = { //TODO add implicit parameter of a protected type to all update methods in subclasses --> prevent them from being called outside 'atomicUpdate'
     code

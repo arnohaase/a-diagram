@@ -13,6 +13,8 @@ import java.util.concurrent.CountDownLatch
 import javafx.beans.value.{ObservableValue, ChangeListener}
 import scala.reflect.ClassTag
 import java.io.File
+import javafx.scene.image.Image
+import com.ajjpj.adiagram.ui.{AScreenRect, AScreenPos}
 
 
 /**
@@ -116,6 +118,10 @@ object JavaFxHelper {
       }
     }.start()
   }
+
+  def image(path: String) = new Image(Thread.currentThread.getContextClassLoader.getResourceAsStream(path))
+
+  //-------------------------------------
 
   class ButtonSpec(_text: => String, val clickId: String, val default: Boolean = false, val cancel: Boolean = false, enabled: => Boolean = true) {
     def text = _text

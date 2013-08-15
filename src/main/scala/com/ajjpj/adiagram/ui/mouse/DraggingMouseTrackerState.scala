@@ -1,20 +1,28 @@
 package com.ajjpj.adiagram.ui.mouse
 
-import com.ajjpj.adiagram.ui.{Zoom, AScreenPos}
-import com.ajjpj.adiagram.ui.fw.{Command, Digest, SystemConfiguration}
+import com.ajjpj.adiagram.ui.presentation.ADiagramController
+import com.ajjpj.adiagram.ui.fw.{Command, SystemConfiguration, Digest}
+import com.ajjpj.adiagram.ui.AScreenPos
+import com.ajjpj.adiagram.model.diagram.{PosSource, ALineSpec, AShapeSpec}
 import com.ajjpj.adiagram.geometry.APoint
-import com.ajjpj.adiagram.model.diagram.{AShapeSpec, PosSource, ALineSpec}
+
 
 /**
  * @author arno
  */
-private[mouse] class MoveTrackerStrategy(initialPos: AScreenPos, selectedShapes: Traversable[AShapeSpec])(implicit digest: Digest, zoom: Zoom) extends MouseTrackerStrategy {
+private[mouse] class DraggingMouseTrackerState(initialPos: AScreenPos, ctrl: ADiagramController, stateMachine: MouseTrackerSM)(implicit digest: Digest)
+  extends NullMouseTrackerState(ctrl, stateMachine)
+  with ResizableMouseTrackerState {
+
+  implicit private def zoom = ctrl.zoom
+
   private var initialSelectOnly = true
   private var prevPos = initialPos
 
+  private val selectedShapes = ctrl.selections.selectedShapes
   private val initialSnapshot = selectedShapes.map(snapshot)
 
-  def onDragged(p: AScreenPos) {
+  override def onDragged(p: AScreenPos) {
     if(initialSelectOnly && initialPos.distanceTo(p) >= SystemConfiguration.selectToDragThreshold) {
       initialSelectOnly = false
     }
@@ -25,10 +33,11 @@ private[mouse] class MoveTrackerStrategy(initialPos: AScreenPos, selectedShapes:
     }
   }
 
-  def onReleased(p: AScreenPos) {
+  override def onReleased(p: AScreenPos) {
     if(! initialSelectOnly) {
       digest.undoRedo.push(MoveCommand(initialSnapshot, selectedShapes.map(snapshot)))
     }
+    stateMachine.changeState(new DefaultMouseTrackerState(ctrl, stateMachine))
   }
 
 
@@ -60,4 +69,6 @@ private[mouse] class MoveTrackerStrategy(initialPos: AScreenPos, selectedShapes:
     def undo() {prevSnapshot.foreach(_.restore())}
     def redo() {newSnapshot .foreach(_.restore())}
   }
+
+
 }

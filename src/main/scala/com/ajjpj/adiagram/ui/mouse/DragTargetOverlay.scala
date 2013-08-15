@@ -1,15 +1,17 @@
-package com.ajjpj.adiagram.ui
+package com.ajjpj.adiagram.ui.mouse
 
-import javafx.scene.layout.Pane
 import javafx.scene.shape.Circle
 import javafx.scene.paint.Color
 import com.ajjpj.adiagram.model.diagram.{AShapeSpec, ADiagram, ABoxSpec}
+import com.ajjpj.adiagram.ui.{AScreenPos, Zoom}
+import com.ajjpj.adiagram.ui.presentation.DiagramOverlay
+import com.ajjpj.adiagram.ui.fw.SystemConfiguration
 
 
 /**
  * @author arno
  */
-class DragTargetOverlay(diagram: ADiagram, zoom: Zoom) extends Pane {
+private[mouse] class DragTargetOverlay(diagram: ADiagram, zoom: Zoom) extends DiagramOverlay {
   private var _activeItem: Option[AShapeSpec] = None
 
   def activeItem = _activeItem
@@ -46,7 +48,7 @@ class DragTargetOverlay(diagram: ADiagram, zoom: Zoom) extends Pane {
     setCenterX(AScreenPos.fromModel(spec.boundsForResizing.center, zoom).x) //TODO make this into bindings? Currently not necessary but worth remembering?
     setCenterY(AScreenPos.fromModel(spec.boundsForResizing.center, zoom).y)
 
-    setRadius(10) //TODO make configurable
+    setRadius(SystemConfiguration.boxDragTargetRadius)
     setFill(passiveColor)
     setStroke(Color.RED)
     setStrokeWidth(2)
