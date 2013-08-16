@@ -2,7 +2,7 @@ package com.ajjpj.adiagram.ui
 
 import com.ajjpj.adiagram.ui.fw.Digest
 import scala.reflect.ClassTag
-import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
+import com.ajjpj.adiagram.ui.presentation.{DiagramRootContainer}
 import com.ajjpj.adiagram.model.diagram.{AShapeSpec, ALineSpec, ADiagram}
 
 /**

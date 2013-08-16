@@ -5,7 +5,7 @@ import com.ajjpj.adiagram.geometry.{Angle, APoint}
 import com.ajjpj.adiagram.render.base.LineStyle
 import com.ajjpj.adiagram.geometry.transform.Translation
 import javafx.scene.shape.{StrokeLineJoin, StrokeLineCap}
-import com.ajjpj.adiagram.ui.{AScreenPos, Zoom}
+import com.ajjpj.adiagram.ui.{Zoom, AScreenPos}
 
 /**
  * @author arno

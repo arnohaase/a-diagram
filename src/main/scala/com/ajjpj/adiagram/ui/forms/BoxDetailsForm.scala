@@ -6,8 +6,7 @@ import com.ajjpj.adiagram.model.diagram.ABoxSpec
 import com.ajjpj.adiagram.model.style.{ShadowStyleSpec, TextStyleSpec, AStyleRepository, FillStyleSpec}
 import javafx.util.Callback
 import scala.Some
-import com.ajjpj.adiagram.ui.StdControls
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
+import com.ajjpj.adiagram.ui.{ADiagramController, StdControls}
 
 /**
  * @author arno

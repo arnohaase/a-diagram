@@ -9,7 +9,7 @@ import javafx.scene.shape.StrokeLineCap
 import javafx.scene.transform.{Transform, Rotate}
 import javafx.geometry.VPos
 import javafx.scene.text.TextAlignment
-import com.ajjpj.adiagram.ui.{AScreenPos, Zoom}
+import com.ajjpj.adiagram.ui.{Zoom, AScreenPos}
 
 /**
  * @author arno

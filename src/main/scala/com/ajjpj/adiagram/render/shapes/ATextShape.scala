@@ -6,7 +6,7 @@ import com.ajjpj.adiagram.geometry.transform.Translation
 import javafx.scene.canvas.GraphicsContext
 import javafx.geometry.VPos
 import javafx.scene.text.TextAlignment
-import com.ajjpj.adiagram.ui.{AScreenPos, AScreenRect, Zoom}
+import com.ajjpj.adiagram.ui.{Zoom, AScreenPos, AScreenRect}
 
 /**
  * @author arno

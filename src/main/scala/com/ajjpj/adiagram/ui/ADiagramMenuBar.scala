@@ -2,7 +2,6 @@ package com.ajjpj.adiagram.ui
 
 import com.ajjpj.adiagram.ui.fw._
 import com.ajjpj.adiagram.ui.fw.JavaFxHelper._
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.input.{KeyCode, KeyCodeCombination, KeyCombination}
 import com.ajjpj.adiagram.model.{DiagramExportToImage, DiagramIO, DiagramManipulation}
 import com.ajjpj.adiagram.model.diagram.{ABoxSpec, ATextSpec, ALineSpec}

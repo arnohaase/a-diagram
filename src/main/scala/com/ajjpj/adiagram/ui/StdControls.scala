@@ -1,9 +1,7 @@
 package com.ajjpj.adiagram.ui
 
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.control.{ListCell, ListView, ComboBox}
 import com.ajjpj.adiagram.model.style._
-import com.ajjpj.adiagram.ui.forms._
 import javafx.util.Callback
 
 /**
@@ -18,6 +16,7 @@ object StdControls {
     cmbFill.setCellFactory(new Callback[ListView[FillStyleSpec], ListCell[FillStyleSpec]] {
       override def call(p1: ListView[FillStyleSpec]) = new FillStyleListCell
     })
+
     cmbFill
   }
 

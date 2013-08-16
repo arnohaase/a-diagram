@@ -3,7 +3,7 @@ package com.ajjpj.adiagram.ui.forms
 import com.ajjpj.adiagram.model.style._
 import javafx.scene.control.{Label, ListCell}
 import javafx.scene.shape.Rectangle
-import javafx.scene.layout.FlowPane
+import javafx.scene.layout.{HBox, FlowPane}
 import javafx.scene.paint.Color
 
 
@@ -11,11 +11,12 @@ import javafx.scene.paint.Color
  * @author arno
  */
 class FillStyleListCell extends ListCell[FillStyleSpec] {
-  val pane = new FlowPane
+  val pane = new HBox(5)
   val rect = new Rectangle(25, 15)
   rect.setStroke(Color.BLACK)
   val label = new Label
-  pane.setHgap(5)
+  label.setTextFill(Color.BLACK)
+//  pane.setHgap(5)
   pane.getChildren.addAll(rect, label)
 
   override def updateItem(item: FillStyleSpec, empty: Boolean) {

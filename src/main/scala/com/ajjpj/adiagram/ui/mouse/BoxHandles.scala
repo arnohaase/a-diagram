@@ -1,8 +1,8 @@
 package com.ajjpj.adiagram.ui.mouse
 
-import com.ajjpj.adiagram.ui.presentation.{ZOrdered, ADiagramController}
+import com.ajjpj.adiagram.ui.presentation.{ZOrdered}
 import com.ajjpj.adiagram.ui.fw.{SystemConfiguration, Unbindable, Digest}
-import com.ajjpj.adiagram.ui.{AScreenPos, ResizeDirection}
+import com.ajjpj.adiagram.ui.{ADiagramController, AScreenPos, ResizeDirection}
 import com.ajjpj.adiagram.geometry.ARect
 import javafx.scene.shape.Rectangle
 import javafx.scene.paint.Color

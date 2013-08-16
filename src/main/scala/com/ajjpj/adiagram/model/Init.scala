@@ -5,12 +5,13 @@ import com.ajjpj.adiagram.ui.fw._
 import javafx.scene.Scene
 import javafx.scene.layout.BorderPane
 import javafx.scene.control.{Button, TitledPane, ScrollPane}
-import com.ajjpj.adiagram.ui.{CurrentStylesPane, ADiagramMenuBar, CurrentSelectionPane, SelectionTracker}
+import com.ajjpj.adiagram.ui.{ADiagramController, ADiagramMenuBar, SelectionTracker}
 import scala.collection.JavaConversions
-import com.ajjpj.adiagram.ui.presentation.{ADiagramController, DiagramRootContainer}
+import com.ajjpj.adiagram.ui.presentation.{DiagramRootContainer}
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import com.ajjpj.adiagram.model.style.AStyleRepository
 import java.io.File
+import com.ajjpj.adiagram.ui.accordion.{ColorPane, CurrentStylesPane, CurrentSelectionPane}
 
 
 /**
@@ -58,10 +59,7 @@ private[model] object Init {
 
     accordion.getPanes.add(new TitledPane("Selection", new CurrentSelectionPane(ctrl)))
     accordion.getPanes.add(new TitledPane("Current Style", new CurrentStylesPane(ctrl)))
-
-    accordion.getPanes.add(new TitledPane("asdf", new Button("asdf")))
-    accordion.getPanes.add(new TitledPane("jklö", new Button("jklö")))
-    accordion.getPanes.add(new TitledPane("123", new Button("123")))
+    accordion.getPanes.add(new TitledPane("Colors", new ColorPane(ctrl)))
 
     val width = SystemConfiguration.leftAccordionWidth //TODO better approach? Must not change when content changes, though...
     accordion.getPanes.foreach (p => {

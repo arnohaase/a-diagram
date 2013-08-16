@@ -1,11 +1,10 @@
 package com.ajjpj.adiagram.ui.mouse
 
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import com.ajjpj.adiagram.ui.fw.{Command, JavaFxHelper, Digest}
 import javafx.scene.layout.VBox
 import javafx.scene.image.ImageView
 import com.ajjpj.adiagram.model.diagram._
-import com.ajjpj.adiagram.ui.{AScreenRect, AScreenPos}
+import com.ajjpj.adiagram.ui.{ADiagramController, Zoom, AScreenRect, AScreenPos}
 import com.ajjpj.adiagram.model.diagram.BoxPosSource
 import com.ajjpj.adiagram.model.diagram.LiteralPosSource
 
@@ -25,6 +24,14 @@ private[mouse] class BoxHoverMenuMouseTrackerState(ctrl: ADiagramController, sta
   menuBox.setLayoutX(boxBounds.topRight.x)
   menuBox.setLayoutY(boxBounds.topRight.y)
   ctrl.root.getChildren.add(menuBox)
+
+  private val initialZoom = zoom
+  private val onZoomChanged = (newZoom: Zoom) => {
+    if(initialZoom != newZoom) { // this check is necessary because the digest triggers a 'change' callback initially
+      stateMachine.changeState(new DefaultMouseTrackerState(ctrl, stateMachine))
+    }
+  }
+  digest.watch(ctrl.zoom, onZoomChanged)
 
   override def onPressed(p: AScreenPos) {
     if(ctrl.root.boundsInRoot(arrow).contains(p)) {
@@ -75,6 +82,7 @@ private[mouse] class BoxHoverMenuMouseTrackerState(ctrl: ADiagramController, sta
   }
 
   override def cleanup() {
+    digest.unbind(onZoomChanged)
     ctrl.root.getChildren.remove(menuBox)
     super.cleanup()
   }

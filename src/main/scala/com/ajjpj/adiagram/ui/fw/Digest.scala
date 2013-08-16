@@ -79,6 +79,8 @@ class Digest() {
     })
   }
 
+  def watch[T] (value: => T, callback: T => _) = bindings.bind(callback, () => value, updateInitially=false)
+
   //TODO bidirectional bindings (?)
   def bind[T]   (target: T => _, source: => T) = bindings.bind(target, () => source)
   def unbind[T] (target: T => _) = bindings.unbind(target)
@@ -110,10 +112,12 @@ class Digest() {
 
     private var bindings = Map[BindingKey, Binding[_]] ()
 
-    def bind[T](target: T => _, source: ()=>T) {
+    def bind[T](target: T => _, source: ()=>T, updateInitially: Boolean = true) {
       val binding = new Binding(target, source)
       bindings += ((target, binding))
-      binding.eval.update()
+
+      if(updateInitially)
+        binding.eval.update()
     }
 
     def isBound[T] (target: T => _) = bindings contains target

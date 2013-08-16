@@ -8,7 +8,7 @@ import com.ajjpj.adiagram.render.base.ShadowStyle
 import scala.Some
 import com.ajjpj.adiagram.render.base.FillStyle
 import com.ajjpj.adiagram.ui.fw.Digest
-import com.ajjpj.adiagram.ui.{AScreenRect, Zoom}
+import com.ajjpj.adiagram.ui.{Zoom, AScreenRect}
 
 /**
  * @author arno

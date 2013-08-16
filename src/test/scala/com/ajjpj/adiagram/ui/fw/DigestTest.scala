@@ -85,6 +85,29 @@ class DigestTest extends FunSuite with ShouldMatchers {
     prop.getValue should equal ("a")
   }
 
+  test("watch") {
+    val digest = new Digest()
+
+    var a = 1
+    var changeCounter = 0
+
+    val onChange = (i: Int) => {changeCounter += 1}
+
+    digest.watch(a, onChange)
+
+    a=2
+    changeCounter should equal (0)
+
+    digest.execute {
+      a=3
+    }
+    changeCounter should equal (1)
+
+    digest.execute {
+    }
+    changeCounter should equal (1)
+  }
+
   test("check if property isBound") {
     val digest = new Digest()
     val prop = new SimpleStringProperty()

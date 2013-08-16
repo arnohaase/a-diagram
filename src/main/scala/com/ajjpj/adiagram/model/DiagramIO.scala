@@ -1,12 +1,12 @@
 package com.ajjpj.adiagram.model
 
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import java.io.File
 import javafx.stage.{Stage, FileChooser}
 import scala.xml.XML
 import com.ajjpj.adiagram.ui.fw.{JavaFxHelper, Digest}
 import javafx.stage.FileChooser.ExtensionFilter
 import javafx.scene.control.Label
+import com.ajjpj.adiagram.ui.ADiagramController
 
 
 /**

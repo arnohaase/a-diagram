@@ -2,9 +2,9 @@ package com.ajjpj.adiagram.model
 
 import com.ajjpj.adiagram.model.diagram._
 import com.ajjpj.adiagram.ui.fw.{Digest, Command}
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import com.ajjpj.adiagram.model.style._
 import com.ajjpj.adiagram.model.diagram.LiteralPosSource
+import com.ajjpj.adiagram.ui.ADiagramController
 
 
 /**

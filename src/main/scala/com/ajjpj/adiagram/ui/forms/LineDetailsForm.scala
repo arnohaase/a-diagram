@@ -5,8 +5,7 @@ import javafx.scene.control._
 import com.ajjpj.adiagram.model.diagram.ALineSpec
 import com.ajjpj.adiagram.model.style.{LineEndSpec, TextStyleSpec, LineStyleSpec}
 import scala.Some
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
-import com.ajjpj.adiagram.ui.StdControls
+import com.ajjpj.adiagram.ui.{ADiagramController, StdControls}
 
 /**
  * @author arno

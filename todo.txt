@@ -8,7 +8,6 @@ todo
     * Line Style
 
 * features
-  * zoom change while mouse hovers over box --> hover menu remains visible
   * clean up 'filled triangle' and 'empty triangle'
   * create line by dragging: minimal initial movement sometimes causes neither 'dragged' nor 'released' to be fired --> SM hangs in 'drag' state
   * 'Current Style': dynamically update combo entries to reflect changes in the overall repository
@@ -16,21 +15,19 @@ todo
   * move SelectShapeCommand to SelectionTracker --> any code that changes a selection automatically has Command support
   * dragging multiple shapes: unbind line ends only if bound shapes are not dragged as well
   * drag display by clicking on background
-  * replace 'new Digest' with JavaFxHelper functions 'without the digest loop'
-  * wrapper around GraphicsContext (with implicit conversion) --> coordinates as 'AScreenPos' instead of 'Double'
   * extract 'AbstractPoint' and 'AbstractRect' traits
   * stable UUIDs for 'standard' styles: 'load' empty diagram (?)
-  * change selection: change MouseTracker state (--> how best to do this?)
-  * 'lock in' on grid lines when moving boxes
-  * visualize 'current' styles (and make them selectable)
-  * TextDetailsForm
-    * 'fit to text' checkbox
+  * 'lock' on grid lines when moving boxes
+  * explicit (editable) abstraction for 'gradient'
+  * keyboard shortcut for styles?
+  * TextDetailsForm: 'fit to text' checkbox
   * undo redo stack should merge commands (i.e. ask them to merge if they can
   * undo redo stack should support 'snapshot' for rollbacks --> 'cancel' / 'reset' in a dialog
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
   * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
-  * automatically delete empty text shapes
+  * automatically delete empty text shapes (but when? *not* during editing! Maybe on selection change?)
   * add four missing resize handles
+  * 'bitmap' / 'clipart' shape
   * limit re-rendering of shapes during interactive 'resize' etc.
   * serialize update rendering per shape
     * delay re-rendering during drag: only one concurrently running re-rendering?
@@ -38,16 +35,14 @@ todo
   * height / width of a box: derive from font
   * restore window position when leaving full screen mode
   * remove 'press ESC to leave full screen mode' message
-  * add tic marks to 'view' menu items
+  * add check marks to 'view' menu items
   * view menu: show / hide accordion
   * multi select
     * drag a rectangle around shapes
     * Shift+Click adds / removes
     * selection details form
   * '+' / '-' moves shape forward / backward in Z Order
-  * loading / saving diagrams
-  * new diagram (another window)
-  * dirty state of a diagram --> 'are you sure' dialog
+  * When closing a window with a dirty diagram --> 'are you sure' dialog
   * grid (optional) in the background
   * Ctrl-Resize, Shift-Resize
   * Ctrl-Move, Shift-Move
@@ -56,7 +51,6 @@ todo
     * empty triangle
     * "elegant" arrow
   * dashed / dotted lines
-  * lines *between* boxes --> find point of intersection between line and box
   * different line style for lines 'behind' a box (e.g. dashed)
   * 'background boxes', i.e. borders used for visually grouping stuff
   * tool bar, status bar
@@ -80,6 +74,10 @@ todo
   * hotkey 'Ctrl +' does not work (for zooming in)
   * File Chooser: no way to pre-fill file name field; filter *only* by file extension
   * slider: only linear scale, not logarithmic
+  * restore window position when leaving full screen
 
 * visual test suite (render to windows and files --> potentially different rendering engine?)
   * line endings at different angles and different line widths --> 'overlap' vs 'gap'
+
+* show
+  * styleCells --> use of traits

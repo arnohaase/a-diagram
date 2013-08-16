@@ -3,8 +3,8 @@ package com.ajjpj.adiagram.ui.mouse
 import javafx.scene.shape.Circle
 import javafx.scene.paint.Color
 import com.ajjpj.adiagram.model.diagram.{AShapeSpec, ADiagram, ABoxSpec}
-import com.ajjpj.adiagram.ui.{AScreenPos, Zoom}
-import com.ajjpj.adiagram.ui.presentation.DiagramOverlay
+import com.ajjpj.adiagram.ui.{Zoom, AScreenPos}
+import com.ajjpj.adiagram.ui.presentation.{DiagramOverlay}
 import com.ajjpj.adiagram.ui.fw.SystemConfiguration
 
 

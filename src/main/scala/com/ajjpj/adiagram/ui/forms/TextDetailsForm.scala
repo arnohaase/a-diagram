@@ -4,8 +4,7 @@ import javafx.scene.control._
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
 import com.ajjpj.adiagram.model.diagram.ATextSpec
 import com.ajjpj.adiagram.model.style.TextStyleSpec
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
-import com.ajjpj.adiagram.ui.StdControls
+import com.ajjpj.adiagram.ui.{ADiagramController, StdControls}
 
 /**
  * @author arno

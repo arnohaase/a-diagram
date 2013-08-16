@@ -1,10 +1,10 @@
 package com.ajjpj.adiagram.ui.mouse
 
 import com.ajjpj.adiagram.geometry.{Angle, APoint}
-import com.ajjpj.adiagram.ui.AScreenPos
+import com.ajjpj.adiagram.ui.{ADiagramController, AScreenPos}
 import com.ajjpj.adiagram.ui.fw.{Unbindable, Digest, SystemConfiguration}
 import javafx.scene.shape.Rectangle
-import com.ajjpj.adiagram.ui.presentation.{ADiagramController, ZOrdered}
+import com.ajjpj.adiagram.ui.presentation.{ZOrdered}
 import javafx.scene.paint.Color
 
 

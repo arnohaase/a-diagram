@@ -1,9 +1,8 @@
 package com.ajjpj.adiagram.ui.mouse
 
 import com.ajjpj.adiagram.ui.fw.Digest
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import javafx.scene.input.MouseEvent
-import com.ajjpj.adiagram.ui.AScreenPos
+import com.ajjpj.adiagram.ui.{ADiagramController, AScreenPos}
 import com.ajjpj.adiagram.geometry.APoint
 
 /**

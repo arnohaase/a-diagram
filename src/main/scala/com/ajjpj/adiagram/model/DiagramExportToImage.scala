@@ -4,8 +4,8 @@ import javafx.scene.canvas.Canvas
 import javax.imageio.ImageIO
 import javafx.embed.swing.SwingFXUtils
 import java.io.File
-import com.ajjpj.adiagram.ui.{AScreenRect, Zoom}
-import com.ajjpj.adiagram.ui.presentation.{ByZComparator, CanvasWithDerivedZOrder, ShapePresentationHelper, ADiagramController}
+import com.ajjpj.adiagram.ui.{ADiagramController, Zoom, AScreenRect}
+import com.ajjpj.adiagram.ui.presentation._
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import javafx.collections.FXCollections
 import com.ajjpj.adiagram.render.RenderHelper
@@ -20,6 +20,7 @@ import javafx.scene.shape.{StrokeType, Rectangle}
 import scala.Some
 import com.ajjpj.adiagram.util._
 import javafx.stage.Window
+import scala.Some
 
 /**
  * @author arno

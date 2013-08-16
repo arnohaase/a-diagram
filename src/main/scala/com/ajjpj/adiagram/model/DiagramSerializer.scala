@@ -1,9 +1,9 @@
 package com.ajjpj.adiagram.model
 
-import com.ajjpj.adiagram.ui.presentation.ADiagramController
 import com.ajjpj.adiagram.model.style._
 import com.ajjpj.adiagram.model.diagram._
 import com.ajjpj.adiagram.geometry.APoint
+import com.ajjpj.adiagram.ui.ADiagramController
 
 
 /**

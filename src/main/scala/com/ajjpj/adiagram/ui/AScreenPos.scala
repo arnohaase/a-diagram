@@ -3,6 +3,7 @@ package com.ajjpj.adiagram.ui
 import com.ajjpj.adiagram.geometry.APoint
 import javafx.scene.input.MouseEvent
 import javafx.scene.Node
+import scala.language.implicitConversions
 
 /**
  * This class represents a point in screen coordinates (as opposed to APoint, which represents

@@ -6,7 +6,7 @@ import javafx.scene.canvas.{Canvas, GraphicsContext}
 import com.ajjpj.adiagram.geometry.transform.Translation
 import com.ajjpj.adiagram.render.RenderHelper
 import com.ajjpj.adiagram.ui.fw.Digest
-import com.ajjpj.adiagram.ui.{AScreenPos, Zoom}
+import com.ajjpj.adiagram.ui.{Zoom, AScreenPos}
 
 
 /**
