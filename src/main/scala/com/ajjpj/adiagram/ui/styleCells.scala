@@ -1,10 +1,11 @@
 package com.ajjpj.adiagram.ui
 
 import com.ajjpj.adiagram.model.style._
-import javafx.scene.control.{IndexedCell, TreeCell, Label, ListCell}
+import javafx.scene.control._
 import javafx.scene.shape.Rectangle
-import javafx.scene.layout.{HBox, FlowPane}
+import javafx.scene.layout.HBox
 import javafx.scene.paint.{Paint, Color}
+import javafx.util.Callback
 
 
 /**
@@ -26,6 +27,40 @@ class RectAndTextListCell[T](val fill: T => Paint, val text: T => String) extend
 
 class TextListCell[T](val text: T => String) extends ListCell[T] with TextIndexedCell[T]
 class TextTreeCell[T](val text: T => String) extends ListCell[T] with TextIndexedCell[T]
+
+//--------------------------------------
+
+object StyleTreeCellFactory extends Callback[TreeView[AnyRef], TreeCell[AnyRef]] {
+  def call(p1: TreeView[AnyRef]): TreeCell[AnyRef] = {
+    new TreeCell[AnyRef] {
+      val colorCell = new ColorTreeCell()
+      val fillStyleCell = new FillStyleListCell()
+      val textStyleCell = new TextStyleListCell()
+      val lineStyleCell = new LineStyleListCell()
+
+      override def updateItem(item: AnyRef, empty: Boolean) {
+        super.updateItem(item, empty)
+
+        item match {
+          case i: ColorSpec =>
+            colorCell.updateItem(i, empty)
+            setGraphic(colorCell.content)
+          case i: FillStyleSpec =>
+            fillStyleCell.updateItem(i, empty)
+            setGraphic(fillStyleCell.content)
+          case i: TextStyleSpec =>
+            textStyleCell.updateItem(i, empty) //TODO graphic
+            setText(textStyleCell.getText)
+          case i: LineStyleSpec =>
+            lineStyleCell.updateItem(i, empty) //TODO graphic
+            setText(lineStyleCell.getText)
+          case _ =>
+            setGraphic(null)
+        }
+      }
+    }
+  }
+}
 
 //--------------------------------------
 

@@ -16,6 +16,7 @@ class ColorSpec extends WithUuid {
   def this(name: String, color: Color) = {this(); this.name = name; this.color = color}
   var name: String = _
   var color: Color = _
+  override def toString() = "ColorSpec{" + name + ": " + color + "}"
 }
 
 

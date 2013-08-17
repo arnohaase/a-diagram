@@ -6,8 +6,10 @@ todo
     * Fill Style
     * Text Style
     * Line Style
+  * make derived style names editable
 
 * features
+  * text style: font name, color
   * clean up 'filled triangle' and 'empty triangle'
   * create line by dragging: minimal initial movement sometimes causes neither 'dragged' nor 'released' to be fired --> SM hangs in 'drag' state
   * 'Current Style': dynamically update combo entries to reflect changes in the overall repository

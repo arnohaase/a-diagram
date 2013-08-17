@@ -2,10 +2,10 @@ package com.ajjpj.adiagram.ui.accordion
 
 import javafx.scene.layout.Pane
 import com.ajjpj.adiagram.ui.fw.Digest
-import com.ajjpj.adiagram.ui.{FillStyleTreeCell, ColorTreeCell, ADiagramController}
+import com.ajjpj.adiagram.ui.{StyleTreeCellFactory, FillStyleTreeCell, ColorTreeCell, ADiagramController}
 import javafx.scene.control.{TreeCell, TreeItem, TreeView}
 import javafx.util.Callback
-import com.ajjpj.adiagram.model.style.{SimpleLinearGradientSpec, SolidFillSpec}
+import com.ajjpj.adiagram.model.style.{FillStyleSpec, ColorSpec, SimpleLinearGradientSpec, SolidFillSpec}
 
 
 /**
@@ -18,14 +18,7 @@ class ColorPane(ctrl: ADiagramController)(implicit digest: Digest) extends Pane 
 
 
   tree.setShowRoot(false)
-  tree.setCellFactory(new Callback[TreeView[AnyRef], TreeCell[AnyRef]] {
-    def call(p1: TreeView[AnyRef]): TreeCell[AnyRef] = {
-      val colorCell = new ColorTreeCell().asInstanceOf[TreeCell[AnyRef]]
-      val fillStyleCell = new FillStyleTreeCell().asInstanceOf[TreeCell[AnyRef]]
-
-      colorCell
-    }
-  })
+  tree.setCellFactory(StyleTreeCellFactory)
 
   //TODO bind
   ctrl.styleRepository.colors.foreach(c => {
@@ -37,10 +30,10 @@ class ColorPane(ctrl: ADiagramController)(implicit digest: Digest) extends Pane 
       case fs: SimpleLinearGradientSpec => fs.colorSpec0 == c || fs.colorSpec1 == c
       })
 
-//    usingFillStyles.foreach(fs => colorItem.getChildren.add(new TreeItem(fs)))
+    usingFillStyles.foreach(fs => colorItem.getChildren.add(new TreeItem(fs)))
+
+    ctrl.styleRepository.lineStyles.filter(_.colorSpec == c).foreach(ls => colorItem.getChildren.add(new TreeItem(ls)))
 
     root.getChildren.add(colorItem)
   })
-
-
 }

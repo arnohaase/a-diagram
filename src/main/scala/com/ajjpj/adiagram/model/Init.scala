@@ -11,7 +11,8 @@ import com.ajjpj.adiagram.ui.presentation.{DiagramRootContainer}
 import com.ajjpj.adiagram.model.diagram.ADiagram
 import com.ajjpj.adiagram.model.style.AStyleRepository
 import java.io.File
-import com.ajjpj.adiagram.ui.accordion.{ColorPane, CurrentStylesPane, CurrentSelectionPane}
+import com.ajjpj.adiagram.ui.accordion._
+import scala.Some
 
 
 /**
@@ -60,6 +61,9 @@ private[model] object Init {
     accordion.getPanes.add(new TitledPane("Selection", new CurrentSelectionPane(ctrl)))
     accordion.getPanes.add(new TitledPane("Current Style", new CurrentStylesPane(ctrl)))
     accordion.getPanes.add(new TitledPane("Colors", new ColorPane(ctrl)))
+    accordion.getPanes.add(new TitledPane("Fill Styles", new FillStylePane(ctrl)))
+    accordion.getPanes.add(new TitledPane("Text Styles", new TextStylePane(ctrl)))
+    accordion.getPanes.add(new TitledPane("Line Styles", new LineStylePane(ctrl)))
 
     val width = SystemConfiguration.leftAccordionWidth //TODO better approach? Must not change when content changes, though...
     accordion.getPanes.foreach (p => {
