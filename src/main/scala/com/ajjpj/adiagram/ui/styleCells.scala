@@ -6,19 +6,26 @@ import javafx.scene.shape.Rectangle
 import javafx.scene.layout.HBox
 import javafx.scene.paint.{Paint, Color}
 import javafx.util.Callback
+import scala.reflect.ClassTag
 
 
 /**
  * @author arno
  */
+class ColorListCell       extends RectAndTextListCell[ColorSpec] (item => item.color, item => item.name)
 class FillStyleListCell   extends RectAndTextListCell[FillStyleSpec] (item => item.paint, item => item.name)
 class TextStyleListCell   extends TextListCell[TextStyleSpec] (item => item.name)
 class LineStyleListCell   extends TextListCell[LineStyleSpec] (item => item.name)
 class LineEndListCell     extends TextListCell[LineEndSpec] (item => item.name) //TODO visualize line end
 class ShadowStyleListCell extends TextListCell[ShadowStyleSpec] (item => item.name)
 
-class ColorTreeCell     extends RectAndTextTreeCell[ColorSpec] (item => item.color, item => item.name)
-class FillStyleTreeCell extends RectAndTextTreeCell[FillStyleSpec] (item => item.paint, item => item.name)
+//--------------------------------------
+
+object StyleListCellFactory {
+  def apply[S, T <: ListCell[S]](implicit cls: ClassTag[T]) = new Callback[ListView[S], ListCell[S]] {
+    override def call(p1: ListView[S]) = cls.runtimeClass.newInstance.asInstanceOf[T]
+  }
+}
 
 //--------------------------------------
 
@@ -33,7 +40,7 @@ class TextTreeCell[T](val text: T => String) extends ListCell[T] with TextIndexe
 object StyleTreeCellFactory extends Callback[TreeView[AnyRef], TreeCell[AnyRef]] {
   def call(p1: TreeView[AnyRef]): TreeCell[AnyRef] = {
     new TreeCell[AnyRef] {
-      val colorCell = new ColorTreeCell()
+      val colorCell = new ColorListCell()
       val fillStyleCell = new FillStyleListCell()
       val textStyleCell = new TextStyleListCell()
       val lineStyleCell = new LineStyleListCell()

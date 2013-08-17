@@ -82,9 +82,9 @@ class Digest() {
   def watch[T] (value: => T, callback: () => _): Unit = watch(value, (_: T) => callback())
   def watch[T] (value: => T, callback: T => _):  Unit = bindings.bind(callback, () => value, updateInitially=false)
 
-  //TODO bidirectional bindings (?)
+  def bind[T]   (target: T => _, source: Property[T]): Unit = {registerEventSource(source); bind(target, source.getValue)}
   def bind[T]   (target: T => _, source: => T) = bindings.bind(target, () => source)
-  def unbind[T] (target: T => _) = bindings.unbind(target)
+  def unbind[T] (target: T => _)               = bindings.unbind(target)
 
   def bind[T]                          (property: Property[T],                 expression: => T)       = bindings.bind(PropertyTarget(property), () => expression)
   def bindBoolean                      (property: Property[java.lang.Boolean], expression: => Boolean) = bindings.bind(PropertyTarget(property), () => expression.asInstanceOf[java.lang.Boolean])
