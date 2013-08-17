@@ -79,7 +79,8 @@ class Digest() {
     })
   }
 
-  def watch[T] (value: => T, callback: T => _) = bindings.bind(callback, () => value, updateInitially=false)
+  def watch[T] (value: => T, callback: () => _): Unit = watch(value, (_: T) => callback())
+  def watch[T] (value: => T, callback: T => _):  Unit = bindings.bind(callback, () => value, updateInitially=false)
 
   //TODO bidirectional bindings (?)
   def bind[T]   (target: T => _, source: => T) = bindings.bind(target, () => source)

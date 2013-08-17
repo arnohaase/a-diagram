@@ -16,24 +16,29 @@ class ColorPane(ctrl: ADiagramController)(implicit digest: Digest) extends Pane 
   val tree = new TreeView(root)
   getChildren.add(tree)
 
-
   tree.setShowRoot(false)
   tree.setCellFactory(StyleTreeCellFactory)
 
-  //TODO bind
-  ctrl.styleRepository.colors.foreach(c => {
-    val colorItem = new TreeItem[AnyRef](c)
-    val usingFillStyles = ctrl.styleRepository.
-      fillStyles.
-      filter(_ match {
-      case fs: SolidFillSpec => fs.colorSpec == c
-      case fs: SimpleLinearGradientSpec => fs.colorSpec0 == c || fs.colorSpec1 == c
+  digest.watch(ctrl.styleRepository.changeCounter, refresh _)
+  refresh()
+
+  def refresh() {
+    root.getChildren.clear()
+
+    ctrl.styleRepository.colors.foreach(c => {
+      val colorItem = new TreeItem[AnyRef](c)
+      val usingFillStyles = ctrl.styleRepository.
+        fillStyles.
+        filter(_ match {
+        case fs: SolidFillSpec => fs.colorSpec == c
+        case fs: SimpleLinearGradientSpec => fs.colorSpec0 == c || fs.colorSpec1 == c
       })
 
-    usingFillStyles.foreach(fs => colorItem.getChildren.add(new TreeItem(fs)))
+      usingFillStyles.foreach(fs => colorItem.getChildren.add(new TreeItem(fs)))
 
-    ctrl.styleRepository.lineStyles.filter(_.colorSpec == c).foreach(ls => colorItem.getChildren.add(new TreeItem(ls)))
+      ctrl.styleRepository.lineStyles.filter(_.colorSpec == c).foreach(ls => colorItem.getChildren.add(new TreeItem(ls)))
 
-    root.getChildren.add(colorItem)
-  })
+      root.getChildren.add(colorItem)
+    })
+  }
 }
