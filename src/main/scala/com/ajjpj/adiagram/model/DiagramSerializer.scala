@@ -67,20 +67,19 @@ private[model] class DiagramSerializer(ctrl: ADiagramController) {
 
   def colorToXml(colorSpec: ColorSpec) = <color id={colorSpec.uuid.toString} name={colorSpec.name} red={colorSpec.color.getRed.toString} green={colorSpec.color.getGreen.toString} blue={colorSpec.color.getBlue.toString} alpha={colorSpec.color.getOpacity.toString} />
 
-  def fillStyleToXml(fillStyle: FillStyleSpec) = fillStyle match {
-    case solid: SolidFillSpec => solidFillStyleToXml(solid)
-    case linear: SimpleLinearGradientSpec => linearFillStyleToXml(linear)
+  def fillStyleToXml(fillStyle: FillStyleSpec) = fillStyle.strategy match {
+    case solid: SolidFillStrategy                 => solidFillStyleToXml  (fillStyle, solid)
+    case linear: SimpleLinearGradientFillStrategy => linearFillStyleToXml (fillStyle, linear)
   }
 
-  def solidFillStyleToXml(solid: SolidFillSpec) = <fill-solid id={solid.uuid.toString} name={solid.name} color={solid.colorSpec.uuid.toString} />
-  def linearFillStyleToXml(linear: SimpleLinearGradientSpec) = <fill-linear id={linear.uuid.toString} name={linear.name} color0={linear.colorSpec0.uuid.toString} color1={linear.colorSpec1.uuid.toString}/>
+  def solidFillStyleToXml (fill: FillStyleSpec, solid: SolidFillStrategy) =
+      <fill-solid id={fill.uuid.toString} name={fill.name} color={solid.colorSpec.uuid.toString} />
+  def linearFillStyleToXml(fill: FillStyleSpec, linear: SimpleLinearGradientFillStrategy) =
+      <fill-linear id={fill.uuid.toString} name={fill.name} color0={linear.colorSpec0.uuid.toString} color1={linear.colorSpec1.uuid.toString}/>
 
   def lineStyleToXml(lineStyle: LineStyleSpec) = <line-style id={lineStyle.uuid.toString} width={lineStyle.width.toString} color={lineStyle.colorSpec.uuid.toString} />
 
-  def textStyleToXml(textStyle: TextStyleSpec) = textStyle match {
-    case simple: SimpleTextStyleSpec => simpleTextStyleToXml(simple)
-  }
-  def simpleTextStyleToXml(textStyle: SimpleTextStyleSpec) = <simple-text-style id={textStyle.uuid.toString} name={textStyle.name} font-size={textStyle.fontSizePixels.toString}  />
+  def textStyleToXml(textStyle: TextStyleSpec) = <text-style id={textStyle.uuid.toString} name={textStyle.name} font-size={textStyle.fontSizePixels.toString}  />
 
   //---------------------------------------------------------------
 

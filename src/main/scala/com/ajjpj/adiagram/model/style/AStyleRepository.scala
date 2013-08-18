@@ -35,9 +35,9 @@ object AStyleRepository {
     val azure     = new ColorSpec("azure",      Color.AZURE)
 
     repo.colors = List(black, red, green, lightBlue, azure)
-    repo.fillStyles = List(new SimpleLinearGradientSpec(lightBlue, azure), new SimpleLinearGradientSpec(red, green))
+    repo.fillStyles = List(new FillStyleSpec("nice", new SimpleLinearGradientFillStrategy(lightBlue, azure)), new FillStyleSpec("strange", new SimpleLinearGradientFillStrategy(red, green)))
     repo.lineStyles = List(new LineStyleSpec(black, 1), new LineStyleSpec(black, 2), new LineStyleSpec(black, 4))
-    repo.textStyles = List(new SimpleTextStyleSpec("Box", 72), new SimpleTextStyleSpec("Line", 30))
+    repo.textStyles = List(new TextStyleSpec("Box", 72), new TextStyleSpec("Line", 30))
 
     repo
   }

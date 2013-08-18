@@ -22,7 +22,7 @@ private[model] class DiagramDeserializer(root: Elem) {
   styleRepository.fillStyles ++= styleRepoRoot \ "fill-solid" map solidFillFromXml
   styleRepository.fillStyles ++= styleRepoRoot \ "fill-linear" map linearFillFromXml
   styleRepository.lineStyles ++= styleRepoRoot \ "line-style" map lineStyleFromXml
-  styleRepository.textStyles ++= styleRepoRoot \ "simple-text-style" map simpleTextStyleFromXml
+  styleRepository.textStyles ++= styleRepoRoot \ "text-style" map textStyleFromXml
 
   root \ "selected-styles" foreach selectedStylesFromXml
 
@@ -48,22 +48,22 @@ private[model] class DiagramDeserializer(root: Elem) {
   }
 
   private def solidFillFromXml(e: Node) = {
-    val fill = new SolidFillSpec
+    val strategy = new SolidFillStrategy
+    val fill = new FillStyleSpec(attrib(e, "name"), strategy)
 
     fill.uuid = UUID.fromString(attrib(e, "id"))
-//    fill.name = attrib(e, "name")
-    fill.colorSpec = styleRepository.colors.find(_.uuid.toString == attrib(e, "color")).get
+    strategy.colorSpec = styleRepository.colors.find(_.uuid.toString == attrib(e, "color")).get
 
     fill
   }
 
   private def linearFillFromXml(e: Node) = {
-    val fill = new SimpleLinearGradientSpec
+    val strategy = new SimpleLinearGradientFillStrategy
+    val fill = new FillStyleSpec(attrib(e, "name"), strategy)
 
     fill.uuid = UUID.fromString(attrib(e, "id"))
-//    fill.name = attrib(e, "name")
-    fill.colorSpec0 = styleRepository.colors.find(_.uuid.toString == attrib(e, "color0")).get
-    fill.colorSpec1 = styleRepository.colors.find(_.uuid.toString == attrib(e, "color1")).get
+    strategy.colorSpec0 = styleRepository.colors.find(_.uuid.toString == attrib(e, "color0")).get
+    strategy.colorSpec1 = styleRepository.colors.find(_.uuid.toString == attrib(e, "color1")).get
 
     fill
   }
@@ -78,8 +78,8 @@ private[model] class DiagramDeserializer(root: Elem) {
     lineStyle
   }
 
-  private def simpleTextStyleFromXml(e: Node) = {
-    val textStyle = new SimpleTextStyleSpec
+  private def textStyleFromXml(e: Node) = {
+    val textStyle = new TextStyleSpec
 
     textStyle.uuid = UUID.fromString(attrib(e, "id"))
     textStyle.name = attrib(e, "name")

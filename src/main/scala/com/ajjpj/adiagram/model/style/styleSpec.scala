@@ -16,29 +16,28 @@ class ColorSpec extends WithUuid {
   def this(name: String, color: Color) = {this(); this.name = name; this.color = color}
   var name: String = _
   var color: Color = _
-  override def toString() = "ColorSpec{" + name + ": " + color + "}"
+  override def toString = "ColorSpec{" + name + ": " + color + "}"
 }
 
 
-trait FillStyleSpec extends WithUuid {
-  def name: String
+class FillStyleSpec(var name: String, var strategy: FillStyleStrategy) extends WithUuid {
   def style = new FillStyle(paint)
+  def paint: Paint = strategy.paint
+}
+
+trait FillStyleStrategy {
   def paint: Paint
 }
-
-class SolidFillSpec extends FillStyleSpec {
-  override def name = "Solid " + colorSpec.name
+class SolidFillStrategy extends FillStyleStrategy {
   var colorSpec: ColorSpec = _
   override def paint = colorSpec.color
 }
-
-class SimpleLinearGradientSpec extends FillStyleSpec {
+class SimpleLinearGradientFillStrategy extends FillStyleStrategy {
   def this(color0: ColorSpec, color1: ColorSpec) = { this(); colorSpec0 = color0; colorSpec1 = color1 }
 
   var colorSpec0: ColorSpec = _
   var colorSpec1: ColorSpec = _
 
-  override def name = "Linear " + colorSpec0.name + " to " + colorSpec1.name
   override def paint = new LinearGradient(0.3, 0, .7, 1, true, CycleMethod.NO_CYCLE, new Stop(0, colorSpec0.color), new Stop(1, colorSpec1.color))
 }
 
@@ -73,12 +72,7 @@ class LineStyleSpec extends WithUuid {
 }
 
 
-trait TextStyleSpec extends WithUuid {
-  def name: String
-  def style: TextStyle
-}
-
-class SimpleTextStyleSpec extends TextStyleSpec {
+class TextStyleSpec extends WithUuid {
   def this(name: String, fontSize: Int) = {this(); this.name = name; this.fontSizePixels = fontSize}
 
   var name: String = _

@@ -2,7 +2,6 @@ todo
 ----
 * next
   * edit style repository
-    * Color
     * Fill Style
     * Text Style
     * Line Style
