@@ -15,15 +15,17 @@ private[mouse] trait SelectableMouseTrackerState extends MouseTrackerState {
 
   override abstract def onPressed(p: AScreenPos) = shapeFor(p.toModel) match {
     case Some(shape: AShapeSpec) =>
-      changeSelection(shape)
+      changeSelection(Some(shape))
       stateMachine.changeState(new DraggingMouseTrackerState(p, ctrl, stateMachine))
-    case _ => super.onPressed(p)
+    case _ =>
+      changeSelection(None)
+      super.onPressed(p)
   }
 
-  private def changeSelection(shape: AShapeSpec) {
+  private def changeSelection(shape: Option[AShapeSpec]) {
     val prevSelection = ctrl.selections.selectedShapes
     ctrl.selections.setSelection(shape)
-    digest.undoRedo.push(new SelectShapeCommand(prevSelection.toList, List(shape)))
+    digest.undoRedo.push(new SelectShapeCommand(prevSelection.toList, shape.toList))
   }
 
   class SelectShapeCommand(prevSelection: List[AShapeSpec], newSelection: List[AShapeSpec]) extends Command {

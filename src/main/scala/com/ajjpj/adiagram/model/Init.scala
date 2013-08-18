@@ -13,6 +13,9 @@ import com.ajjpj.adiagram.model.style.AStyleRepository
 import java.io.File
 import com.ajjpj.adiagram.ui.accordion._
 import scala.Some
+import javafx.event.EventHandler
+import javafx.scene.input.MouseEvent
+import javafx.application.Platform
 
 
 /**
@@ -42,6 +45,14 @@ private[model] object Init {
     val scrollPane = new ScrollPane()
     scrollPane.setContent(root)
     appPane.setCenter(scrollPane)
+
+    digest.registerEventSource(scrollPane.viewportBoundsProperty)
+    Platform.runLater(new Runnable {
+      override def run {
+        digest.bindDouble(root.minWidthProperty,  scrollPane.getViewportBounds.getWidth)
+        digest.bindDouble(root.minHeightProperty, scrollPane.getViewportBounds.getHeight)
+      }
+    })
 
     val scene = new Scene(appPane, 1500, 1000) //TODO initial window size and pos
 
