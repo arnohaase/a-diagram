@@ -1,22 +1,25 @@
 package com.ajjpj.adiagram.ui.accordion
 
-import com.ajjpj.adiagram.ui.{StyleTreeCellFactory, ADiagramController}
-import com.ajjpj.adiagram.ui.fw.Digest
-import javafx.scene.layout.Pane
-import javafx.scene.control.{TreeView, TreeItem}
+import com.ajjpj.adiagram.ui.{FillStyleListCell, ADiagramController}
+import com.ajjpj.adiagram.ui.fw.{Command, Digest}
+import com.ajjpj.adiagram.model.style.FillStyleSpec
+import com.ajjpj.adiagram.ui.forms.AbstractForm
 
 
 /**
  * @author arno
  */
-class FillStylePane (ctrl: ADiagramController)(implicit digest: Digest) extends Pane {
-  val root = new TreeItem[AnyRef]("root")
-  val tree = new TreeView(root)
-  getChildren.add(tree)
+class FillStylePane (ctrl: ADiagramController)(implicit digest: Digest) extends AbstractStylePane[FillStyleSpec, FillStyleListCell, ChangeFillStyleCommand](ctrl) {
+  override def all = ctrl.styleRepository.fillStyles
+  override def snapshot = ChangeFillStyleCommand()
 
-  tree.setShowRoot(false)
-  tree.setCellFactory(StyleTreeCellFactory)
+}
 
-  //TODO bind
-  ctrl.styleRepository.fillStyles.foreach(fs => root.getChildren.add(new TreeItem(fs)))
+case class ChangeFillStyleCommand() extends Command {
+  def name = "Change Fill Style"
+  def isNop = false
+
+  def undo() {} //TODO
+
+  def redo() {} //TODO
 }
