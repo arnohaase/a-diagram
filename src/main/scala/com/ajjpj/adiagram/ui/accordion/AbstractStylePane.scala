@@ -10,32 +10,55 @@ import com.ajjpj.adiagram.ui.forms.AbstractForm
 import javafx.scene.paint.Color
 import javafx.event.ActionEvent
 import scala.Some
+import javafx.collections.FXCollections
+import scala.collection.JavaConversions
 
 /**
  * @author arno
  */
 private[accordion] abstract class AbstractStylePane[S, C <: ListCell[S], Cmd <: Command] (ctrl: ADiagramController)(implicit digest: Digest, cellClass: ClassTag[C]) extends Pane {
-  def all: Traversable[S]
+  def all: Seq[S]
   def snapshot: Cmd
 
   protected var selected: Option[S] = None
 
   protected val form = new AbstractForm {}
   private var formRow = 0
-  protected def textfield(label: String, getter: => String, setter: (Cmd, String) => Cmd) {
+
+  protected def combo[T](label: String, values: => Seq[T], getter: => T, setter: (Cmd, T) => Cmd) = {
+    val lbl = new Label(label)
+    val cmb = new ComboBox[T]()
+    digest.bind(cmb.itemsProperty, FXCollections.observableArrayList (JavaConversions.asJavaCollection (values)))
+
+    digest.bind(cmb.valueProperty, getter)
+    digest.bind(updateProp(getter, setter), cmb.valueProperty)
+
+    digest.bindBoolean(cmb.disableProperty, selected.isEmpty)
+
+    form.add(lbl, 0, formRow)
+    form.add(cmb, 1, formRow)
+
+    formRow += 1
+    (lbl, cmb)
+  }
+
+  protected def textfield(label: String, getter: => String, setter: (Cmd, String) => Cmd) = {
+    val lbl = new Label(label)
     val txt = new TextField
     digest.bind(txt.textProperty, getter)
     digest.bind(updateProp(getter, setter), txt.textProperty)
 
     digest.bindBoolean(txt.disableProperty, selected.isEmpty)
 
-    form.add(new Label(label), 0, formRow)
+    form.add(lbl, 0, formRow)
     form.add(txt, 1, formRow)
 
     formRow += 1
+    (lbl, txt)
   }
 
-  protected def color(label: String, getter: => Color, setter: (Cmd, Color) => Cmd) {
+  protected def color(label: String, getter: => Color, setter: (Cmd, Color) => Cmd) = {
+    val lbl = new Label(label)
     val rectColor = new ColorPicker
 
     rectColor.getStyleClass.add(ColorPicker.STYLE_CLASS_BUTTON)
@@ -45,10 +68,11 @@ private[accordion] abstract class AbstractStylePane[S, C <: ListCell[S], Cmd <: 
 
     digest.bindBoolean(rectColor.disableProperty, selected.isEmpty)
 
-    form.add(new Label(label), 0, formRow)
+    form.add(lbl, 0, formRow)
     form.add(rectColor, 1, formRow)
 
     formRow += 1
+    (lbl, rectColor)
   }
 
 
@@ -83,14 +107,16 @@ private[accordion] abstract class AbstractStylePane[S, C <: ListCell[S], Cmd <: 
     }
   }
 
-  digest.watch(ctrl.styleRepository.changeCounter, refresh _)
+  digest.watch(ctrl.styleRepository.changeCounter, () => {onStyleRepoChanged(); refresh()})
   refresh()
+
+  protected def onStyleRepoChanged() {}
 
   def refresh() {
     list.getSelectionModel.selectedItemProperty.removeListener(changeListener)
 
     selected match {
-      case Some(c) if ! ctrl.styleRepository.colors.contains(c) => selected = None
+      case Some(c) if ! all.contains(c) => selected = None
       case _ =>
     }
 
