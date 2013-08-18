@@ -3,6 +3,8 @@ package com.ajjpj.adiagram.ui.accordion
 import com.ajjpj.adiagram.ui.{ColorListCell, StyleListCellFactory, FillStyleListCell, ADiagramController}
 import com.ajjpj.adiagram.ui.fw.{Command, Digest}
 import com.ajjpj.adiagram.model.style.{ColorSpec, SimpleLinearGradientFillStrategy, SolidFillStrategy, FillStyleSpec}
+import scala.collection.JavaConversions
+import javafx.scene.control.ComboBox
 
 
 /**
@@ -20,23 +22,41 @@ class FillStylePane (ctrl: ADiagramController)(implicit digest: Digest) extends 
   val cmbColor  = combo("Color",   ctrl.styleRepository.colors, curColor,  (cmd: ChangeFillStyleCommand, newColor: ColorSpec) => cmd.copy(newColor  = newColor))
   val cmbColor2 = combo("Color 2", ctrl.styleRepository.colors, curColor2, (cmd: ChangeFillStyleCommand, newColor: ColorSpec) => cmd.copy(newColor2 = newColor))
 
+  cmbColor. _2.setButtonCell(new ColorListCell)
+  cmbColor2._2.setButtonCell(new ColorListCell)
+
   cmbColor._2.setCellFactory(StyleListCellFactory[ColorSpec, ColorListCell])
   cmbColor2._2.setCellFactory(StyleListCellFactory[ColorSpec, ColorListCell])
 
   digest.bindBoolean(cmbColor2._1.visibleProperty, curKind == LINEAR)
   digest.bindBoolean(cmbColor2._2.visibleProperty, curKind == LINEAR)
 
-  def curKind = selected.map (_.strategy match {
+  val initialized = true
+
+  override def onStyleRepoChanged() {
+    if (initialized) {
+      def refresh(cmb: ComboBox[ColorSpec]) {
+        val sel = cmb.getValue
+        cmb.getItems.clear()
+        cmb.getItems.addAll(JavaConversions.seqAsJavaList(ctrl.styleRepository.colors))
+        cmb.setValue(sel)
+      }
+      refresh(cmbColor._2)
+      refresh(cmbColor2._2)
+    }
+  }
+
+  private def curKind = selected.map (_.strategy match {
       case _: SolidFillStrategy => SOLID
       case _: SimpleLinearGradientFillStrategy => LINEAR
     }).getOrElse(SOLID)
 
-  def curColor = selected.map (_.strategy match {
+  private def curColor = selected.map (_.strategy match {
     case s: SolidFillStrategy => s.colorSpec
     case s: SimpleLinearGradientFillStrategy => s.colorSpec0
   }).getOrElse (ctrl.styleRepository.colors.iterator.next())
 
-  def curColor2 = selected.map (_.strategy match {
+  private def curColor2 = selected.map (_.strategy match {
     case s: SolidFillStrategy => ctrl.styleRepository.colors.iterator.next()
     case s: SimpleLinearGradientFillStrategy => s.colorSpec1
   }).getOrElse (ctrl.styleRepository.colors.iterator.next())

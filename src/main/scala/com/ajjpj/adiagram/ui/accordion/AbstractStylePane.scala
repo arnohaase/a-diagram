@@ -108,6 +108,7 @@ private[accordion] abstract class AbstractStylePane[S, C <: ListCell[S], Cmd <: 
   }
 
   digest.watch(ctrl.styleRepository.changeCounter, () => {onStyleRepoChanged(); refresh()})
+  onStyleRepoChanged()
   refresh()
 
   protected def onStyleRepoChanged() {}
