@@ -77,7 +77,7 @@ private[model] class DiagramSerializer(ctrl: ADiagramController) {
   def linearFillStyleToXml(fill: FillStyleSpec, linear: SimpleLinearGradientFillStrategy) =
       <fill-linear id={fill.uuid.toString} name={fill.name} color0={linear.colorSpec0.uuid.toString} color1={linear.colorSpec1.uuid.toString}/>
 
-  def lineStyleToXml(lineStyle: LineStyleSpec) = <line-style id={lineStyle.uuid.toString} width={lineStyle.width.toString} color={lineStyle.colorSpec.uuid.toString} />
+  def lineStyleToXml(lineStyle: LineStyleSpec) = <line-style id={lineStyle.uuid.toString} name={lineStyle.name} width={lineStyle.width.toString} color={lineStyle.colorSpec.uuid.toString} />
 
   def textStyleToXml(textStyle: TextStyleSpec) = <text-style id={textStyle.uuid.toString} name={textStyle.name} font-size={textStyle.fontSizePixels.toString}  />
 

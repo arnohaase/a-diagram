@@ -2,8 +2,8 @@ package com.ajjpj.adiagram.ui
 
 import com.ajjpj.adiagram.ui.fw.Digest
 import scala.reflect.ClassTag
-import com.ajjpj.adiagram.ui.presentation.{DiagramRootContainer}
-import com.ajjpj.adiagram.model.diagram.{AShapeSpec, ALineSpec, ADiagram}
+import com.ajjpj.adiagram.ui.presentation.DiagramRootContainer
+import com.ajjpj.adiagram.model.diagram.{ATextSpec, AShapeSpec, ALineSpec, ADiagram}
 
 /**
  * @author arno
@@ -25,6 +25,12 @@ class SelectionTracker (diagram: ADiagram, root: DiagramRootContainer, ctrl: ADi
     if(oldSel != selectedShapes) {
       selectionChangeListeners.foreach(l => l(oldSel, selectedShapes))
     }
+
+    (oldSel -- selectedShapes).foreach(_ match {
+      case t: ATextSpec if t.text.trim().isEmpty => diagram -= t // 'garbage collect' empty text elements
+      case _ =>
+    })
+
     result
   }
 

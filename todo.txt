@@ -1,11 +1,6 @@
 todo
 ----
 * next
-  * edit style repository
-    * Fill Style
-    * Text Style
-    * Line Style
-  * make derived style names editable
 
 * features
   * text style: font name, color
@@ -26,7 +21,6 @@ todo
   * undo redo stack should support 'snapshot' for rollbacks --> 'cancel' / 'reset' in a dialog
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
   * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
-  * automatically delete empty text shapes (but when? *not* during editing! Maybe on selection change?)
   * add four missing resize handles
   * 'bitmap' / 'clipart' shape
   * limit re-rendering of shapes during interactive 'resize' etc.
@@ -81,4 +75,5 @@ todo
   * line endings at different angles and different line widths --> 'overlap' vs 'gap'
 
 * show
+  * digest loop
   * styleCells --> use of traits

@@ -62,12 +62,12 @@ object NoShadowSpec extends ShadowStyleSpec {
 }
 
 
-class LineStyleSpec extends WithUuid {
-  def this(colorSpec: ColorSpec, width: Double) = {this(); this.colorSpec = colorSpec; this.width = width}
+class LineStyleSpec(var name: String) extends WithUuid {
+  def this(colorSpec: ColorSpec, width: Double) = {this("Width " + width + ", " + colorSpec.name); this.colorSpec = colorSpec; this.width = width}
   var colorSpec: ColorSpec = _
   var width: Double = _
 
-  def name = "Width " + width + ", " + colorSpec.name
+//  def name = "Width " + width + ", " + colorSpec.name
   def style = LineStyle(colorSpec.color, width)
 }
 

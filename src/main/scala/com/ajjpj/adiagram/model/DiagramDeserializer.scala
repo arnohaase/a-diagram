@@ -69,7 +69,7 @@ private[model] class DiagramDeserializer(root: Elem) {
   }
 
   private def lineStyleFromXml(e: Node) = {
-    val lineStyle = new LineStyleSpec
+    val lineStyle = new LineStyleSpec(attrib(e, "name"))
 
     lineStyle.uuid = UUID.fromString(attrib(e, "id"))
     lineStyle.width = attribD(e, "width")
