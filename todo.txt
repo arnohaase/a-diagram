@@ -1,8 +1,11 @@
 todo
 ----
 * next
+  * add / remove styles
 
 * features
+  * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
+  * add four missing resize handles
   * text style: font name, color
   * clean up 'filled triangle' and 'empty triangle'
   * create line by dragging: minimal initial movement sometimes causes neither 'dragged' nor 'released' to be fired --> SM hangs in 'drag' state
@@ -20,8 +23,6 @@ todo
   * undo redo stack should merge commands (i.e. ask them to merge if they can
   * undo redo stack should support 'snapshot' for rollbacks --> 'cancel' / 'reset' in a dialog
   * dragging: combine 'move' and 'resize' into a single UI operation, i.e. apply the entire operation only after the new rendered image is available
-  * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
-  * add four missing resize handles
   * 'bitmap' / 'clipart' shape
   * limit re-rendering of shapes during interactive 'resize' etc.
   * serialize update rendering per shape
