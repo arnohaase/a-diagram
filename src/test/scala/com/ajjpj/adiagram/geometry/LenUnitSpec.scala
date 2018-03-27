@@ -16,14 +16,14 @@ class LenUnitSpec extends ADiagramSpec {
   }
 
   "LenUnit.point" should "convert correctly" in {
-    LenUnit.point.convertTo(5, LenUnit.point) shouldBe (5.0 +- eps)
+    LenUnit.pt.convertTo(5, LenUnit.pt) shouldBe (5.0 +- eps)
   }
 
   "LenUnit.mm" should "convert correctly" in {
-    LenUnit.mm.convertTo(25.4, LenUnit.point) shouldBe (72.0 +- eps)
+    LenUnit.mm.convertTo(25.4, LenUnit.pt) shouldBe (72.0 +- eps)
   }
 
   "LenUnit.inch" should "convert correctly" in {
-    LenUnit.inch.convertTo(2, LenUnit.point) shouldBe (144.0 +- eps)
+    LenUnit.inch.convertTo(2, LenUnit.pt) shouldBe (144.0 +- eps)
   }
 }

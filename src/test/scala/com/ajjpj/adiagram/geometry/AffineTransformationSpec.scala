@@ -11,7 +11,7 @@ class AffineTransformationSpec extends ADiagramSpec {
   import LenUnit._
 
   "An AffineTransformation" should "perform a translation" in {
-    val p = AffineTransformation.translation(Vector2(144, 216, point)) (Vector2(4, 5, inch))
+    val p = AffineTransformation.translation(Vector2(144, 216, pt)) (Vector2(4, 5, inch))
     p.x shouldBe (6.0 +- eps)
     p.y shouldBe (8.0 +- eps)
     p.unit shouldBe inch
@@ -20,12 +20,12 @@ class AffineTransformationSpec extends ADiagramSpec {
   it should "perform a rotation" in {
     val orig = Vector2(2, 1, inch)
 
-    val p0 = AffineTransformation.rotation(Vector2(144, 0, point), Angle(PI / 4)) (orig)
+    val p0 = AffineTransformation.rotation(Vector2(144, 0, pt), Angle(PI / 4)) (orig)
     p0.x shouldBe (2 + sqrt(2)/2 +- eps)
     p0.y shouldBe (    sqrt(2)/2 +- eps)
     p0.unit shouldBe inch
 
-    val p1 = AffineTransformation.rotation(Vector2(0, 72, point), Angle(-PI/2)) (orig)
+    val p1 = AffineTransformation.rotation(Vector2(0, 72, pt), Angle(-PI/2)) (orig)
     p1.x shouldBe (0.0 +- eps)
     p1.y shouldBe (3.0 +- eps)
     p1.unit shouldBe inch
@@ -34,17 +34,17 @@ class AffineTransformationSpec extends ADiagramSpec {
   it should "scale relative to a given origin" in {
     val orig = Vector2(2, 1, inch)
 
-    val p0 = AffineTransformation.scaling(Vector2.ZERO inUnit point, .5)(orig)
+    val p0 = AffineTransformation.scaling(Vector2.ZERO inUnit pt, .5)(orig)
     p0.x should be (1.0 +- eps)
     p0.y should be ( .5 +- eps)
     p0.unit shouldBe inch
 
-    val p1 = AffineTransformation.scaling(Vector2(144, 0, point), 2)(orig)
+    val p1 = AffineTransformation.scaling(Vector2(144, 0, pt), 2)(orig)
     p1.x shouldBe (2.0 +- eps)
     p1.y shouldBe (2.0 +- eps)
     p1.unit shouldBe inch
 
-    val p2 = AffineTransformation.scaling(Vector2(0, 72, point), 3)(orig)
+    val p2 = AffineTransformation.scaling(Vector2(0, 72, pt), 3)(orig)
     p2.x shouldBe (6.0 +- eps)
     p2.y shouldBe (1.0 +- eps)
     p2.unit shouldBe inch

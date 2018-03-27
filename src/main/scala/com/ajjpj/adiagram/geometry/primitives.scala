@@ -10,7 +10,7 @@ class LenUnit (val factorToPoint: Double) extends AnyVal {
 object LenUnit {
   def apply(factorToPoint: Double) = new LenUnit(factorToPoint)
 
-  val point = LenUnit(1)
+  val pt = LenUnit(1)
   val inch = LenUnit(72)
   val mm = LenUnit(inch.factorToPoint / 25.4)
 }
@@ -18,22 +18,22 @@ object LenUnit {
 /**
   * This class represents an angle. If used in an absolute context, it counts counterclockwise from 'down' (which has positive y).
   */
-class Angle(val angle: Double) extends AnyVal {
+class Angle(val rad: Double) extends AnyVal {
   /** converts the angle to the JavaFX representation, i.e. degrees ccw from 'horizontal to the right' */
-  def screenDegrees = (angle * 180 / Math.PI + 270 + 360) % 360
+  def screenDegrees = (rad * 180 / Math.PI + 270 + 360) % 360
 
-  def unitX = Math.sin(angle)
-  def unitY = Math.cos(angle)
+  def unitX = Math.sin(rad)
+  def unitY = Math.cos(rad)
 
-  def opposite = Angle(angle + Math.PI)
+  def opposite = Angle(rad + Math.PI)
 
-  def cw90 = Angle(angle - Math.PI/2)
-  def ccw90 = Angle(angle + Math.PI/2)
+  def cw90 = Angle(rad - Math.PI/2)
+  def ccw90 = Angle(rad + Math.PI/2)
 
-  def +(other: Angle): Angle = Angle(angle + other.angle)
-  def -(other: Angle): Angle = Angle(angle - other.angle)
+  def +(other: Angle): Angle = Angle(rad + other.rad)
+  def -(other: Angle): Angle = Angle(rad - other.rad)
 
-  override def toString = s"Angle{$angle}"
+  override def toString = s"Angle{$rad}"
 }
 object Angle {
   def apply(angle: Double) = {
@@ -51,7 +51,20 @@ object Angle {
 }
 
 case class Length(l: Double, unit: LenUnit) {
-  def inUnit(u: LenUnit) = Length(l * unit.convertTo(l, u), u)
+  def inUnit(u: LenUnit) = Length(unit.convertTo(l, u), u) //TODO test
+
+  def +(other: Length) = Length(l + other.inUnit(unit).l, unit) // TODO test
+  def -(other: Length) = Length(l - other.inUnit(unit).l, unit) // TODO test
+
+  def *(f: Double) = Length(l*f, unit) //TODO test
+  def /(f: Double) = Length(l/f, unit) //TODO test
+}
+object Length {
+  val ZERO = Length(0, LenUnit.pt)
+  def max(l1: Length, _l2: Length) = { //TODO test
+    val l2 = _l2.inUnit(l1.unit)
+    if (l1.l >= l2.l) l1 else l2
+  }
 }
 
 /**
@@ -66,6 +79,9 @@ case class Vector2 (x: Double, y: Double, unit: LenUnit) {
   def +(p: Vector2): Vector2 = Vector2(x+p.inUnit(unit).x, y+p.inUnit(unit).y, unit)
   def -(p: Vector2): Vector2 = this + p.inverse
 
+  def *(f: Double) = Vector2(x*f, y*f, unit) //TODO test
+  def /(f: Double) = Vector2(x/f, y/f, unit) //TODO test
+
   def distanceTo(p: Vector2): Length = {
     val pNorm = p.inUnit(unit)
     Length (Math.sqrt((pNorm.x-x)*(pNorm.x-x) + (pNorm.y-y)*(pNorm.y-y)), unit)
@@ -74,5 +90,5 @@ case class Vector2 (x: Double, y: Double, unit: LenUnit) {
 object Vector2 {
 //  def fromLength(x: Length, y: Length): Vector2 = Vector2(x.l, y.inUnit(x.unit).l, x.unit)
   def fromAngle(angle: Angle, len: Length): Vector2 = Vector2 (len.l*angle.unitX, len.l*angle.unitY, len.unit)
-  final val ZERO = Vector2(0, 0, LenUnit.point)
+  final val ZERO = Vector2(0, 0, LenUnit.pt)
 }

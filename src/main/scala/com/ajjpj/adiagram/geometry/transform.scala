@@ -50,6 +50,6 @@ object AffineTransformation {
 
   def rotation(origin: Vector2, angle: Angle) =
     translation(origin) after
-    AffineTransformation(Matrix2.rotate(angle.angle), Vector2.ZERO) after
+    AffineTransformation(Matrix2.rotate(angle.rad), Vector2.ZERO) after
     translation (origin.inverse)
 }

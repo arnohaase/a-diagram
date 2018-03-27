@@ -40,8 +40,6 @@ case class RectShape(topLeft: Vector2, _bottomRight: Vector2) extends GeometricS
       topLeft.y <= pNorm.y && topLeft.y+dim.y >= pNorm.y
   }
 
-  override def toString = s"RectShape{$topLeft, dim $dim}"
-
   def intersection(_inside: Vector2, _outside: Vector2): Vector2 = {
     val inside = _inside.inUnit(unit)
     val outside = _outside.inUnit(unit)
@@ -81,14 +79,21 @@ object RectShape {
 
 //  def fromCoordinates(x0: Double, y0: Double, x1: Double, y1: Double) = apply(Vector2(x0, y0), Vector2(x1, y1))
 
-//  def createWithPadding(padding: Double, p0: Vector2, p1: Vector2): RectShape = {
-//    val minX = Math.min(p0.x, p1.x) - padding
-//    val maxX = Math.max(p0.x, p1.x) + padding
-//    val minY = Math.min(p0.y, p1.y) - padding
-//    val maxY = Math.max(p0.y, p1.y) + padding
-//
-//    new RectShape(Vector2(minX, minY), Vector2(maxX-minX, maxY-minY))
-//  }
+  def createWithPadding(p0: Vector2, p1: Vector2, _padding: Length): RectShape = {
+    val unit = p0.unit
+    val x0 = p0.x
+    val y0 = p0.y
+    val x1 = p1.unit.convertTo(p1.x, unit)
+    val y1 = p1.unit.convertTo(p1.y, unit)
+    val padding = _padding.inUnit(unit).l
+
+    val minX = Math.min(x0, x1) - padding
+    val maxX = Math.max(x0, x1) + padding
+    val minY = Math.min(y0, y1) - padding
+    val maxY = Math.max(y0, y1) + padding
+
+    new RectShape(Vector2(minX, minY, unit), Vector2(maxX, maxY, unit))
+  }
 
   //TODO move to GeometricShape; 'enclosingRect' for each shape
 //  def containingRect(rects: Iterable[RectShape]) = {

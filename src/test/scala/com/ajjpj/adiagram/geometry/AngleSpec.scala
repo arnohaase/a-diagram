@@ -7,15 +7,15 @@ class AngleSpec extends ADiagramSpec {
   import Math._
 
   "An Angle" should "contain its normalized value" in {
-    Angle(1).angle shouldBe (1.0 +- eps)
-    Angle(0).angle shouldBe (0.0 +- eps)
-    Angle(PI).angle shouldBe (PI +- eps)
-    Angle(6).angle shouldBe (6.0 +- eps)
+    Angle(1).rad shouldBe (1.0 +- eps)
+    Angle(0).rad shouldBe (0.0 +- eps)
+    Angle(PI).rad shouldBe (PI +- eps)
+    Angle(6).rad shouldBe (6.0 +- eps)
 
-    Angle(2*PI).angle shouldBe (0.0 +- eps)
-    Angle(3*PI).angle shouldBe (PI +- eps)
-    Angle(-1).angle shouldBe (2*PI - 1 +- eps)
-    Angle(-2*PI).angle shouldBe (0.0 +- eps)
+    Angle(2*PI).rad shouldBe (0.0 +- eps)
+    Angle(3*PI).rad shouldBe (PI +- eps)
+    Angle(-1).rad shouldBe (2*PI - 1 +- eps)
+    Angle(-2*PI).rad shouldBe (0.0 +- eps)
   }
 
   it should "calculate its screenDegrees " in {
@@ -39,46 +39,46 @@ class AngleSpec extends ADiagramSpec {
   }
 
   it should "rotate and calculate its opposite" in {
-    Angle(0).cw90.angle shouldBe (3*PI/2 +- eps)
-    Angle(PI/2).cw90.angle shouldBe (0.0 +- eps)
-    Angle(PI).cw90.angle shouldBe (PI/2 +- eps)
-    Angle(3*PI/2).cw90.angle shouldBe (PI +- eps)
+    Angle(0).cw90.rad shouldBe (3*PI/2 +- eps)
+    Angle(PI/2).cw90.rad shouldBe (0.0 +- eps)
+    Angle(PI).cw90.rad shouldBe (PI/2 +- eps)
+    Angle(3*PI/2).cw90.rad shouldBe (PI +- eps)
 
-    Angle(0).ccw90.angle shouldBe (PI/2 +- eps)
-    Angle(PI/2).ccw90.angle shouldBe (PI +- eps)
-    Angle(PI).ccw90.angle shouldBe (3*PI/2 +- eps)
-    Angle(3*PI/2).ccw90.angle shouldBe (0.0 +- eps)
+    Angle(0).ccw90.rad shouldBe (PI/2 +- eps)
+    Angle(PI/2).ccw90.rad shouldBe (PI +- eps)
+    Angle(PI).ccw90.rad shouldBe (3*PI/2 +- eps)
+    Angle(3*PI/2).ccw90.rad shouldBe (0.0 +- eps)
 
-    Angle(0).opposite.angle shouldBe (PI +- eps)
-    Angle(PI/2).opposite.angle shouldBe (3*PI/2 +- eps)
-    Angle(PI).opposite.angle shouldBe (0.0 +- eps)
-    Angle(3*PI/2).opposite.angle shouldBe (PI/2 +- eps)
+    Angle(0).opposite.rad shouldBe (PI +- eps)
+    Angle(PI/2).opposite.rad shouldBe (3*PI/2 +- eps)
+    Angle(PI).opposite.rad shouldBe (0.0 +- eps)
+    Angle(3*PI/2).opposite.rad shouldBe (PI/2 +- eps)
   }
 
   it should "add and subtract another Angle" in {
-    (Angle(1) + Angle(2)).angle shouldBe(3.0 +- eps)
-    (Angle(4) + Angle(5)).angle shouldBe(9 - 2*PI +- eps)
+    (Angle(1) + Angle(2)).rad shouldBe(3.0 +- eps)
+    (Angle(4) + Angle(5)).rad shouldBe(9 - 2*PI +- eps)
 
-    (Angle(3) - Angle(2)).angle shouldBe(1.0 +- eps)
-    (Angle(2) - Angle(3)).angle shouldBe(2*PI - 1 +- eps)
+    (Angle(3) - Angle(2)).rad shouldBe(1.0 +- eps)
+    (Angle(2) - Angle(3)).rad shouldBe(2*PI - 1 +- eps)
   }
 
   it should "be creatable from dx and dy" in {
-    Angle.fromDxDy(0, 1).angle shouldBe (0.0 +- eps)
-    Angle.fromDxDy(-1, 0).angle shouldBe (3*PI/2 +- eps)
-    Angle.fromDxDy(0, -1).angle shouldBe (PI +- eps)
-    Angle.fromDxDy(1, 0).angle shouldBe (PI/2 +- eps)
+    Angle.fromDxDy(0, 1).rad shouldBe (0.0 +- eps)
+    Angle.fromDxDy(-1, 0).rad shouldBe (3*PI/2 +- eps)
+    Angle.fromDxDy(0, -1).rad shouldBe (PI +- eps)
+    Angle.fromDxDy(1, 0).rad shouldBe (PI/2 +- eps)
 
-    Angle.fromDxDy(1, 1).angle shouldBe (PI/4 +- eps)
+    Angle.fromDxDy(1, 1).rad shouldBe (PI/4 +- eps)
   }
 
   it should "be creatable from two points" in {
     import LenUnit._
-    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(1, 2, mm)).angle shouldBe (0.0 +- eps)
-    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(0, 1, mm)).angle shouldBe (3*PI/2 +- eps)
-    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(1, 0, mm)).angle shouldBe (PI +- eps)
-    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(2, 1, mm)).angle shouldBe (PI/2 +- eps)
+    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(1, 2, mm)).rad shouldBe (0.0 +- eps)
+    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(0, 1, mm)).rad shouldBe (3*PI/2 +- eps)
+    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(1, 0, mm)).rad shouldBe (PI +- eps)
+    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(2, 1, mm)).rad shouldBe (PI/2 +- eps)
 
-    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(2, 2, mm)).angle shouldBe (PI/4 +- eps)
+    Angle.fromLine(Vector2(1, 1 ,mm), Vector2(2, 2, mm)).rad shouldBe (PI/4 +- eps)
   }
 }

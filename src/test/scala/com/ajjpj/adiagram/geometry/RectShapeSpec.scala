@@ -1,13 +1,12 @@
 package com.ajjpj.adiagram.geometry
 
 import com.ajjpj.adiagram.ADiagramSpec
-import com.ajjpj.adiagram_.geometry.{ADim, APoint, ARect}
 
 
 class RectShapeSpec extends ADiagramSpec {
   import LenUnit._
 
-  val r = RectShape (Vector2 (10, 20, inch), Vector2 (40*72, 60*72, point))
+  val r = RectShape (Vector2 (10, 20, inch), Vector2 (40*72, 60*72, pt))
 
   "A RectShape" should "convert its lower right corner to its common LenUnit" in {
     r.bottomRight.x shouldBe (40.0 +- eps)
@@ -44,7 +43,7 @@ class RectShapeSpec extends ADiagramSpec {
   }
 
   "RectShape.fromDim" should "create a rectangle based on width and height" in {
-    val r2 = RectShape.fromDim(Vector2(10, 20, inch), Vector2(30*72, 40*72, point))
+    val r2 = RectShape.fromDim(Vector2(10, 20, inch), Vector2(30*72, 40*72, pt))
 
     r2.topLeft.x shouldBe (10.0 +- eps)
     r2.topLeft.y shouldBe (20.0 +- eps)
@@ -75,5 +74,18 @@ class RectShapeSpec extends ADiagramSpec {
     val right = r.intersection(Vector2(2, 2, inch), Vector2(4, 2, inch))
     right.x shouldBe (3.0 +- eps)
     right.y shouldBe (2.0 +- eps)
+  }
+
+  "RectShape.createWithPadding" should "add uniform padding around a RectShape" in {
+    val r = RectShape.createWithPadding(Vector2(1, 2, inch), Vector2(3*72, 4*72, pt), Length(2.54, mm))
+    r.left.l shouldBe (.9 +- eps)
+    r.right.l shouldBe (3.1 +- eps)
+    r.top.l shouldBe (1.9 +- eps)
+    r.bottom.l shouldBe (4.1 +- eps)
+
+    r.left.unit shouldBe inch
+    r.right.unit shouldBe inch
+    r.top.unit shouldBe inch
+    r.bottom.unit shouldBe inch
   }
 }
