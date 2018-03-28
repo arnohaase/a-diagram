@@ -1,9 +1,25 @@
 todo
 ----
-* next
-  * add / remove styles
+* oval
+* RectBox (rounded corners)
+* text
+  * multi-line, paragraphs --> typesetting
+  * horizontal / vertical alignment
+  * font(s), sizes
+  * styles (subscript, superscript, underline, strikethrough, bold, italics)
+  * angled
+* text on lines
+* splines
+* multi segment lines (perpendicular / non perpendicular)
+* 'grouping' rectangles: text in the top left corner (or is that just a special use of RectBox?)
+* bitmaps
+* SVGs (--> Batik)
+* 'model' layer
+
+* Java 10
 
 * features
+  * add / remove styles
   * select arrow / line only when clicking close to the line itself, *not* on the entire bounding rectangle
   * add four missing resize handles
   * text style: font name, color
@@ -78,3 +94,10 @@ todo
 * show
   * digest loop
   * styleCells --> use of traits
+
+done
+----
+* straight line
+* line ends
+* rendering
+* render tests

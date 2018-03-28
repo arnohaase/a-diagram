@@ -13,7 +13,7 @@ import com.ajjpj.adiagram.render.{LineStyle, Model2Screen, RenderHelper, Rendera
 import com.sun.javafx.application.PlatformImpl
 
 
-class StrightLineRenderSpec extends ADiagramSpec {
+class StraightLineRenderSpec extends ADiagramSpec {
   import LenUnit._
 
   PlatformImpl.startup(() => {})
@@ -28,9 +28,9 @@ class StrightLineRenderSpec extends ADiagramSpec {
 
   private def doRenderToFile(folder: File, filename: String, line: RenderableStraightLine, zoom: Double, coordId: String): Unit = {
     val m2s = new Model2Screen(10 * zoom)
-    val piRaw = line.render(m2s)
-    val imgRaw = piRaw.shape.img
-    val ro = piRaw.shape.renderOffset
+    val riRaw = line.render(m2s)
+    val imgRaw = riRaw.img
+    val ro = riRaw.topLeftPos
 
     val canvas = new Canvas(imgRaw.getWidth, imgRaw.getHeight)
     val gc = canvas.getGraphicsContext2D

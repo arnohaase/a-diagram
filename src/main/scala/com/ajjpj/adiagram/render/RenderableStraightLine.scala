@@ -1,20 +1,12 @@
 package com.ajjpj.adiagram.render
 
+import java.util.concurrent.atomic.AtomicLong
 import javafx.scene.canvas.GraphicsContext
-import javafx.scene.paint.Paint
 import javafx.scene.shape.StrokeLineCap
 
 import com.ajjpj.adiagram.geometry.{Angle, Length, RectShape, Vector2}
 import com.ajjpj.adiagram.render.lineend.RenderableLineEnd
 
-
-case class LineStyle (width: Length, paint: Paint) {
-  def applyTo(gc: GraphicsContext, m2s: Model2Screen): Unit = {
-    gc.setStroke (paint)
-    gc.setLineWidth (m2s(width))
-    gc.setFill (paint)
-  }
-}
 
 //TODO text
 case class RenderableStraightLine(p0: Vector2, p1: Vector2, style: LineStyle, startDecoration: RenderableLineEnd, endDecoration: RenderableLineEnd) extends Renderable {
@@ -32,7 +24,23 @@ case class RenderableStraightLine(p0: Vector2, p1: Vector2, style: LineStyle, st
 
   val angle = Angle.fromLine(p0, p1)
 
-  override def render(m2s: Model2Screen) = PartialImage.fromGc(pos, renderBounds(m2s), m2s, None, (gc, t) => paint(gc, t, m2s))
+  override def render(m2s: Model2Screen) = {
+    val t0 = System.currentTimeMillis()
+    val t1 = new AtomicLong()
+    val t2 = new AtomicLong()
+
+    val result = RenderedItem.fromGc(pos, renderBounds(m2s), m2s, None, (gc, t) => {
+      t1.set(System.currentTimeMillis())
+      paint(gc, t, m2s)
+      t2.set(System.currentTimeMillis())
+    })
+
+    val t3 = System.currentTimeMillis()
+
+    println(s"render time: ${t1.get - t0}ms / ${t2.get - t1.get}ms / ${t3 - t2.get}ms")
+
+    result
+  }
 
   def paint(gc: GraphicsContext, t: Vector2, m2s: Model2Screen) {
     style.applyTo(gc, m2s)

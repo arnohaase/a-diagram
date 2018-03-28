@@ -73,6 +73,9 @@ object Length {
 case class Vector2 (x: Double, y: Double, unit: LenUnit) {
   def inUnit(u: LenUnit) = if(u == unit) this else Vector2(unit.convertTo(x, u), unit.convertTo(y, u), u)
 
+  val xLen = Length(x, unit)
+  val yLen = Length(y, unit)
+
   def halfWayTo(p: Vector2) = Vector2((x+p.inUnit(unit).x)/2, (y+p.inUnit(unit).y)/2, unit)
   def inverse = Vector2(-x, -y, unit)
 

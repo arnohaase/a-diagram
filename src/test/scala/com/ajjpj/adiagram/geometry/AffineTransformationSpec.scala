@@ -7,7 +7,6 @@ import com.ajjpj.adiagram.ADiagramSpec
 
 class AffineTransformationSpec extends ADiagramSpec {
   import Math._
-
   import LenUnit._
 
   "An AffineTransformation" should "perform a translation" in {
