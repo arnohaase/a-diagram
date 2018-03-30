@@ -16,7 +16,7 @@ todo
 * SVGs (--> Batik)
 * 'model' layer
 
-* Java 10
+* subscript, superscript, double underline
 
 * features
   * add / remove styles

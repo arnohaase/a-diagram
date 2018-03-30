@@ -1,5 +1,6 @@
 package com.ajjpj.adiagram.render
 
+import javafx.scene.Node
 import javafx.scene.canvas.{Canvas, GraphicsContext}
 import javafx.scene.image.Image
 
@@ -8,7 +9,7 @@ import com.ajjpj.adiagram.geometry._
 
 trait Renderable {
   def pos: Vector2
-  def renderBounds(m2s: Model2Screen): RectShape
+//  def renderBounds(m2s: Model2Screen): RectShape
   def render(m2s: Model2Screen): RenderedItem
 }
 
@@ -75,11 +76,22 @@ object RenderedItem {
     val canvas = new Canvas (m2s(bounds.width) + 2, m2s(bounds.height) + 2)
     callback(canvas.getGraphicsContext2D, offset)
 
-    val img = RenderHelper.snapshot(canvas)
+    fromNode(pos, m2s, shadowStyle, canvas)
+//    val img = RenderHelper.snapshot(canvas)
+//
+//    val screenPos = m2s.toScreenCoordinates(offset, pos)
+//    shadowStyle match {
+//      case Some(s) => RenderedItem(screenPos, img, screenPos - s.additionalSpaceTopLeft(m2s), Some(s.shadow(img, m2s)))
+//      case None    => RenderedItem(screenPos, img, screenPos, None)
+//    }
+  }
 
-    val screenPos = m2s.toScreenCoordinates(offset, pos)
+  def fromNode(pos: Vector2, m2s: Model2Screen, shadowStyle: Option[ShadowStyle], node: Node) = {
+    val img = RenderHelper.snapshot(node)
+
+    val screenPos = m2s.toScreenCoordinates(Vector2.ZERO, pos)
     shadowStyle match {
-      case Some(s) => RenderedItem(screenPos, img, screenPos - s.additionalSpaceTopLeft, Some(s.shadow(img, m2s)))
+      case Some(s) => RenderedItem(screenPos, img, screenPos - s.additionalSpaceTopLeft(m2s), Some(s.shadow(img, m2s)))
       case None    => RenderedItem(screenPos, img, screenPos, None)
     }
   }

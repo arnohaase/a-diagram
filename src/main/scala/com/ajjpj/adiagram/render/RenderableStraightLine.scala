@@ -12,7 +12,7 @@ import com.ajjpj.adiagram.render.lineend.RenderableLineEnd
 case class RenderableStraightLine(p0: Vector2, p1: Vector2, style: LineStyle, startDecoration: RenderableLineEnd, endDecoration: RenderableLineEnd) extends Renderable {
   override val pos = RectShape(p0, p1).topLeft
 
-  override def renderBounds(m2s: Model2Screen) = {
+  def renderBounds(m2s: Model2Screen) = {
     val decorationWidth = Length.max(startDecoration.width(style, m2s), endDecoration.width(style, m2s))
 //    text match {
 //      case Some(_) => decorationWidth = Math.max(decorationWidth, style.widthNoZoom + textStyle.height(Zoom.Identity)*2)

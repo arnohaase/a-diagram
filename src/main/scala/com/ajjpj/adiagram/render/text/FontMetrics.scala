@@ -16,4 +16,6 @@ class FontMetrics(font: Font) {
     internal.setText(txt)
     internal.getLayoutBounds.getWidth
   }
+
+  override def toString = s"FontMetrics{font: $font, lineHeight: $lineHeight, ascent: $ascent, descent: $descent}"
 }
