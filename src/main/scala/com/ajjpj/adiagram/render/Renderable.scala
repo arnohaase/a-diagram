@@ -38,6 +38,8 @@ class Model2Screen (val factorFromPt: Double) extends AnyVal {
     ScreenPos(toJavaFx(raw.x, raw.unit), toJavaFx(raw.y, raw.unit))
   }
 
+  def fromScreenCoordinates(x: Double, y: Double) = Vector2(x / factorFromPt, y/factorFromPt, pt)
+
   def singlePixel = Length(1/factorFromPt, LenUnit.pt)
 
   /**

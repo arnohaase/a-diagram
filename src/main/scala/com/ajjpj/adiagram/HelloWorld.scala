@@ -1,5 +1,8 @@
 package com.ajjpj.adiagram
 
+import com.ajjpj.adiagram.geometry.{LenUnit, Length, Vector2}
+import com.ajjpj.adiagram.render._
+import com.ajjpj.adiagram.render.lineend.NullLineEnd
 import javafx.application.Application
 import javafx.geometry.VPos
 import javafx.scene.Scene
@@ -9,8 +12,8 @@ import javafx.scene.layout._
 import javafx.scene.paint.Color
 import javafx.scene.text._
 import javafx.stage.Stage
-
-import com.ajjpj.adiagram.render.text.FontMetrics
+import com.ajjpj.adiagram.render.text._
+import javafx.scene.image.ImageView
 
 object HelloWorld extends App {
   Application.launch (classOf[HelloWorld])
@@ -21,43 +24,62 @@ class HelloWorld extends Application {
     val root = new FlowPane
     root.setRowValignment(VPos.TOP)
 
-    val text = new Text("123 456 789")
-    text.setWrappingWidth(80)
-    text.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 40))
-    root.getChildren.add(text)
+    {
+      val atom = TextAtomModel("Hallo Arno asdfj asdf adj asdl adfslaka asdjlf alksdj ljasdfklasd jfklsjadklfjlkasdf lasdkasd lasdlfkl           lkasdfk lasdfkl asdkfl kasdf", TextAtomStyle("Arial", Length(20, LenUnit.pt), Color.DARKBLUE))
+      val paragraph = TextParagraphModel(Vector(atom), TextParagraphStyle(TextAlignment.LEFT))
+      val text = TextModel(Vector(paragraph), TextStyle())
+      val riText = RenderableText(Vector2.ZERO, Length(200, LenUnit.pt), text, None).render(new Model2Screen(1))
+      root.getChildren.add(new ImageView(riText.img))
+    }
+    {
+      val atom = TextAtomModel("Hallo Arno asdfj asdf adj asdl adfslaka asdjlf alksdj ljasdfklasd jfklsjadklfjlkasdf lasdkasd lasdlfkl           lkasdfk lasdfkl asdkfl kasdf", TextAtomStyle("Arial", Length(20, LenUnit.pt), Color.DARKBLUE))
+      val paragraph = TextParagraphModel(Vector(atom), TextParagraphStyle(TextAlignment.JUSTIFY))
+      val text = TextModel(Vector(paragraph), TextStyle())
+      val riText = RenderableText(Vector2.ZERO, Length(200, LenUnit.pt), text, None).render(new Model2Screen(1))
+      root.getChildren.add(new ImageView(riText.img))
+    }
 
-    val c = new Canvas(600, 600)
-    val gc = c.getGraphicsContext2D
-    gc.setFill(Color.BROWN)
-
-    val fontMetrics = new FontMetrics (Font.font ("Helvetica", FontPosture.ITALIC, 40))
-
-    println (fontMetrics)
-
-    gc.setStroke(Color.DARKBLUE)
-    gc.strokeLine(0, fontMetrics.ascent, 200, fontMetrics.ascent)
-
-    gc.setStroke(Color.DARKGREEN)
-//    gc.strokeLine(0, 100 - fontMetrics.ascent, 200, 100 - fontMetrics.ascent)
-    gc.strokeLine(0, fontMetrics.ascent + fontMetrics.descent, 200, fontMetrics.ascent + fontMetrics.descent)
-
-    gc.setStroke(Color.DARKRED)
-    gc.strokeLine(200, 0, 200, 3*fontMetrics.lineHeight)
-    gc.strokeLine(204, 0, 204, text.getLayoutBounds.getHeight)
-
-    gc.rotate(20)
+    val riLine = RenderableStraightLine(Vector2.ZERO, Vector2(100, 100, LenUnit.pt), LineStyle(Length(1, LenUnit.pt), Color.DARKRED), new NullLineEnd(), new NullLineEnd()).render(new Model2Screen(1))
+    root.getChildren.add(new ImageView(riLine.img))
 
 
-    gc.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 40))
-    gc.fillText("40", 0, fontMetrics.ascent)
-
-    gc.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 20))
-    gc.fillText("20", 50, fontMetrics.ascent)
-
-    gc.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 10))
-    gc.fillText("10", 100, fontMetrics.ascent)
-
-    root.getChildren.add(c)
+//    val text = new Text("123 456 789")
+//    text.setWrappingWidth(80)
+//    text.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 40))
+//    root.getChildren.add(text)
+//
+//    val c = new Canvas(600, 600)
+//    val gc = c.getGraphicsContext2D
+//    gc.setFill(Color.BROWN)
+//
+//    val fontMetrics = new FontMetrics (Font.font ("Helvetica", FontPosture.ITALIC, 40))
+//
+//    println (fontMetrics)
+//
+//    gc.setStroke(Color.DARKBLUE)
+//    gc.strokeLine(0, fontMetrics.ascent, 200, fontMetrics.ascent)
+//
+//    gc.setStroke(Color.DARKGREEN)
+////    gc.strokeLine(0, 100 - fontMetrics.ascent, 200, 100 - fontMe/trics.ascent)
+//    gc.strokeLine(0, fontMetrics.ascent + fontMetrics.descent, 200, fontMetrics.ascent + fontMetrics.descent)
+//
+//    gc.setStroke(Color.DARKRED)
+//    gc.strokeLine(200, 0, 200, 3*fontMetrics.lineHeight)
+//    gc.strokeLine(204, 0, 204, text.getLayoutBounds.getHeight)
+//
+//    gc.rotate(20)
+//
+//
+//    gc.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 40))
+//    gc.fillText("40", 0, fontMetrics.ascent)
+//
+//    gc.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 20))
+//    gc.fillText("20", 50, fontMetrics.ascent)
+//
+//    gc.setFont(Font.font ("Helvetica", FontPosture.ITALIC, 10))
+//    gc.fillText("10", 100, fontMetrics.ascent)
+//
+//    root.getChildren.add(c)
 
 
 //    val tf = new TextFlow

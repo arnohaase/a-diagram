@@ -15,22 +15,23 @@ case class RenderableText(logicalTopLeft: Vector2, maxWidth: Length, text: TextM
   override def pos = logicalTopLeft //NB: for rotated text, the img may go above and / or to the left of this pos
 
   override def render (m2s: Model2Screen) = {
-    val typesetText = new FixedWidthTypeSetter(Length(500, LenUnit.pt), m2s, text).build()
+    val typesetText = new FixedWidthTypeSetter(maxWidth, m2s, text).build()
 
     //TODO rotated text
     //TODO pos for non-left alignment
-    RenderedItem.fromGc(pos, RectShape(Vector2.ZERO, Vector2(700, 1000, LenUnit.pt)), m2s, shadowStyle, (gc, t) => paint(gc, t, typesetText, m2s))
+    val canvasBounds = RectShape(m2s.fromScreenCoordinates(typesetText.xMin, 0), m2s.fromScreenCoordinates(typesetText.xMax, typesetText.height))
+    RenderedItem.fromGc(pos, canvasBounds, m2s, shadowStyle, (gc, t) => paint(gc, t, typesetText, m2s))
   }
 
   def paint(gc: GraphicsContext, t: Vector2, typesetText: TypesetText, m2s: Model2Screen): Unit = {
-    //TODO what to do about t
+    val offset = m2s.toScreenCoordinates(Vector2.ZERO, t)
 
     for (line <- typesetText.lines;
          atom <- line.atoms
     ) {
       gc.setFont(atom.font)
       gc.setFill(atom.fill)
-      gc.fillText(atom.text, atom.offsetX, atom.baselineY)
+      gc.fillText(atom.text, atom.offsetX + offset.x, line.offsetY + atom.baselineY + offset.y)
     }
   }
 }

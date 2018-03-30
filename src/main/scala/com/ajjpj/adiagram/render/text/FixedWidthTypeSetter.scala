@@ -9,6 +9,9 @@ import com.ajjpj.adiagram.render.{Model2Screen, TextParagraphStyle}
 import scala.collection.mutable.ArrayBuffer
 
 
+/**
+  * @param baselineY is in this line's coordinate system, i.e. y=0 is the top of the current line
+  */
 case class TypesetAtom(offsetX: Double, baselineY: Double, text: String, font: Font, fill: Paint, underline: Boolean, strikeThrough: Boolean)
 case class LineOfTypesetText(offsetY: Double, height: Double, atoms: Vector[TypesetAtom])
 
@@ -66,22 +69,59 @@ class FixedWidthTypeSetter(_wrapWidth: Length, m2s: Model2Screen, textModel: Tex
 
   private def typesetAtom(atom: TextAtomModel, paragraphStyle: TextParagraphStyle, isLastAtomInParagraph: Boolean) {
     def completeLine(isLastLineOfParagraph: Boolean) = {
+      // Remove a single trailing blank, if any. This is important for RIGHT and JUSTIFY and nice to have for CENTER while not hurting LEFT --> just do it
+      // We restrict ourselves to removing only onw blank to allow manual 'tweaking' of layout which is common practice
+      if (curLineAtoms.size > 1 && curLineAtoms.last.text == " ") {
+        // we avoid emptying a line completely by removing the (invisible) space
+        curLineWidth = curLineAtoms.last.offsetX
+        curLineAtoms.remove(curLineAtoms.size-1, 1)
+      }
+      val idxLastNonSpace = curLineAtoms.lastIndexWhere(_.text != " ")
+      if (idxLastNonSpace >= 0 && idxLastNonSpace < curLineAtoms.size-1) {
+        curLineWidth = curLineAtoms(idxLastNonSpace+1).offsetX
+        curLineAtoms.remove (idxLastNonSpace + 1, curLineAtoms.size - idxLastNonSpace - 1)
+      }
+
       // post process the line according to alignment
       paragraphStyle.hAlignment match {
         case TextAlignment.LEFT =>
-          curLineAtoms.map(a => a.copy(baselineY = a.baselineY + curLineMaxAscent))
+          curLineAtoms = curLineAtoms.map(a => a.copy(baselineY = a.baselineY + curLineMaxAscent))
           xMax = Math.max(xMax, curLineWidth)
         case TextAlignment.CENTER =>
-          curLineAtoms.map(a => a.copy(offsetX = a.offsetX - curLineWidth/2, baselineY = a.baselineY + curLineMaxAscent))
+          curLineAtoms = curLineAtoms.map(a => a.copy(offsetX = a.offsetX - curLineWidth/2, baselineY = a.baselineY + curLineMaxAscent))
           xMax = Math.max(xMax, curLineWidth/2)
           xMin = Math.min(xMin, -curLineWidth/2)
         case TextAlignment.RIGHT =>
-          curLineAtoms.map(a => a.copy(offsetX = a.offsetX - curLineWidth, baselineY = a.baselineY + curLineMaxAscent))
+          curLineAtoms = curLineAtoms.map(a => a.copy(offsetX = a.offsetX - curLineWidth, baselineY = a.baselineY + curLineMaxAscent))
           xMin = Math.min(xMin, -curLineWidth)
         case TextAlignment.JUSTIFY =>
-          curLineAtoms.map(a => a.copy(baselineY = a.baselineY + curLineMaxAscent))
-          //TODO remove trailing blanks
-          //TODO spread white space evenly (unless this is the paragraph's last line)
+          // remove leading blank, if any, unless that empties the line completely
+          val xCorrection = {
+            if (curLineAtoms.size > 1 && curLineAtoms.head.text == " ") {
+              curLineAtoms = curLineAtoms.tail //NB: side effect!
+              curLineAtoms.head.offsetX
+            }
+            else
+              0.0
+          }
+
+          // spread available space evenly
+          val surplusSpace = {
+            if (curLineWidth < wrapWidth && curLineAtoms.size > 1) {
+              val result = (wrapWidth - curLineWidth) / (curLineAtoms.size - 1)
+              curLineWidth = wrapWidth //NB: side effect!
+              result
+            }
+            else
+              0.0
+          }
+
+          val transformed = curLineAtoms.view.zipWithIndex.map(atomIdx => {
+            val (atom, idx) = atomIdx
+            atom.copy(offsetX = atom.offsetX + surplusSpace*idx - xCorrection, baselineY = atom.baselineY + curLineMaxAscent)
+          }).toVector
+          curLineAtoms.clear()
+          curLineAtoms ++= transformed
 
           xMax = Math.max(xMax, curLineWidth) // always do this to deal with words too long for one line
           if (! isLastLineOfParagraph) xMax = Math.max(xMax, wrapWidth)
@@ -104,22 +144,21 @@ class FixedWidthTypeSetter(_wrapWidth: Length, m2s: Model2Screen, textModel: Tex
     val fm = new FontMetrics(font)
 
     val words = splitToWords(atom.text)
+
     for ((word, i) <- words.view.zipWithIndex) {
       val wordWidth = fm.computeStringWidth(word)
-      if (curLineWidth + wordWidth > wrapWidth && !isStartOfLine) completeLine(isLastAtomInParagraph && i == words.length-1)
-      curLineWidth += wordWidth
+      if (curLineWidth + wordWidth > wrapWidth && !isStartOfLine) completeLine(false)
 
       //TODO superscript / subscript
       curLineAtoms += TypesetAtom(curLineWidth, 0, word, font, atom.style.fill, atom.style.underline, atom.style.strikeThrough)
       curLineMaxAscent = Math.max(curLineMaxAscent, fm.ascent)
       curLineMaxDescent = Math.max(curLineMaxDescent, fm.descent)
+      curLineWidth += wordWidth
+      if(isLastAtomInParagraph && i == words.length-1) completeLine(true)
     }
   }
 
-
-  //TODO JUSTIFY: remove leading / trailing blanks
   //TODO hyphenation, allow splits at '-'
-
   //TODO how best to represent strikethrough and underline?
 }
 
