@@ -107,7 +107,7 @@ class FixedWidthTypeSetter(_wrapWidth: Length, m2s: Model2Screen, textModel: Tex
 
           // spread available space evenly
           val surplusSpace = {
-            if (curLineWidth < wrapWidth && curLineAtoms.size > 1) {
+            if (curLineWidth < wrapWidth && curLineAtoms.size > 1 && !isLastLineOfParagraph) {
               val result = (wrapWidth - curLineWidth) / (curLineAtoms.size - 1)
               curLineWidth = wrapWidth //NB: side effect!
               result

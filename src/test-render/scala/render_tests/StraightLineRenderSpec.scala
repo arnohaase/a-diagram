@@ -1,30 +1,21 @@
 package render_tests
 
 import java.io.File
-import javafx.embed.swing.SwingFXUtils
-import javafx.scene.canvas.Canvas
-import javafx.scene.paint.Color
-import javax.imageio.ImageIO
 
 import com.ajjpj.adiagram.ADiagramSpec
 import com.ajjpj.adiagram.geometry._
 import com.ajjpj.adiagram.render.lineend._
 import com.ajjpj.adiagram.render.{LineStyle, Model2Screen, RenderHelper, RenderableStraightLine}
-import com.sun.javafx.application.PlatformImpl
+import javafx.embed.swing.SwingFXUtils
+import javafx.scene.canvas.Canvas
+import javafx.scene.paint.Color
+import javax.imageio.ImageIO
 
 
-class StraightLineRenderSpec extends ADiagramSpec {
+class StraightLineRenderSpec extends ADiagramSpec with RenderUtils {
   import LenUnit._
 
-  PlatformImpl.startup(() => {})
-  val baseDir = new File("target/render-test/straight-line")
-  baseDir.mkdirs()
-  delRec(baseDir)
-
-  private def delRec(f: File): Unit = {
-    Option(f.listFiles).getOrElse(Array.empty).foreach(delRec)
-    if (f.isFile) f.delete()
-  }
+  override def componentId = "straight-line"
 
   private def doRenderToFile(folder: File, filename: String, line: RenderableStraightLine, zoom: Double, coordId: String): Unit = {
     val m2s = new Model2Screen(10 * zoom)
@@ -49,7 +40,7 @@ class StraightLineRenderSpec extends ADiagramSpec {
     ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", new File(folder, s"$filename.png"))
   }
 
-  private def render(folderName: String, decoration: RenderableLineEnd): Unit = { //TODO 'base' part of file names
+  private def render(folderName: String, decoration: RenderableLineEnd): Unit = {
     val folder = new File(baseDir, folderName)
     folder.mkdirs()
 

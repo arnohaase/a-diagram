@@ -1,14 +1,14 @@
 todo
 ----
-* oval
-* RectBox (rounded corners)
 * text
   * multi-line, paragraphs --> typesetting
   * horizontal / vertical alignment
   * font(s), sizes
   * styles (subscript, superscript, underline, strikethrough, bold, italics)
   * angled
-* text on lines
+* oval
+* RectBox (rounded corners)
+* text on straight lines
 * splines
 * multi segment lines (perpendicular / non perpendicular)
 * 'grouping' rectangles: text in the top left corner (or is that just a special use of RectBox?)
