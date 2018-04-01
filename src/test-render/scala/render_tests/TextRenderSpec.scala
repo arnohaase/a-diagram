@@ -4,6 +4,7 @@ import java.io.File
 
 import com.ajjpj.adiagram.ADiagramSpec
 import com.ajjpj.adiagram.geometry.{LenUnit, Length, Vector2}
+import com.ajjpj.adiagram.render.TextAtomStyle.{UnderlineDouble, UnderlineKind, UnderlineNone, UnderlineSingle}
 import com.ajjpj.adiagram.render._
 import com.ajjpj.adiagram.render.text.{RenderableText, TextAtomModel, TextModel, TextParagraphModel}
 import javafx.embed.swing.SwingFXUtils
@@ -50,7 +51,7 @@ class TextRenderSpec extends ADiagramSpec with RenderUtils {
     ) {
       val paragraphs = {
         def style(sizeFactor: Double = 1.0, fontFamily: String = FONT_FAMILY_TIMES, color: Paint = Color.BLACK,
-                  italics: Boolean = false, bold: Boolean = false, underline: Boolean = false, strikeThrough: Boolean = false) =
+                  italics: Boolean = false, bold: Boolean = false, underline: UnderlineKind = UnderlineNone, strikeThrough: Boolean = false) =
           TextAtomStyle(fontFamily, Length(sizePt * sizeFactor, pt), color, italics, bold, underline, strikeThrough)
 
         val atoms1 = Vector (
@@ -79,9 +80,13 @@ class TextRenderSpec extends ADiagramSpec with RenderUtils {
           TextAtomModel(" (big)", style(sizeFactor=2, strikeThrough = true)),
           TextAtomModel(" (small)", style(sizeFactor=.5, strikeThrough = true)),
           TextAtomModel(" and ", style()),
-          TextAtomModel("underlined", style(underline = true)),
-          TextAtomModel(" (big)", style(sizeFactor=2, underline = true)),
-          TextAtomModel(" (small)", style(sizeFactor=.5, underline = true)),
+          TextAtomModel("underlined", style(underline = UnderlineSingle)),
+          TextAtomModel(" (big)", style(sizeFactor=2, underline = UnderlineSingle)),
+          TextAtomModel(" (small)", style(sizeFactor=.5, underline = UnderlineSingle)),
+          TextAtomModel(" and ", style()),
+          TextAtomModel("double underlined", style(underline = UnderlineDouble)),
+          TextAtomModel(" (big)", style(sizeFactor=2, underline = UnderlineDouble)),
+          TextAtomModel(" (small)", style(sizeFactor=.5, underline = UnderlineDouble)),
           TextAtomModel(" text. And there is text in ", style()),
           TextAtomModel("blue", style(color = Color.BLUE)),
           TextAtomModel(" and in ", style()),
@@ -98,12 +103,12 @@ class TextRenderSpec extends ADiagramSpec with RenderUtils {
       render("regular", s"styles-$hAlignment-${sizePt.toInt}pt-${zoom._1}", zoom._2, RenderableText(Vector2.ZERO, Length(330, LenUnit.pt), TextModel(paragraphs, TextStyle()), None))
     }
 
-    //TODO underline, double underline, strikethrough
-    //TODO superscript, subscript
+    //TODO superscript, subscript, caps
   }
 
   //TODO line spacing --> two paragraphs for comparison
+  //TODO paragraph spacing
+
   //TODO angle: steps of 30° to take care of all variations
   //TODO single word on a line, word wider than line
-  //TODO paragraph spacing
 }

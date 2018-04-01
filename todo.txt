@@ -1,10 +1,7 @@
 todo
 ----
 * text
-  * multi-line, paragraphs --> typesetting
-  * horizontal / vertical alignment
-  * font(s), sizes
-  * styles (subscript, superscript, underline, strikethrough, bold, italics)
+  * styles (subscript, superscript)
   * angled
 * oval
 * RectBox (rounded corners)
@@ -15,8 +12,6 @@ todo
 * bitmaps
 * SVGs (--> Batik)
 * 'model' layer
-
-* subscript, superscript, double underline
 
 * features
   * add / remove styles
@@ -101,3 +96,5 @@ done
 * line ends
 * rendering
 * render tests
+* typesetting: font sizes, colors, italics, bold, horizontal alignment / justify
+  * single / double underline, strike-through

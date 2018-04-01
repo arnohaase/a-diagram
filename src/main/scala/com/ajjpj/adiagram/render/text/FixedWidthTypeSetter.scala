@@ -2,8 +2,8 @@ package com.ajjpj.adiagram.render.text
 
 import javafx.scene.paint.Paint
 import javafx.scene.text.{Font, FontPosture, FontWeight, TextAlignment}
-
 import com.ajjpj.adiagram.geometry.Length
+import com.ajjpj.adiagram.render.TextAtomStyle.UnderlineKind
 import com.ajjpj.adiagram.render.{Model2Screen, TextParagraphStyle}
 
 import scala.collection.mutable.ArrayBuffer
@@ -12,7 +12,7 @@ import scala.collection.mutable.ArrayBuffer
 /**
   * @param baselineY is in this line's coordinate system, i.e. y=0 is the top of the current line
   */
-case class TypesetAtom(offsetX: Double, baselineY: Double, text: String, font: Font, fill: Paint, underline: Boolean, strikeThrough: Boolean)
+case class TypesetAtom(offsetX: Double, width: Double, baselineY: Double, text: String, font: Font, fill: Paint, underline: UnderlineKind, strikeThrough: Boolean)
 case class LineOfTypesetText(offsetY: Double, height: Double, atoms: Vector[TypesetAtom])
 
 /**
@@ -118,7 +118,10 @@ class FixedWidthTypeSetter(_wrapWidth: Length, m2s: Model2Screen, textModel: Tex
 
           val transformed = curLineAtoms.view.zipWithIndex.map(atomIdx => {
             val (atom, idx) = atomIdx
-            atom.copy(offsetX = atom.offsetX + surplusSpace*idx - xCorrection, baselineY = atom.baselineY + curLineMaxAscent)
+            atom.copy(
+              offsetX = atom.offsetX + surplusSpace*idx - xCorrection,
+              baselineY = atom.baselineY + curLineMaxAscent,
+              width = atom.width + surplusSpace) //TODO this extends underline / strikethrough by 'surplus' for the last atom with a given line. A more sophisticated behavior probably requires separate widths for strikeThrough and underline...
           }).toVector
           curLineAtoms.clear()
           curLineAtoms ++= transformed
@@ -150,7 +153,7 @@ class FixedWidthTypeSetter(_wrapWidth: Length, m2s: Model2Screen, textModel: Tex
       if (curLineWidth + wordWidth > wrapWidth && !isStartOfLine) completeLine(false)
 
       //TODO superscript / subscript
-      curLineAtoms += TypesetAtom(curLineWidth, 0, word, font, atom.style.fill, atom.style.underline, atom.style.strikeThrough)
+      curLineAtoms += TypesetAtom(curLineWidth, wordWidth, 0, word, font, atom.style.fill, atom.style.underline, atom.style.strikeThrough)
       curLineMaxAscent = Math.max(curLineMaxAscent, fm.ascent)
       curLineMaxDescent = Math.max(curLineMaxDescent, fm.descent)
       curLineWidth += wordWidth
@@ -159,7 +162,6 @@ class FixedWidthTypeSetter(_wrapWidth: Length, m2s: Model2Screen, textModel: Tex
   }
 
   //TODO hyphenation, allow splits at '-'
-  //TODO how best to represent strikethrough and underline?
 }
 
 object FixedWidthTypeSetter {

@@ -8,7 +8,7 @@ import com.ajjpj.adiagram.render.{LineStyle, Model2Screen}
 
 
 class SemiCircleLineEnd extends RenderableLineEnd {
-  override def shortenLength(style: LineStyle, m2s: Model2Screen) = Length.max(Length.ZERO, style.width / 2 - m2s.overlapPixels)
+  override def shortenLength(style: LineStyle, m2s: Model2Screen) = Length.max(Length.ZERO, style.width / 2 - m2s.overlapLength)
   override def width(style: LineStyle, m2s: Model2Screen) = Length.ZERO
 
   override def paint(gc: GraphicsContext, p: Vector2, angle: Angle, style: LineStyle, t: Vector2, m2s: Model2Screen) {

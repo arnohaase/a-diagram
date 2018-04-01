@@ -6,8 +6,8 @@ import javafx.scene.effect.{BlurType, Shadow}
 import javafx.scene.image.Image
 import javafx.scene.paint.{Color, Paint}
 import javafx.scene.text.TextAlignment
-
 import com.ajjpj.adiagram.geometry.{Angle, Length, Vector2}
+import com.ajjpj.adiagram.render.TextAtomStyle.{UnderlineKind, UnderlineNone}
 
 
 case class LineStyle (width: Length, paint: Paint) {
@@ -68,9 +68,15 @@ case class TextAtomStyle(fontFamily: String,
                          fill: Paint,
                          italics: Boolean = false,
                          bold: Boolean = false,
-                         underline: Boolean = false,
+                         underline: UnderlineKind = UnderlineNone,
                          strikeThrough: Boolean = false
                         )
+object TextAtomStyle {
+  sealed trait UnderlineKind
+  case object UnderlineNone extends UnderlineKind
+  case object UnderlineSingle extends UnderlineKind
+  case object UnderlineDouble extends UnderlineKind
+}
 
 
 case class TextParagraphStyle(hAlignment: TextAlignment, lineSpacing: Length = Length.ZERO)

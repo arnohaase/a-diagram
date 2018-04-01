@@ -42,10 +42,11 @@ class Model2Screen (val factorFromPt: Double) extends AnyVal {
 
   def singlePixel = Length(1/factorFromPt, LenUnit.pt)
 
+  def overlapPixels = .5
   /**
     * This is the amount that two geometric shapes sharing a boundary need to overlap in order to leave no gap. TODO this may profit from experimentation
     */
-  def overlapPixels = Length(.5/factorFromPt, LenUnit.pt)
+  def overlapLength = Length(overlapPixels/factorFromPt, LenUnit.pt)
 
   override def toString = s"Model2Screen{$factorFromPt}"
 }

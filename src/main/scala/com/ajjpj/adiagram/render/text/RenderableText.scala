@@ -1,9 +1,10 @@
 package com.ajjpj.adiagram.render.text
 
-import javafx.scene.canvas.GraphicsContext
-
-import com.ajjpj.adiagram.geometry.{LenUnit, Length, RectShape, Vector2}
+import com.ajjpj.adiagram.geometry.{Length, RectShape, Vector2}
+import com.ajjpj.adiagram.render.TextAtomStyle.{UnderlineDouble, UnderlineNone, UnderlineSingle}
 import com.ajjpj.adiagram.render.{Model2Screen, Renderable, RenderedItem, ShadowStyle}
+import javafx.scene.canvas.GraphicsContext
+import javafx.scene.shape.StrokeLineCap
 
 
 /**
@@ -32,6 +33,28 @@ case class RenderableText(logicalTopLeft: Vector2, maxWidth: Length, text: TextM
       gc.setFont(atom.font)
       gc.setFill(atom.fill)
       gc.fillText(atom.text, atom.offsetX + offset.x, line.offsetY + atom.baselineY + offset.y)
+
+      def lineWidth = atom.font.getSize / 30
+      def drawLine(y: Double): Unit = {
+        gc.setStroke(atom.fill)
+        gc.setLineWidth(lineWidth)
+        gc.setLineCap(StrokeLineCap.BUTT)
+
+        val x0 = atom.offsetX + offset.x
+        gc.strokeLine(x0 - m2s.overlapPixels, y, x0 + atom.width + m2s.overlapPixels, y)
+      }
+
+      atom.underline match {
+        case UnderlineNone =>
+        case UnderlineSingle =>
+          drawLine (line.offsetY + atom.baselineY + offset.y + lineWidth * 2.5)
+        case UnderlineDouble =>
+          drawLine (line.offsetY + atom.baselineY + offset.y + lineWidth * 2.5)
+          drawLine (line.offsetY + atom.baselineY + offset.y + lineWidth * 4.5)
+      }
+      if (atom.strikeThrough) {
+        drawLine (line.offsetY + atom.baselineY + offset.y - atom.font.getSize * .2)
+      }
     }
   }
 }
