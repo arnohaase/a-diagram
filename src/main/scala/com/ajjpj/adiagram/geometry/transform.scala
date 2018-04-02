@@ -45,11 +45,11 @@ object AffineTransformation {
 
   def scaling(origin: Vector2, factor: Double) =
     translation(origin) after
-    AffineTransformation(Matrix2.scale(factor), Vector2.ZERO) after
-    translation (origin.inverse)
+      AffineTransformation(Matrix2.scale(factor), Vector2.ZERO) after
+      translation (origin.inverse)
 
   def rotation(origin: Vector2, angle: Angle) =
     translation(origin) after
-    AffineTransformation(Matrix2.rotate(angle.rad), Vector2.ZERO) after
-    translation (origin.inverse)
+      AffineTransformation(Matrix2.rotate(angle.rad), Vector2.ZERO) after
+      translation (origin.inverse)
 }

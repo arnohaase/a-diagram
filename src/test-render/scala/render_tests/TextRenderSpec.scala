@@ -3,9 +3,9 @@ package render_tests
 import java.io.File
 
 import com.ajjpj.adiagram.ADiagramSpec
-import com.ajjpj.adiagram.geometry.{LenUnit, Length, Vector2}
+import com.ajjpj.adiagram.geometry.{Angle, LenUnit, Length, Vector2}
 import com.ajjpj.adiagram.render.TextAtomStyle.{UnderlineDouble, UnderlineKind, UnderlineNone, UnderlineSingle}
-import com.ajjpj.adiagram.render._
+import com.ajjpj.adiagram.render.{Model2Screen, _}
 import com.ajjpj.adiagram.render.text.{RenderableText, TextAtomModel, TextModel, TextParagraphModel}
 import javafx.embed.swing.SwingFXUtils
 import javafx.scene.canvas.Canvas
@@ -19,26 +19,21 @@ class TextRenderSpec extends ADiagramSpec with RenderUtils {
 
   override def componentId = "text"
 
-  private def doRenderToFile(folder: File, filename: String, text: RenderableText, zoom: Double): Unit = {
-    val m2s = new Model2Screen(zoom)
-    val riRaw = text.render(m2s)
-    val imgRaw = riRaw.img
-    val ro = riRaw.topLeftPos
-
-    val canvas = new Canvas(imgRaw.getWidth, imgRaw.getHeight)
-    val gc = canvas.getGraphicsContext2D
-
-    gc.drawImage(imgRaw, 0, 0)
-    val img = RenderHelper.snapshot(canvas, Color.WHITE)
-
-    ImageIO.write(SwingFXUtils.fromFXImage(img, null), "png", new File(folder, s"$filename.png"))
-  }
-
   private def render(folderName: String, filename: String, zoom: Double, text: RenderableText): Unit = {
     val folder = new File(baseDir, folderName)
     folder.mkdirs()
 
-    doRenderToFile(folder, filename, text, zoom)
+    val m2s = new Model2Screen (zoom)
+    val riRaw = text.render (m2s)
+    val imgRaw = riRaw.img
+
+    val canvas = new Canvas (imgRaw.getWidth, imgRaw.getHeight)
+    val gc = canvas.getGraphicsContext2D
+
+    gc.drawImage (imgRaw, 0, 0)
+    val img = RenderHelper.snapshot (canvas, Color.WHITE)
+
+    ImageIO.write (SwingFXUtils.fromFXImage (img, null), "png", new File (folder, s"$filename.png"))
   }
 
   val FONT_FAMILY_TIMES = "Times New Roman"
@@ -102,13 +97,54 @@ class TextRenderSpec extends ADiagramSpec with RenderUtils {
 
       render("regular", s"styles-$hAlignment-${sizePt.toInt}pt-${zoom._1}", zoom._2, RenderableText(Vector2.ZERO, Length(330, LenUnit.pt), TextModel(paragraphs, TextStyle()), None))
     }
-
     //TODO superscript, subscript, caps
   }
 
-  //TODO line spacing --> two paragraphs for comparison
-  //TODO paragraph spacing
+  private def atomStyle(fontFamily: String = FONT_FAMILY_TIMES, fontSize: Double = 20, fill: Paint = Color. BLACK) = TextAtomStyle(fontFamily, Length(fontSize, pt), fill)
 
-  //TODO angle: steps of 30° to take care of all variations
-  //TODO single word on a line, word wider than line
+  it should "respect line and paragraph spacing" in {
+    def paragraph(text: String, spacing: Double) = TextParagraphModel (Vector (TextAtomModel(text, atomStyle())), TextParagraphStyle(TextAlignment.JUSTIFY, Length(spacing, pt)))
+
+    for (paragraphSpacing <- Vector(0, 2, 5, 9);
+         zoom <- Vector(1, 2)
+    ) {
+      val paragraphs = Vector (
+        paragraph("Normal line spacing: This paragraph has normal line spacing and is included as a reference", 0),
+        paragraph("Two points additional line spacing: These lines are a little further apart", 2),
+        paragraph("Five points additional line spacing: These lines are further apart", 5),
+        paragraph("Ten points additional line spacing: These lines are pretty far apart", 10)
+      )
+      val text = RenderableText(Vector2.ZERO, Length(200, pt), TextModel(paragraphs, TextStyle(Length(paragraphSpacing, pt))), None)
+      render("special", s"spacing-$paragraphSpacing-${zoom}x", zoom, text)
+    }
+  }
+
+  it should "handle exotic cases for JUSTIFY" in {
+    def paragraph(text: String) = TextParagraphModel (Vector (TextAtomModel(text, atomStyle())), TextParagraphStyle(TextAlignment.JUSTIFY))
+
+    // handle two special cases:
+    //  * a single word in a line that is too short for justified typesetting, and
+    //  * a single word in a line that does not fit
+    val paragraphs = Vector(
+      paragraph("bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla"),
+      paragraph("SingleWord ThisIsAVeryLongWordThatDoesNotFitOnALine and some bla bla bla bla bla bla bla bla bla bla"),
+      paragraph("bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla bla")
+    )
+    val text = RenderableText(Vector2.ZERO, Length(200, pt), TextModel(paragraphs, TextStyle(Length(10, pt))), None)
+    render("special", s"justify-single-word", 1, text)
+
+    //TODO wide word for RIGHT
+  }
+
+  it should "render text at an angle" in {
+    for (angle <- Vector(0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330);
+         hAlign <- Vector(TextAlignment.LEFT, TextAlignment.CENTER, TextAlignment.RIGHT, TextAlignment.JUSTIFY)
+    ) {
+      val paragraph = TextParagraphModel(Vector(TextAtomModel("This is some arbitrary text that spans several lines", atomStyle())), TextParagraphStyle(hAlign))
+
+      val text = RenderableText(Vector2.ZERO, Length(200, pt), TextModel(Vector(paragraph), TextStyle(angle = Angle(angle * Math.PI / 180))), None)
+      render("angle", s"angle-${String.format("%03d", int2Integer(angle))}-$hAlign", 1, text)
+//      fail("not yet implemented")
+    }
+  }
 }

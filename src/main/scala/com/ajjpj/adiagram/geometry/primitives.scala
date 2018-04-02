@@ -19,8 +19,10 @@ object LenUnit {
   * This class represents an angle. If used in an absolute context, it counts counterclockwise from 'down' (which has positive y).
   */
 class Angle(val rad: Double) extends AnyVal {
+  def degrees = rad * 180 / Math.PI
+
   /** converts the angle to the JavaFX representation, i.e. degrees ccw from 'horizontal to the right' */
-  def screenDegrees = (rad * 180 / Math.PI + 270 + 360) % 360
+  def screenDegrees = (degrees + 270 + 360) % 360
 
   def unitX = Math.sin(rad)
   def unitY = Math.cos(rad)
