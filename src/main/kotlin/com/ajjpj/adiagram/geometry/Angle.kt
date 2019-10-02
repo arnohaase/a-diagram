@@ -4,22 +4,28 @@ import kotlin.math.atan2
 import kotlin.math.cos
 import kotlin.math.sin
 
-data class Angle(val angle: Double) {
+inline class Angle(val angle: Double) {
     /** converts the angle to the JavaFX representation, i.e. degrees ccw from 'horizontal to the right' */
-    fun screenDegrees() = (this.angle * 180 / Math.PI + 270 + 360) % 360
+    val screenDegrees: Double
+        get() = (this.angle * 180 / Math.PI + 270 + 360) % 360
 
-    fun unitX() = sin(angle)
-    fun unitY() = cos(angle)
+    val unitX: Double
+        get() = sin(angle)
+    val unitY
+        get() = cos(angle)
 
-    fun opposite() = Angle(angle + Math.PI)
+    val opposite
+        get() = Angle(angle + Math.PI)
 
-    fun cw90() = Angle(angle - Math.PI/2)
-    fun ccw90() = Angle(angle + Math.PI/2)
+    val cw90
+        get() = Angle(angle - Math.PI/2)
+    val ccw90
+        get() = Angle(angle + Math.PI/2)
 
-    fun plus(other: Angle) = Angle(angle + other.angle)
-    fun plus(a: Double) = Angle(angle + a)
-    fun minus(other: Angle) = Angle(angle - other.angle)
-    fun minus(a: Double) = Angle(angle - a)
+    operator fun plus(other: Angle) = Angle(angle + other.angle)
+    operator fun plus(a: Double) = Angle(angle + a)
+    operator fun minus(other: Angle) = Angle(angle - other.angle)
+    operator fun minus(a: Double) = Angle(angle - a)
 
     companion object {
         fun fromDxDy(dx: Double, dy: Double) = Angle(atan2(dx, dy))

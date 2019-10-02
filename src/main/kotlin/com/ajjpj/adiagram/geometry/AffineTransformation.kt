@@ -1,8 +1,4 @@
-package com.ajjpj.adiagram.geometry.transform
-
-import com.ajjpj.adiagram.geometry.APoint
-import com.ajjpj.adiagram.geometry.ARect
-import com.ajjpj.adiagram.geometry.Angle
+package com.ajjpj.adiagram.geometry
 
 /**
  * the semantics of the constructor data structures are as follows:
@@ -15,10 +11,10 @@ data class AffineTransformation(val translation: APoint, val m: Matrix) {
     operator fun invoke(p: APoint): APoint = m*p + translation
     operator fun invoke (rect: ARect): ARect = ARect(this(rect.topLeft), this(rect.bottomRight))
 
-    fun inverse() = AffineTransformation(m.inverse, (m.inverse*translation).inverse)
+    fun inverse() = AffineTransformation(m.inverse, (m.inverse * translation).inverse)
 
     fun before(other: AffineTransformation) = other.after(this)
-    fun after(other: AffineTransformation) = AffineTransformation(m * other.m, m*other.translation + translation)
+    fun after(other: AffineTransformation) = AffineTransformation(m * other.m, m * other.translation + translation)
 
     fun scaleFactor() = m.det
 
@@ -28,10 +24,10 @@ data class AffineTransformation(val translation: APoint, val m: Matrix) {
 
         fun scaling(origin: APoint, factor: Double) = translation(origin)
                 .after(AffineTransformation(Matrix.scale(factor), APoint.ZERO))
-                .after(translation (origin.inverse))
+                .after(translation(origin.inverse))
 
         fun rotation(origin: APoint, angle: Angle) = translation(origin)
                 .after(AffineTransformation(Matrix.rotate(angle.angle), APoint.ZERO))
-                .after(translation (origin.inverse))
+                .after(translation(origin.inverse))
     }
 }

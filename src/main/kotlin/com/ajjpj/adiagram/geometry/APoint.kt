@@ -7,7 +7,6 @@ data class APoint(val x: Double, val y: Double) {
         get() = APoint(-x, -y)
 
     operator fun plus(p: APoint): APoint = APoint(x+p.x, y+p.y)
-    fun plus(angle: Angle, d: Double):APoint = this + APoint(d*angle.unitX(), d*angle.unitY())
 
     operator fun minus(p: APoint): APoint = APoint(x-p.x, y-p.y)
 
@@ -15,5 +14,7 @@ data class APoint(val x: Double, val y: Double) {
 
     companion object {
         val ZERO = APoint(.0, .0)
+
+        operator fun invoke(angle: Angle, d: Double): APoint = APoint(d*angle.unitX, d*angle.unitY)
     }
 }
